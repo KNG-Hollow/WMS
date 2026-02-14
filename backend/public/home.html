@@ -1,0 +1,68 @@
+<!--- SPDX-License-Identifier: GPL-3.0 --->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        background-color: darkgrey;
+        align-items: center;
+      }
+      #header {
+        text-align: center;
+      }
+      #info {
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        width: 400px;
+        margin: 5em 0em 15em 0em;
+      }
+      #footer {
+        text-align: center;
+        margin-bottom: 5em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <h1>Home</h1>
+    </div>
+    <div id="info">
+      <h2>JWT Key</h2>
+      <p id="jwt-key"></p>
+    </div>
+
+    <div id="footer">
+      <span id="footer-text"></span>
+    </div>
+    <script>
+      const copyright = String.fromCodePoint(0x00a9);
+      const year = new Date().getFullYear();
+      const companyName = "Jaylen Holloway";
+      const footerStr = `${copyright} ${year} ${companyName}. All Rights Reserved.`;
+
+      function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(";");
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === " ") c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0)
+            return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      }
+
+      document.getElementById("footer-text").textContent = footerStr;
+
+      const jwtCookie = getCookie("jwt");
+      document.getElementById("jwt-key").textContent = jwtCookie;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,96 @@
+<!--- SPDX-License-Identifier: GPL-3.0 ---><!--- SPDX-License-Identifier: GPL-3.0 --->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        background-color: darkgrey;
+        height: 80vh;
+        align-items: center;
+      }
+      #header {
+        text-align: center;
+      }
+      #form {
+        align-self: center;
+        margin: 5em 0em 15em 0em;
+      }
+      #footer {
+        text-align: center;
+        margin-bottom: 5em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <h1>Login</h1>
+    </div>
+    <div id="form">
+      <form id="loginForm">
+        <input type="text" name="username" placeholder="Username" required />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Login</button>
+      </form>
+    </div>
+    <div id="footer">
+      <span id="footer-text"></span>
+    </div>
+    <script>
+      const copyright = String.fromCodePoint(0x00a9);
+      const year = new Date().getFullYear();
+      const companyName = "Jaylen Holloway";
+      const footerStr = `${copyright} ${year} ${companyName}. All Rights Reserved.`;
+
+      function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+          const date = new Date();
+          date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+          expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + ": path=/";
+      }
+
+      document.getElementById("footer-text").textContent = footerStr;
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const formData = new FormData(this);
+
+          fetch("/login", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.json();
+              }
+              throw new Error("Network response was not ok.");
+            })
+            .then((data) => {
+              const token = data.token;
+              setCookie("jwt", token, 1);
+              console.log("JWT saved as cookie:", token);
+
+              window.location.href = "./home";
+            })
+            .catch((error) => {
+              console.error(
+                "There was a problem with the fetch operation:",
+                error,
+              );
+            });
+        });
+    </script>
+  </body>
+</html>
