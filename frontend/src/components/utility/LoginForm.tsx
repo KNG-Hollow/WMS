@@ -7,6 +7,7 @@ import {
   insertRole,
   activateUser,
   insertUsername,
+  insertID,
 } from "../../features/accounts/accountSlice";
 import { insertUser, activateApp } from "../../features/appSlice";
 import { useNavigate } from "react-router";
@@ -41,6 +42,7 @@ export default function LoginForm() {
         throw new Error("Account not found in database!");
       }
       dispatch(insertJWT(token));
+      dispatch(insertID(payload.id));
       dispatch(insertUsername(payload.username));
       dispatch(insertRole(payload.role.Value));
       dispatch(activateUser());
@@ -48,6 +50,7 @@ export default function LoginForm() {
       dispatch(
         insertUser({
           jwt: token,
+          id: payload.id,
           username: payload.username,
           role: payload.role.Value,
           userActive: true,

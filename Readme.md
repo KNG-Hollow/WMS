@@ -6,7 +6,7 @@ A centralized digital workstation for all of your warehousing needs.
 
 ## Introduction
 
-This project uses *Postgresql* for complex query capability and full ACID compliance, *Go/Echo* as the API Service, and *React* as the User Interface.
+This project uses _Postgresql_ for complex query capability and full ACID compliance, _Go/Echo_ as the API Service, and _React_ as the User Interface.
 
 ## How To Use
 
@@ -14,12 +14,12 @@ This project uses *Postgresql* for complex query capability and full ACID compli
 
 ## Features In-Progress
 
-* BACKEND
+- BACKEND
+  - // Role Based Security
+  - // Backend Homepage To Give Restricted Summary Data To Admins
+  - // autotls with Let's Encrypt for production ssl keys and certs
+  - // Search Engine for Query Interface
 
-  * // Role Based Security
-  * // Backend Homepage To Give Restricted Summary Data To Admins
-  * // autotls with Let's Encrypt for production ssl keys and certs
-
-* FRONTEND
-
-  * ...
+- FRONTEND
+  - // Shipment Services
+  - // Query Interface for Search Engine

@@ -39,8 +39,64 @@ export interface Role {
   Value: string;
 }
 
-// TODO ITEM
-// TODO BOX
-// TODO SHIPMENT
-// TODO INVENTORY
-// TODO IMAGEDATA
+export interface Item {
+  id: number;
+  upc: string;
+  name: string;
+  description: string;
+  weight: number;
+  image: ImageInfo;
+}
+
+export interface ImageInfo {
+  name: string;
+  data: Blob;
+  valid: boolean;
+}
+
+export interface Box {
+  id: number;
+  upc: string;
+  item: Item;
+  dimensions: string;
+  count: number;
+}
+
+export interface Dimensions {
+  length: number;
+  width: number;
+  height: number;
+}
+
+export interface Inventory {
+  id: number;
+  item: Item;
+  total: number;
+  locations: LocationData[];
+}
+
+export interface LocationData {
+  area: string;
+  count: number;
+}
+
+export interface Order {
+  id: number;
+  customer: Account;
+  address: string;
+  time: Date;
+  payload: ItemGroup[];
+}
+
+export interface Shipment {
+  id: number;
+  supplier: Account;
+  distributor: string;
+  eta: Date;
+  payload: ItemGroup[];
+}
+
+export interface ItemGroup {
+  item: Item;
+  count: number;
+}

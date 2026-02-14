@@ -24,9 +24,11 @@ export default function Home() {
 
   return (
     <div className="flex w-full items-center flex-1 flex-col">
-      <div className="mt-20 items-center flex gap-x-2 justify-center mb-10 text-2xl font-bold">
+      <div className="mt-20 items-center flex gap-x-2 justify-center mb-10 text-2xl font-bold text-cyan-600">
         <h2>Welcome Home</h2>
-        <h2 className="underline">{userState.username}</h2>
+        <h2 className="underline text-cyan-400 font-extrabold">
+          {userState.username}
+        </h2>
       </div>
       <div className="mb-20 w-11/12 space-y-3 border-3 px-10 rounded-xl py-10 bg-gray-950 flex h-full flex-col items-center">
         <h2>Username:</h2>

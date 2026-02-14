@@ -20,27 +20,27 @@ export default function Error() {
 
   return (
     <div className="text-center flex flex-col items-center">
-      <div id="error-header">
-        <h2 className="text-red-600 mt-10 text-xl font-extrabold">ERROR</h2>
+      <div id="error-header" className="mt-20">
+        <h2 className="text-red-600 underline text-xl font-extrabold">ERROR</h2>
       </div>
       <div
         id="error-container"
-        className="border-2 w-11/12 py-10 gap-y-15 rounded flex-col flex mt-15"
+        className="border-2 border-red-600 w-11/12 bg-gray-950 py-10 gap-y-15 rounded flex-col flex mt-15"
       >
-        <div>
+        <div className="space-y-3">
           <h2>Title:</h2>
-          <h4 id="error-title" className="text-red-700">
+          <h4 id="error-title" className="text-red-700 wrap-break-word w-2xl">
             {errTitle}
           </h4>
         </div>
-        <div className="">
+        <div className="space-y-3">
           <h2>Message:</h2>
-          <p id="error-message" className="text-red-600">
+          <p id="error-message" className="text-red-600 wrap-break-word w-2xl">
             {errMessage}
           </p>
         </div>
       </div>
-      <div id="error-button" className="mt-20">
+      <div id="error-button" className="mt-15">
         <button onClick={() => window.location.reload()}>Refresh</button>
       </div>
     </div>

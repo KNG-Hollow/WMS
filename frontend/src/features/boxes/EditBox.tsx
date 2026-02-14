@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { useAppSelector } from "../../app/hooks";
 import { selectAppActive } from "../appSlice";
 import { selectErrorActive } from "../errors/errorSlice";
-import { useNavigate } from "react-router";
 
-export default function AllAccounts() {
+export default function EditBox() {
   const appActive = useAppSelector(selectAppActive);
   const errorActive = useAppSelector(selectErrorActive);
   const navigate = useNavigate();
@@ -21,10 +21,8 @@ export default function AllAccounts() {
   });
 
   return (
-    <div>
-      <h2 className="pt-20 text-center font-extrabold text-amber-600">
-        All Accounts Routing Works!
-      </h2>
+    <div className="text-amber-600 font-extrabold text-center pt-20">
+      <h2>Edit Box Routing Works!</h2>
     </div>
   );
 }

@@ -31,7 +31,7 @@ func InitRouter(e *echo.Echo, jwtConfig echo.MiddlewareFunc) {
 
 	api.POST("/accounts", ctrl.AddAccount)
 	api.POST("/items", ctrl.AddItem)
-	api.POST("/shipments", ctrl.AddShipment)
+	api.POST("/orders", ctrl.AddOrder)
 	api.POST("/boxes", ctrl.AddBox)
 	api.POST("/inventory", ctrl.AddInventory)
 
@@ -39,8 +39,8 @@ func InitRouter(e *echo.Echo, jwtConfig echo.MiddlewareFunc) {
 	api.GET("/accounts/:id", ctrl.GetAccount)
 	api.GET("/items", ctrl.GetItems)
 	api.GET("/items/:id", ctrl.GetItem)
-	api.GET("/shipments", ctrl.GetShipments)
-	api.GET("/shipments/:id", ctrl.GetShipment)
+	api.GET("/orders", ctrl.GetOrders)
+	api.GET("/orders/:id", ctrl.GetOrder)
 	api.GET("/boxes", ctrl.GetBoxes)
 	api.GET("/boxes/:id", ctrl.GetBox)
 	api.GET("/inventory", ctrl.GetAllInventory)
@@ -48,13 +48,13 @@ func InitRouter(e *echo.Echo, jwtConfig echo.MiddlewareFunc) {
 
 	api.PUT("/accounts/:id", ctrl.UpdateAccount)
 	api.PUT("/items/:id", ctrl.UpdateItem)
-	api.PUT("/shipments/:id", ctrl.UpdateShipment)
+	api.PUT("/orders/:id", ctrl.UpdateOrder)
 	api.PUT("/boxes/:id", ctrl.UpdateBox)
 	api.PUT("/inventory/:id", ctrl.UpdateInventory)
 
 	api.DELETE("/accounts/:id", ctrl.DeleteAccount)
 	api.DELETE("/items/:id", ctrl.DeleteItem)
-	api.DELETE("/shipments/:id", ctrl.DeleteShipment)
+	api.DELETE("/orders/:id", ctrl.DeleteOrder)
 	api.DELETE("/boxes/:id", ctrl.DeleteBox)
 	api.DELETE("/inventory/:id", ctrl.DeleteInventory)
 }

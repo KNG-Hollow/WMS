@@ -47,7 +47,7 @@ export default function App() {
     <StrictMode>
       <Provider store={store}>
         <div
-          className="bg-cover bg-center bg-no-repeat min-h-screen"
+          className="bg-linear-to-b from-cyan-600 to-slate-600 bg-center bg-no-repeat min-h-screen"
           style={{ backgroundImage: `url(${backgroundImage})` }}
         >
           <Navbar />
@@ -97,8 +97,8 @@ export async function loader() {
 
 export function HydrateFallback({ loaderData }: Route.ComponentProps) {
   return (
-    <div className="flex font-semibold flex-col gap-y-25 mt-15 items-center">
-      <h1>Loading Version: {loaderData.version}</h1>
+    <div className="flex font-bold flex-col gap-y-25 items-center bg-linear-to-t from-cyan-600 to-slate-700 bg-center bg-no-repeat min-h-screen">
+      <h1 className="mt-15">Loading Version: {loaderData.version}</h1>
       <Spinner />
     </div>
   );
@@ -109,7 +109,7 @@ export function Spinner() {
     <div id="spinner-container" className="flex justify-center self-center">
       <div
         id="spinner"
-        className="w-24 h-24 rounded-full border-8 border-t-sky-600 animate-spin"
+        className="w-24 h-24 rounded-full border-8 border-t-pink-600 animate-spin"
       ></div>
     </div>
   );

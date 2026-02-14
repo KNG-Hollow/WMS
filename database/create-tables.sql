@@ -1,43 +1,47 @@
 CREATE TABLE IF NOT EXISTS account (
-    id          SERIAL PRIMARY KEY NOT NULL,
-    firstname   VARCHAR(128) NOT NULL,
-    lastname    VARCHAR(128) NOT NULL,
-    email       VARCHAR(128),
-    phone       VARCHAR(128),
-    username    VARCHAR(128) NOT NULL,
-    password    VARCHAR(128) NOT NULL,
-    role        VARCHAR(64) NOT NULL,
-    active      BOOLEAN NOT NULL,
-    created     TIMESTAMP NOT NULL
+    id SERIAL PRIMARY KEY NOT NULL,
+    firstname VARCHAR(128) NOT NULL,
+    lastname VARCHAR(128) NOT NULL,
+    email VARCHAR(128),
+    phone VARCHAR(128),
+    username VARCHAR(128) NOT NULL,
+    password VARCHAR(128) NOT NULL,
+    role VARCHAR(64) NOT NULL,
+    active BOOLEAN NOT NULL,
+    created TIMESTAMP NOT NULL
 );
-
 CREATE TABLE IF NOT EXISTS item (
-    id              SERIAL PRIMARY KEY NOT NULL,
-    upc             VARCHAR(128) NOT NULL,
-    name            VARCHAR(128) NOT NULL,
-    description     VARCHAR(128),
-    weight          DOUBLE PRECISION NOT NULL,
-    image           BYTEA
+    id SERIAL PRIMARY KEY NOT NULL,
+    upc VARCHAR(128) NOT NULL,
+    name VARCHAR(128) NOT NULL,
+    description VARCHAR(128),
+    weight DOUBLE PRECISION NOT NULL,
+    image BYTEA
 );
-
+CREATE TABLE IF NOT EXISTS order_data (
+    id SERIAL PRIMARY KEY NOT NULL,
+    customer JSON NOT NULL,
+    address VARCHAR(128) NOT NULL,
+    timeOrdered TIMESTAMP NOT NULL,
+    payload JSON NOT NULL
+);
 CREATE TABLE IF NOT EXISTS shipment (
-    id          SERIAL PRIMARY KEY NOT NULL,
-    customer    JSON NOT NULL,
-    address     VARCHAR(128) NOT NULL,
-    ordered     TIMESTAMP NOT NULL,
-    payload     JSON NOT NULL
+    id SERIAL PRIMARY KEY NOT NULL,
+    supplier JSON NOT NULL,
+    distributor VARCHAR(128) NOT NULL,
+    eta TIMESTAMP NOT NULL,
+    payload JSON NOT NULL
 );
-
 CREATE TABLE IF NOT EXISTS box (
-    id      SERIAL PRIMARY KEY NOT NULL,
-    upc     VARCHAR(128) NOT NULL,
-    item    JSON NOT NULL,
-    count   INT NOT NULL
+    id SERIAL PRIMARY KEY NOT NULL,
+    upc VARCHAR(128) NOT NULL,
+    item JSON NOT NULL,
+    dimensions VARCHAR(128) NOT NULL,
+    count INT NOT NULL
 );
-
 CREATE TABLE IF NOT EXISTS inventory (
-    id          SERIAL PRIMARY KEY NOT NULL,
-    item        JSON NOT NULL,
-    total       INT NOT NULL,
-    locations   JSON NOT NULL
+    id SERIAL PRIMARY KEY NOT NULL,
+    item JSON NOT NULL,
+    total INT NOT NULL,
+    locations JSON NOT NULL
 );

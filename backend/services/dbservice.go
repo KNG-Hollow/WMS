@@ -163,12 +163,12 @@ func AddItem(item models.Item) error {
 	return nil
 }
 
-func AddShipment(order models.Shipment) error {
+func AddOrder(order models.Order) error {
 	conn := Connect()
 	defer conn.Close(context.Background())
 
-	fmt.Println("Attempting to add shipment to database!")
-	commandstr := "insert into shipment (id, customer, address, ordered, payload) values ($1, $2, $3, $4, $5)"
+	fmt.Println("Attempting to add order to database!")
+	commandstr := "insert into order_data (id, customer, address, timeOrdered, payload) values ($1, $2, $3, $4, $5)"
 	command, err := conn.Exec(context.Background(), commandstr,
 		order.ID,
 		order.Customer,
@@ -183,7 +183,7 @@ func AddShipment(order models.Shipment) error {
 		return errors.New("No new order created")
 	}
 
-	fmt.Println("Successfully added shipment!")
+	fmt.Println("Successfully added order!")
 	return nil
 }
 
@@ -193,11 +193,12 @@ func AddBox(box models.Box) error {
 
 	fmt.Println("Attempting to add box to database!")
 
-	commandstr := "insert into box (id, upc, item, count) values ($1, $2, $3, $4)"
+	commandstr := "insert into box (id, upc, item, dimensions, count) values ($1, $2, $3, $4, $5)"
 	command, err := conn.Exec(context.Background(), commandstr,
 		box.ID,
 		box.UPC,
 		box.Item,
+		box.Dimensions,
 		box.Count,
 	)
 	if err != nil {
@@ -380,15 +381,15 @@ func GetItem(id int) (models.Item, error) {
 	return item, nil
 }
 
-func GetShipments() ([]models.Shipment, error) {
+func GetOrders() ([]models.Order, error) {
 	conn := Connect()
 
 	defer conn.Close(context.Background())
 
-	fmt.Println("Attempting to get shipments...")
-	rows, _ := conn.Query(context.Background(), "select * from shipment")
-	shipments, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (models.Shipment, error) {
-		var n models.Shipment
+	fmt.Println("Attempting to get orders...")
+	rows, _ := conn.Query(context.Background(), "select * from order_data")
+	orders, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (models.Order, error) {
+		var n models.Order
 		err := row.Scan(
 			&n.ID,
 			&n.Customer,
@@ -397,29 +398,29 @@ func GetShipments() ([]models.Shipment, error) {
 			&n.Payload,
 		)
 		if err != nil {
-			return models.Shipment{}, err
+			return models.Order{}, err
 		}
 		return n, nil
 	})
 	if err != nil {
 		fmt.Printf("CollectRows error: %v", err)
-		return []models.Shipment{}, err
+		return []models.Order{}, err
 	}
-	if len(shipments) < 1 {
-		return []models.Shipment{}, errors.New("Shipment table is empty")
+	if len(orders) < 1 {
+		return []models.Order{}, errors.New("Order table is empty")
 	}
 
-	fmt.Println("Successfully retrieved shipments!")
-	return shipments, nil
+	fmt.Println("Successfully retrieved orders!")
+	return orders, nil
 }
 
-func GetShipment(id int) (models.Shipment, error) {
+func GetOrder(id int) (models.Order, error) {
 	conn := Connect()
 
-	fmt.Printf("Attempting to get shipment: %v...\n", id)
-	rows, _ := conn.Query(context.Background(), "select * from shipment where id=$1", id)
-	col, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (models.Shipment, error) {
-		var n models.Shipment
+	fmt.Printf("Attempting to get order: %v...\n", id)
+	rows, _ := conn.Query(context.Background(), "select * from order_data where id=$1", id)
+	col, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (models.Order, error) {
+		var n models.Order
 		err := row.Scan(
 			&n.ID,
 			&n.Customer,
@@ -428,22 +429,22 @@ func GetShipment(id int) (models.Shipment, error) {
 			&n.Payload,
 		)
 		if err != nil {
-			return models.Shipment{}, err
+			return models.Order{}, err
 		}
 		return n, err
 	})
 	if err != nil {
 		fmt.Printf("CollectRows error: %v", err)
-		return models.Shipment{}, err
+		return models.Order{}, err
 	}
 	if len(col) < 1 {
-		return models.Shipment{}, errors.New("Shipment table is empty")
+		return models.Order{}, errors.New("Order table is empty")
 	}
 
-	shipment := col[0]
+	order := col[0]
 
-	fmt.Printf("Successfully retrieved shipment: %v!\n", id)
-	return shipment, nil
+	fmt.Printf("Successfully retrieved order: %v!\n", id)
+	return order, nil
 }
 
 func GetBoxes() ([]models.Box, error) {
@@ -459,6 +460,7 @@ func GetBoxes() ([]models.Box, error) {
 			&n.ID,
 			&n.UPC,
 			&n.Item,
+			&n.Dimensions,
 			&n.Count,
 		)
 		if err != nil {
@@ -489,6 +491,7 @@ func GetBox(id int) (models.Box, error) {
 			&n.ID,
 			&n.UPC,
 			&n.Item,
+			&n.Dimensions,
 			&n.Count,
 		)
 		if err != nil {
@@ -632,12 +635,12 @@ func UpdateItem(id int, newData models.Item) error {
 	return nil
 }
 
-func UpdateShipment(id int, newData models.Shipment) error {
+func UpdateOrder(id int, newData models.Order) error {
 	conn := Connect()
 	defer conn.Close(context.Background())
 
-	fmt.Printf("Attempting to update shipment: %v...\n", id)
-	commandstr := "update shipment set customer=$1, address=$2, ordered=$3, payload=$4 where id=$5"
+	fmt.Printf("Attempting to update order: %v...\n", id)
+	commandstr := "update order_data set customer=$1, address=$2, timeOrdered=$3, payload=$4 where id=$5"
 
 	command, err := conn.Exec(context.Background(), commandstr,
 		newData.Customer,
@@ -650,10 +653,10 @@ func UpdateShipment(id int, newData models.Shipment) error {
 		return err
 	}
 	if command.RowsAffected() != 1 {
-		return errors.New("No shipment updated")
+		return errors.New("No order updated")
 	}
 
-	fmt.Printf("Successfully updated shipment: %v!\n", id)
+	fmt.Printf("Successfully updated order: %v!\n", id)
 	return nil
 }
 
@@ -662,11 +665,12 @@ func UpdateBox(id int, newData models.Box) error {
 	defer conn.Close(context.Background())
 
 	fmt.Printf("Attempting to update box: %v...\n", id)
-	commandstr := "update box set upc=$1, item=$2, count=$3 where id=$4"
+	commandstr := "update box set upc=$1, item=$2, dimensions=$3, count=$4 where id=$5"
 
 	command, err := conn.Exec(context.Background(), commandstr,
 		newData.UPC,
 		newData.Item,
+		newData.Dimensions,
 		newData.Count,
 		id,
 	)
@@ -740,20 +744,20 @@ func DeleteItem(id int) error {
 	return nil
 }
 
-func DeleteShipment(id int) error {
+func DeleteOrder(id int) error {
 	conn := Connect()
 	defer conn.Close(context.Background())
 
-	fmt.Printf("Attempting to delete shipment: %v...\n", id)
-	command, err := conn.Exec(context.Background(), "delete from shipment where id=$1", id)
+	fmt.Printf("Attempting to delete order: %v...\n", id)
+	command, err := conn.Exec(context.Background(), "delete from order_data where id=$1", id)
 	if err != nil {
 		return err
 	}
 	if command.RowsAffected() != 1 {
-		return errors.New("No shipment deleted!")
+		return errors.New("No order deleted!")
 	}
 
-	fmt.Printf("Successfully deleted shipment: %v!\n", id)
+	fmt.Printf("Successfully deleted order: %v!\n", id)
 	return nil
 }
 

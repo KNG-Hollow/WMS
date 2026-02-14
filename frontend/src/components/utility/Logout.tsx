@@ -42,8 +42,8 @@ export default function Logout() {
     };
   }, [navigate, appActive, dispatch]);
   return (
-    <div className="mt-12 flex h-svh w-full flex-1 flex-col items-center">
-      <div className="mt-10 mb-10 flex justify-center self-center text-2xl font-bold">
+    <div className=" flex h-svh w-full flex-1 flex-col items-center">
+      <div className="mt-20 mb-10 flex justify-center self-center text-2xl font-bold">
         <h2>Logging Out</h2>
       </div>
       <div className="mt-10 flex flex-col items-center text-xl">

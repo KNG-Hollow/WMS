@@ -40,7 +40,7 @@ var (
 		Weight:      1.0,
 		Image:       models.ImageData{Name: "test.png", Data: nil, Valid: true},
 	}
-	mockShipment models.Shipment = models.Shipment{ID: 66, Customer: models.Account{ID: 66, Firstname: "test", Lastname: "test", Email: "test@test.com", Phone: "123-456-7890", Username: "test", Password: "test", Role: models.Role{Value: "CUSTOMER"}, Active: true, Created: time.Now()}, Address: "12345 N. test ln.", TimeOrdered: time.Now(), Payload: []models.ItemGroup{models.ItemGroup{Item: models.Item{
+	mockOrder models.Order = models.Order{ID: 66, Customer: models.Account{ID: 66, Firstname: "test", Lastname: "test", Email: "test@test.com", Phone: "123-456-7890", Username: "test", Password: "test", Role: models.Role{Value: "CUSTOMER"}, Active: true, Created: time.Now()}, Address: "12345 N. test ln.", TimeOrdered: time.Now(), Payload: []models.ItemGroup{models.ItemGroup{Item: models.Item{
 		ID:          66,
 		UPC:         "123456",
 		Name:        "test",
@@ -49,10 +49,11 @@ var (
 		Image:       models.ImageData{Name: "test.png", Data: nil, Valid: true}}, Count: 55}},
 	}
 	mockBox models.Box = models.Box{
-		ID:    66,
-		UPC:   "123456",
-		Item:  mockItem,
-		Count: 66,
+		ID:         66,
+		UPC:        "123456",
+		Item:       mockItem,
+		Dimensions: "2x2x4",
+		Count:      66,
 	}
 	mockInv models.Inventory = models.Inventory{
 		ID:         66,
@@ -85,7 +86,7 @@ var (
 		Weight:      2.0,
 		Image:       models.ImageData{Name: "test.png", Data: nil, Valid: true},
 	}
-	mockShipment1 models.Shipment = models.Shipment{
+	mockOrder1 models.Order = models.Order{
 		ID: 66,
 		Customer: models.Account{
 			ID:        66,
@@ -118,10 +119,11 @@ var (
 		},
 	}
 	mockBox1 models.Box = models.Box{
-		ID:    66,
-		UPC:   "234567",
-		Item:  mockItem1,
-		Count: 667,
+		ID:         66,
+		UPC:        "234567",
+		Item:       mockItem1,
+		Dimensions: "4x4x8",
+		Count:      667,
 	}
 	mockInv1 models.Inventory = models.Inventory{
 		ID:         66,
@@ -301,40 +303,40 @@ func TestItemController(t *testing.T) {
 	assert.Equal(t, http.StatusAccepted, rec.Code)
 }
 
-func TestShipmentController(t *testing.T) {
-	// Mock Shipments In JSON
-	jsonShipment, err := json.Marshal(mockShipment)
+func TestOrderController(t *testing.T) {
+	// Mock Orders In JSON
+	jsonOrder, err := json.Marshal(mockOrder)
 	if err != nil {
-		fmt.Println("Error marshaling shipment to JSON:", err)
+		fmt.Println("Error marshaling order to JSON:", err)
 		return
 	}
-	jsonShipment1, err := json.Marshal(mockShipment1)
+	jsonOrder1, err := json.Marshal(mockOrder1)
 	if err != nil {
-		fmt.Println("Error marshaling shipment1 to JSON:", err)
+		fmt.Println("Error marshaling order1 to JSON:", err)
 	}
 
-	// AddShipment
+	// AddOrder
 	rec := echotest.ContextConfig{
 		Headers: map[string][]string{
 			echo.HeaderContentType: {echo.MIMEApplicationJSON},
 		},
-		JSONBody: jsonShipment,
-	}.ServeWithHandler(t, AddShipment)
+		JSONBody: jsonOrder,
+	}.ServeWithHandler(t, AddOrder)
 
 	assert.Equal(t, http.StatusCreated, rec.Code)
-	assert.Equal(t, string(jsonShipment)+"\n", rec.Body.String())
+	assert.Equal(t, string(jsonOrder)+"\n", rec.Body.String())
 
-	// GetShipments
+	// GetOrders
 	rec = echotest.ContextConfig{
 		Headers: map[string][]string{
 			echo.HeaderContentType: {echo.MIMEApplicationJSON},
 		},
-		JSONBody: jsonShipment,
-	}.ServeWithHandler(t, GetShipments)
+		JSONBody: jsonOrder,
+	}.ServeWithHandler(t, GetOrders)
 
 	assert.Equal(t, http.StatusOK, rec.Code)
 
-	// GetShipment
+	// GetOrder
 	rec = echotest.ContextConfig{
 		PathValues: echo.PathValues{
 			{Name: "id", Value: "66"},
@@ -342,12 +344,12 @@ func TestShipmentController(t *testing.T) {
 		Headers: map[string][]string{
 			echo.HeaderContentType: {echo.MIMEApplicationJSON},
 		},
-		JSONBody: jsonShipment,
-	}.ServeWithHandler(t, GetShipment)
+		JSONBody: jsonOrder1,
+	}.ServeWithHandler(t, GetOrder)
 
 	assert.Equal(t, http.StatusOK, rec.Code)
 
-	// UpdateShipment
+	// UpdateOrder
 	rec = echotest.ContextConfig{
 		PathValues: echo.PathValues{
 			{Name: "id", Value: "66"},
@@ -355,12 +357,12 @@ func TestShipmentController(t *testing.T) {
 		Headers: map[string][]string{
 			echo.HeaderContentType: {echo.MIMEApplicationJSON},
 		},
-		JSONBody: jsonShipment1,
-	}.ServeWithHandler(t, UpdateShipment)
+		JSONBody: jsonOrder1,
+	}.ServeWithHandler(t, UpdateOrder)
 
 	assert.Equal(t, http.StatusAccepted, rec.Code)
 
-	// DeleteShipment
+	// DeleteOrder
 	rec = echotest.ContextConfig{
 		PathValues: echo.PathValues{
 			{Name: "id", Value: "66"},
@@ -368,8 +370,8 @@ func TestShipmentController(t *testing.T) {
 		Headers: map[string][]string{
 			echo.HeaderContentType: {echo.MIMEApplicationJSON},
 		},
-		JSONBody: jsonShipment1,
-	}.ServeWithHandler(t, DeleteShipment)
+		JSONBody: jsonOrder1,
+	}.ServeWithHandler(t, DeleteOrder)
 
 	assert.Equal(t, http.StatusAccepted, rec.Code)
 }

@@ -75,22 +75,22 @@ func AddItem(c *echo.Context) error {
 	return c.JSON(http.StatusCreated, item)
 }
 
-func AddShipment(c *echo.Context) error {
+func AddOrder(c *echo.Context) error {
 	/*
 		err := services.AuthorizeRequest(c)
 		if err != nil {
 			return err
 		}
 	*/
-	var shipment models.Shipment
-	if err := c.Bind(&shipment); err != nil {
+	var order models.Order
+	if err := c.Bind(&order); err != nil {
 		return err
 	}
-	err := services.AddShipment(shipment)
+	err := services.AddOrder(order)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusCreated, shipment)
+	return c.JSON(http.StatusCreated, order)
 }
 
 func AddBox(c *echo.Context) error {
@@ -163,21 +163,21 @@ func GetAccount(c *echo.Context) error {
 	return c.JSON(http.StatusOK, account)
 }
 
-func GetShipments(c *echo.Context) error {
+func GetOrders(c *echo.Context) error {
 	/*
 		err := services.AuthorizeRequest(c)
 		if err != nil {
 			return err
 		}
 	*/
-	shipments, err := services.GetShipments()
+	orders, err := services.GetOrders()
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, shipments)
+	return c.JSON(http.StatusOK, orders)
 }
 
-func GetShipment(c *echo.Context) error {
+func GetOrder(c *echo.Context) error {
 	/*
 		err := services.AuthorizeRequest(c)
 		if err != nil {
@@ -190,11 +190,11 @@ func GetShipment(c *echo.Context) error {
 		return err
 	}
 
-	shipment, err := services.GetShipment(id)
+	order, err := services.GetOrder(id)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, shipment)
+	return c.JSON(http.StatusOK, order)
 }
 
 func GetItems(c *echo.Context) error {
@@ -347,7 +347,7 @@ func UpdateItem(c *echo.Context) error {
 	return c.JSON(http.StatusAccepted, item)
 }
 
-func UpdateShipment(c *echo.Context) error {
+func UpdateOrder(c *echo.Context) error {
 	/*
 		err := services.AuthorizeRequest(c)
 		if err != nil {
@@ -360,15 +360,15 @@ func UpdateShipment(c *echo.Context) error {
 		return err
 	}
 
-	var shipment models.Shipment
-	if err := c.Bind(&shipment); err != nil {
+	var order models.Order
+	if err := c.Bind(&order); err != nil {
 		return err
 	}
-	err = services.UpdateShipment(id, shipment)
+	err = services.UpdateOrder(id, order)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusAccepted, shipment)
+	return c.JSON(http.StatusAccepted, order)
 }
 
 func UpdateBox(c *echo.Context) error {
@@ -459,7 +459,7 @@ func DeleteItem(c *echo.Context) error {
 	return c.JSON(http.StatusAccepted, id)
 }
 
-func DeleteShipment(c *echo.Context) error {
+func DeleteOrder(c *echo.Context) error {
 	/*
 		err := services.AuthorizeRequest(c)
 		if err != nil {
@@ -472,7 +472,7 @@ func DeleteShipment(c *echo.Context) error {
 		return err
 	}
 
-	err = services.DeleteShipment(id)
+	err = services.DeleteOrder(id)
 	if err != nil {
 		return err
 	}

@@ -24,23 +24,6 @@ type Account struct {
 	Created   time.Time `json:"created" db:"created"`
 }
 
-type Item struct {
-	ID          int64     `json:"id" db:"id"`
-	UPC         string    `json:"upc" db:"upc"`
-	Name        string    `json:"name" db:"name"`
-	Description string    `json:"description" db:"description"`
-	Weight      float64   `json:"weight" db:"weight"`
-	Image       ImageData `json:"image" db:"image"`
-}
-
-type Shipment struct {
-	ID          int64       `json:"id" db:"id"`
-	Customer    Account     `json:"customer" db:"customer"`
-	Address     string      `json:"address" db:"address"`
-	TimeOrdered time.Time   `json:"time" db:"ordered"`
-	Payload     []ItemGroup `json:"payload" db:"payload"`
-}
-
 type Role struct {
 	ADMIN    string
 	MANAGER  string
@@ -57,6 +40,15 @@ func (r *Role) Scan(value any) error {
 	}
 	r.Value = v
 	return nil
+}
+
+type Item struct {
+	ID          int64     `json:"id" db:"id"`
+	UPC         string    `json:"upc" db:"upc"`
+	Name        string    `json:"name" db:"name"`
+	Description string    `json:"description" db:"description"`
+	Weight      float64   `json:"weight" db:"weight"`
+	Image       ImageData `json:"image" db:"image"`
 }
 
 type ImageData struct {
@@ -88,16 +80,12 @@ func (i *ImageData) Value() (driver.Value, error) {
 	return i.Data, nil
 }
 
-type ItemGroup struct {
-	Item  Item  `json:"item"`
-	Count int64 `json:"count"`
-}
-
 type Box struct {
-	ID    int64  `json:"id" db:"id"`
-	UPC   string `json:"upc" db:"upc"`
-	Item  Item   `json:"item" db:"item"`
-	Count int64  `json:"count" db:"count"`
+	ID         int64  `json:"id" db:"id"`
+	UPC        string `json:"upc" db:"upc"`
+	Item       Item   `json:"item" db:"item"`
+	Dimensions string `json:"dimensions" db:"dimensions"`
+	Count      int64  `json:"count" db:"count"`
 }
 
 type Inventory struct {
@@ -110,6 +98,27 @@ type Inventory struct {
 type LocationData struct {
 	Area  string `json:"area" db:"area"`
 	Count int64  `json:"count" db:"count"`
+}
+
+type Order struct {
+	ID          int64       `json:"id" db:"id"`
+	Customer    Account     `json:"customer" db:"customer"`
+	Address     string      `json:"address" db:"address"`
+	TimeOrdered time.Time   `json:"timeOrdered" db:"timeOrdered"`
+	Payload     []ItemGroup `json:"payload" db:"payload"`
+}
+
+type Shipment struct {
+	ID          int64       `json:"id" db:"id"`
+	Supplier    Account     `json:"supplier" db:"supplier"`
+	Distributor string      `json:"distributor" db:"distributor"`
+	ETA         time.Time   `json:"eta" db:"eta"`
+	Payload     []ItemGroup `json:"payload" db:"payload"`
+}
+
+type ItemGroup struct {
+	Item  Item  `json:"item"`
+	Count int64 `json:"count"`
 }
 
 type LoginDetails struct {

@@ -18,7 +18,7 @@ import (
 var (
 	testAccount   models.Account
 	testItem      models.Item
-	testShipment  models.Shipment
+	testOrder     models.Order
 	testBox       models.Box
 	testInventory models.Inventory
 )
@@ -140,9 +140,9 @@ func TestItemService(t *testing.T) {
 	assert.Nil(t, stat)
 }
 
-func TestShipmentService(t *testing.T) {
-	// AddShipment
-	testShipment = models.Shipment{
+func TestOrderService(t *testing.T) {
+	// AddOrder
+	testOrder = models.Order{
 		ID:          66,
 		Customer:    testAccount,
 		Address:     "12345 N. test Ln.",
@@ -151,21 +151,21 @@ func TestShipmentService(t *testing.T) {
 			{Item: testItem, Count: 123},
 		},
 	}
-	stat := AddShipment(testShipment)
+	stat := AddOrder(testOrder)
 	assert.Nil(t, stat)
 
-	// GetShipments
-	shipments, err := GetShipments()
+	// GetOrders
+	orders, err := GetOrders()
 	assert.Nil(t, err)
-	assert.True(t, len(shipments) > 0)
+	assert.True(t, len(orders) > 0)
 
-	// GetShipment
-	shipment, err := GetShipment(int(testShipment.ID))
+	// GetOrder
+	order, err := GetOrder(int(testOrder.ID))
 	assert.Nil(t, err)
-	assert.NotNil(t, shipment)
+	assert.NotNil(t, order)
 
-	// UpdateShipment
-	updateShipment := models.Shipment{
+	// UpdateOrder
+	updateOrder := models.Order{
 		ID: 66,
 		Customer: models.Account{
 			ID:        66,
@@ -185,21 +185,22 @@ func TestShipmentService(t *testing.T) {
 		},
 	}
 
-	stat = UpdateShipment(int(updateShipment.ID), updateShipment)
+	stat = UpdateOrder(int(updateOrder.ID), updateOrder)
 	assert.Nil(t, stat)
 
-	// DeleteShipment
-	stat = DeleteShipment(int(updateShipment.ID))
+	// DeleteOrder
+	stat = DeleteOrder(int(updateOrder.ID))
 	assert.Nil(t, stat)
 }
 
 func TestBoxService(t *testing.T) {
 	// AddBox
 	testBox = models.Box{
-		ID:    66,
-		UPC:   "123456",
-		Item:  testItem,
-		Count: 123,
+		ID:         66,
+		UPC:        "123456",
+		Item:       testItem,
+		Dimensions: "2x2x4",
+		Count:      123,
 	}
 
 	stat := AddBox(testBox)
@@ -217,10 +218,11 @@ func TestBoxService(t *testing.T) {
 
 	// UpdateBox
 	updatebox := models.Box{
-		ID:    66,
-		UPC:   "23456",
-		Item:  testItem,
-		Count: 234,
+		ID:         66,
+		UPC:        "23456",
+		Item:       testItem,
+		Dimensions: "4x4x8",
+		Count:      234,
 	}
 
 	stat = UpdateBox(int(updatebox.ID), updatebox)

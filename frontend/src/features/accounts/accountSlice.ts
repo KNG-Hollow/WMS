@@ -5,6 +5,7 @@ import { createAppSlice } from "../../app/createAppSlice";
 
 export type AccountSliceState = {
   jwt: string;
+  id: number;
   username: string;
   role: string;
   userActive: boolean;
@@ -12,6 +13,7 @@ export type AccountSliceState = {
 
 const initialState: AccountSliceState = {
   jwt: "",
+  id: 0,
   username: "",
   role: "",
   userActive: false,
@@ -30,6 +32,12 @@ export const accountSlice = createAppSlice({
     }),
     resetJWT: create.reducer((state) => {
       state.jwt = "";
+    }),
+    insertID: create.reducer((state, action: PayloadAction<number>) => {
+      state.id = action.payload;
+    }),
+    resetID: create.reducer((state) => {
+      state.id = 0;
     }),
     insertUsername: create.reducer((state, action: PayloadAction<string>) => {
       state.username = action.payload;
@@ -54,6 +62,7 @@ export const accountSlice = createAppSlice({
   // state as their first argument.
   selectors: {
     selectJWT: (account: AccountSliceState) => account.jwt,
+    selectID: (account: AccountSliceState) => account.id,
     selectUsername: (account: AccountSliceState) => account.username,
     selectRole: (account: AccountSliceState) => account.role,
     selectUserActive: (account: AccountSliceState) => account.userActive,
@@ -62,10 +71,12 @@ export const accountSlice = createAppSlice({
 
 // Action creators are generated for each case reducer function.
 export const {
-  insertUsername,
-  resetUsername,
   insertJWT,
   resetJWT,
+  insertID,
+  resetID,
+  insertUsername,
+  resetUsername,
   insertRole,
   resetRole,
   activateUser,
@@ -73,5 +84,10 @@ export const {
 } = accountSlice.actions;
 
 // Selectors returned by `slice.selectors` take the root state as their first argument.
-export const { selectJWT, selectUsername, selectRole, selectUserActive } =
-  accountSlice.selectors;
+export const {
+  selectJWT,
+  selectID,
+  selectUsername,
+  selectRole,
+  selectUserActive,
+} = accountSlice.selectors;
