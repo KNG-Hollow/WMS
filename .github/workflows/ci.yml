@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '24'
+
+      - name: Install dependencies (Frontend)
+        working-directory: frontend
+        run: corepack enable && yarn install
+
+      - name: Build Frontend
+        working-directory: frontend
+        run: yarn build
+
+      - name: Set up Go Environment
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: './backend/go.mod'
+
+      - name: Install Backend Dependencies
+        working-directory: backend
+        run: go mod tidy
+
+      - name: Run Backend Tests
+        working-directory: backend
+        run: go test ./...
+        
