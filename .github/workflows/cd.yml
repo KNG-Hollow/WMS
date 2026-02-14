@@ -36,8 +36,8 @@ jobs:
         env:
           JWT_PUB_KEY: ./security/jwtpubkey.pem
           JWT_KEY: ./security/jwtkey.pem
-          SSL_CERTIFICATE: ./ssl/ceritficate.crt
-          SSL_PRIVATE_KEY: ./ssl/private.key
+          TLS_CERTIFICATE: ./ssl/ceritficate.crt
+          TLS_KEY: ./ssl/private.key
           
 
       - name: Log in to Docker Hub
