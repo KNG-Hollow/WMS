@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies (Frontend)
         working-directory: frontend
-        run: yarn install
+        run: corepack enable && yarn install
 
       - name: Build Frontend
         working-directory: frontend
