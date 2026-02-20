@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { selectAppActive, selectUser } from "../../features/appSlice";
+import { selectAppActive, selectAppUser } from "../../features/appSlice";
 import { PingHealth } from "../../services/utilityApi";
 import { Link } from "react-router";
 
@@ -10,7 +10,7 @@ import { Link } from "react-router";
 
 export default function Navbar() {
   const appActive = useAppSelector(selectAppActive);
-  const userState = useAppSelector(selectUser);
+  const userState = useAppSelector(selectAppUser);
   const [connected, setConnected] = useState<boolean>(false);
 
   useEffect(() => {

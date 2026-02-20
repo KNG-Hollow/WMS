@@ -97,7 +97,7 @@ export async function loader() {
 
 export function HydrateFallback({ loaderData }: Route.ComponentProps) {
   return (
-    <div className="flex font-bold flex-col gap-y-25 items-center bg-linear-to-t from-cyan-600 to-slate-700 bg-center bg-no-repeat min-h-screen">
+    <div className="flex font-bold flex-col gap-y-25 items-center bg-linear-to-t from-cyan-700 to-slate-950 bg-center bg-no-repeat min-h-screen">
       <h1 className="mt-15">Loading Version: {loaderData.version}</h1>
       <Spinner />
     </div>

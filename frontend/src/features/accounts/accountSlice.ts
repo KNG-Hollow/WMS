@@ -19,7 +19,6 @@ const initialState: AccountSliceState = {
   userActive: false,
 };
 
-// TODO Fill in values
 // If you are not using async thunks you can use the standalone `createSlice`.
 export const accountSlice = createAppSlice({
   name: "account",
@@ -66,6 +65,7 @@ export const accountSlice = createAppSlice({
     selectUsername: (account: AccountSliceState) => account.username,
     selectRole: (account: AccountSliceState) => account.role,
     selectUserActive: (account: AccountSliceState) => account.userActive,
+    selectUserState: (account: AccountSliceState) => account,
   },
 });
 
@@ -90,4 +90,5 @@ export const {
   selectUsername,
   selectRole,
   selectUserActive,
+  selectUserState,
 } = accountSlice.selectors;

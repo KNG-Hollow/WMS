@@ -18,7 +18,7 @@ export interface JwtObject extends JwtPayload {
 }
 
 export interface Account {
-  id: number;
+  id: number | null;
   firstname: string;
   lastname: string;
   email: string;
@@ -27,7 +27,7 @@ export interface Account {
   password: string;
   role: Role;
   active: boolean;
-  created: Date;
+  created: Date | string;
 }
 
 export interface Role {
@@ -40,7 +40,7 @@ export interface Role {
 }
 
 export interface Item {
-  id: number;
+  id: number | null;
   upc: string;
   name: string;
   description: string;
@@ -55,7 +55,7 @@ export interface ImageInfo {
 }
 
 export interface Box {
-  id: number;
+  id: number | null;
   upc: string;
   item: Item;
   dimensions: string;
@@ -69,7 +69,7 @@ export interface Dimensions {
 }
 
 export interface Inventory {
-  id: number;
+  id: number | null;
   item: Item;
   total: number;
   locations: LocationData[];
@@ -81,18 +81,18 @@ export interface LocationData {
 }
 
 export interface Order {
-  id: number;
+  id: number | null;
   customer: Account;
   address: string;
-  time: Date;
+  time: Date | string;
   payload: ItemGroup[];
 }
 
 export interface Shipment {
-  id: number;
+  id: number | null;
   supplier: Account;
   distributor: string;
-  eta: Date;
+  eta: Date | string;
   payload: ItemGroup[];
 }
 

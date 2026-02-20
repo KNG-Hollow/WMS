@@ -9,7 +9,7 @@ import {
   insertUsername,
   insertID,
 } from "../../features/accounts/accountSlice";
-import { insertUser, activateApp } from "../../features/appSlice";
+import { insertAppUser, activateApp } from "../../features/appSlice";
 import { useNavigate } from "react-router";
 import type { JwtObject } from "../../app/models";
 import { AuthorizeUser } from "../../services/utilityApi";
@@ -48,7 +48,7 @@ export default function LoginForm() {
       dispatch(activateUser());
 
       dispatch(
-        insertUser({
+        insertAppUser({
           jwt: token,
           id: payload.id,
           username: payload.username,
@@ -70,13 +70,13 @@ export default function LoginForm() {
 
   return (
     <div className="w-full flex flex-col">
-      <div className="text-center w-3/4 py-2 border-2 bg-gray-950 self-center mt-15 text-2xl font-bold">
+      <div className="text-center w-3/4 py-2 border-2 bg-gray-900 self-center mt-15 text-2xl font-bold">
         <h2>Login</h2>
       </div>
       <div className="mt-5 flex justify-center">
         <div
           id="login-container"
-          className="mt-10 border-3 px-10 rounded-xl py-10 bg-gray-950 flex h-full flex-col items-center"
+          className="mt-10 border-3 px-10 rounded-xl py-10 bg-gray-900 flex h-full flex-col items-center"
         >
           <div id="login-form">
             <div

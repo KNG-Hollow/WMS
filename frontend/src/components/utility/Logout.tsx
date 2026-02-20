@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   deactivateApp,
-  resetUser,
+  resetAppUser,
   selectAppActive,
 } from "../../features/appSlice";
 import { useEffect, useState } from "react";
@@ -26,7 +26,7 @@ export default function Logout() {
     }
 
     const handleLogout = () => {
-      dispatch(resetUser());
+      dispatch(resetAppUser());
       dispatch(deactivateApp());
       window.location.reload();
     };
@@ -49,7 +49,7 @@ export default function Logout() {
       <div className="mt-10 flex flex-col items-center text-xl">
         <div
           id="logout-container"
-          className="justify-center mb-20 space-y-3 border-3 px-20 rounded-xl py-10 bg-gray-950 flex h-full flex-col items-center"
+          className="justify-center mb-20 space-y-3 border-3 px-20 rounded-xl py-10 bg-gray-900 flex h-full flex-col items-center"
         >
           <div id="logout-header" className="mt-5 flex flex-col justify-center">
             <p>You are being logged out in...</p>

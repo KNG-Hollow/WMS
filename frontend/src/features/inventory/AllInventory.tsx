@@ -21,8 +21,14 @@ export default function AllInventory() {
   });
 
   return (
-    <div className="text-amber-600 font-extrabold text-center pt-20">
-      <h2>All Inventory Routing Works!</h2>
+    <div className="pt-20 flex justify-center-safe">
+      <div className="flex flex-col p-20 border-3 bg-gray-900 border-cyan-600 w-11/12 gap-y-3">
+        <div className="text-cyan-500 text-center font-extrabold">
+          <h1>Inventory</h1>
+        </div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
   );
 }

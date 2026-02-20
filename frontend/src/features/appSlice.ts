@@ -24,24 +24,26 @@ export const appSlice = createAppSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: (create) => ({
-    insertUser: create.reducer(
+    insertAppUser: create.reducer(
       (state, action: PayloadAction<AccountSliceState>) => {
         state.user = action.payload;
       },
     ),
-    resetUser: create.reducer((state) => {
+    resetAppUser: create.reducer((state) => {
       state.user = {
         jwt: "",
+        id: 0,
+        username: "",
         role: "",
         userActive: false,
       };
     }),
-    insertErrorState: create.reducer(
+    insertAppError: create.reducer(
       (state, action: PayloadAction<ErrorSliceState>) => {
         state.errorState = action.payload;
       },
     ),
-    resetErrorState: create.reducer((state) => {
+    resetAppError: create.reducer((state) => {
       state.errorState = {
         errorActive: false,
         header: "",
@@ -60,22 +62,22 @@ export const appSlice = createAppSlice({
   // You can define your selectors here. These selectors receive the slice
   // state as their first argument.
   selectors: {
-    selectUser: (app: AppSliceState) => app.user,
-    selectErrorState: (app: AppSliceState) => app.errorState,
+    selectAppUser: (app: AppSliceState) => app.user,
+    selectAppError: (app: AppSliceState) => app.errorState,
     selectAppActive: (app: AppSliceState) => app.appActive,
   },
 });
 
 // Action creators are generated for each case reducer function.
 export const {
-  insertUser,
-  resetUser,
-  insertErrorState,
-  resetErrorState,
+  insertAppUser,
+  resetAppUser,
+  insertAppError,
+  resetAppError,
   activateApp,
   deactivateApp,
 } = appSlice.actions;
 
 // Selectors returned by `slice.selectors` take the root state as their first argument.
-export const { selectUser, selectErrorState, selectAppActive } =
+export const { selectAppUser, selectAppError, selectAppActive } =
   appSlice.selectors;

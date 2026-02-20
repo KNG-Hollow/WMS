@@ -41,10 +41,16 @@ export const errorSlice = createAppSlice({
     resetMessage: create.reducer((state) => {
       state.message = "";
     }),
+    insertError: create.reducer(
+      (state, action: PayloadAction<[string, string, boolean]>) => {
+        [state.header, state.message, state.errorActive] = action.payload;
+      },
+    ),
   }),
   // You can define your selectors here. These selectors receive the slice
   // state as their first argument.
   selectors: {
+    selectError: (error: ErrorSliceState) => error,
     selectErrorActive: (error: ErrorSliceState) => error.errorActive,
     selectHeader: (error: ErrorSliceState) => error.header,
     selectMessage: (error: ErrorSliceState) => error.message,
@@ -59,8 +65,9 @@ export const {
   resetHeader,
   insertMessage,
   resetMessage,
+  insertError,
 } = errorSlice.actions;
 
 // Selectors returned by `slice.selectors` take the root state as their first argument.
-export const { selectErrorActive, selectHeader, selectMessage } =
+export const { selectError, selectErrorActive, selectHeader, selectMessage } =
   errorSlice.selectors;
