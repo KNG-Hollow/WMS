@@ -80,7 +80,6 @@ func hashPassword(password string) (string, error) {
 }
 
 func parseArgon2Hash(encodedHash string) (*Argon2Config, error) {
-	log.Printf("received hash %s\n", encodedHash)
 	components := strings.Split(encodedHash, "$")
 	if len(components) != 6 {
 		return nil, errors.New("invalid hash format structure")

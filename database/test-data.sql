@@ -83,7 +83,7 @@ VALUES (
 INSERT INTO inventory (id, item, total, locations)
 VALUES (
         6,
-        '{"beans": 1234}',
+        '{"id": 6, "upc": "123456", "name": "beans", "description": "beans are beans are beans.", "weight": 2.3, "image": null}',
         1234,
         '{"A21": 1234}'
     );

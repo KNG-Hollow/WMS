@@ -3,6 +3,8 @@
 import axios, { HttpStatusCode } from "axios";
 import { jwtDecode } from "jwt-decode";
 import type { JwtObject } from "../app/models";
+import { selectJWT } from "../features/accounts/accountSlice";
+import { useAppSelector } from "../app/hooks";
 
 const apiHost: string =
   import.meta.env.VITE_API_URL || "https://localhost:1323";
@@ -24,6 +26,16 @@ const decodeToken = (token: string): JwtObject | null => {
     return null;
   }
 };
+
+export function InitAPI() {
+  const token = useAppSelector(selectJWT);
+  api.interceptors.request.use((config) => {
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
+}
 
 export async function PingHealth(): Promise<boolean> {
   let active: boolean = false;

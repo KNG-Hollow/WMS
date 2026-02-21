@@ -124,14 +124,14 @@ export default function CreateAccountForm() {
 
   return (
     <div className="flex pt-20 pb-20 flex-col items-center">
-      <div className="font-extrabold text-cyan-500">
-        <h1>Create Account</h1>
-      </div>
       <div
         id="form-container"
-        className="mt-10 border-3 border-cyan-600 rounded bg-gray-900 p-20 gap-y-2 flex flex-col"
+        className="border-3 items-center border-cyan-600 rounded bg-gray-900 p-20 gap-y-2 flex flex-col"
       >
-        <div id="form" className="flex gap-y-5 flex-col items-center">
+        <div className="font-bold text-xl text-cyan-500">
+          <h1>Create Account</h1>
+        </div>
+        <div id="form" className="flex mt-5 gap-y-5 flex-col items-center">
           <div id="input-username">
             <label htmlFor="username-area" className="relative right-2">
               *Username:

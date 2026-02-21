@@ -6,7 +6,7 @@ import { useAppSelector } from "../../app/hooks";
 import { selectAppActive } from "../appSlice";
 import { selectErrorActive } from "../errors/errorSlice";
 
-export default function AllBoxes() {
+export default function ViewBox() {
   const appActive = useAppSelector(selectAppActive);
   const errorActive = useAppSelector(selectErrorActive);
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export default function AllBoxes() {
 
   return (
     <div className="text-amber-600 font-extrabold text-center pt-20">
-      <h2>All Boxes Routing Works!</h2>
+      <h2>View Box Routing Works!</h2>
     </div>
   );
 }

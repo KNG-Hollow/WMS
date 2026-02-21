@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import axios, { HttpStatusCode } from "axios";
-import type { Account, Role } from "../app/models";
+import type { Inventory, Item, LocationData } from "../app/models";
 import {
   selectJWT,
   type AccountSliceState,
@@ -20,7 +20,7 @@ const api = axios.create({
   },
 });
 
-export function InitAccAPI() {
+export function InitInvAPI() {
   const token = useAppSelector(selectJWT);
   api.interceptors.request.use((config) => {
     if (token) {
@@ -30,51 +30,37 @@ export function InitAccAPI() {
   });
 }
 
-export async function CreateAccount(
+export async function CreateInventory(
   initiatorAccount: AccountSliceState,
   id: number | null,
-  firstname: string,
-  lastname: string,
-  email: string,
-  phone: string,
-  username: string,
-  password: string,
-  role: Role,
-): Promise<[boolean, Account]> {
+  item: Item,
+  total: number,
+  locations: LocationData[],
+): Promise<[boolean, Inventory]> {
   let successful: boolean;
-  const timestamp = new Date().toISOString();
-  const newAccount: Account = {
+  const newInventory: Inventory = {
     id: id,
-    firstname: firstname,
-    lastname: lastname,
-    email: email,
-    phone: phone,
-    username: username,
-    password: password,
-    role: role,
-    active: true,
-    created: timestamp,
+    item: item,
+    total: total,
+    locations: locations,
   };
 
   try {
-    if (initiatorAccount.role !== "ADMIN") {
+    if (
+      initiatorAccount.role !== "ADMIN" &&
+      initiatorAccount.role !== "MANAGER"
+    ) {
       successful = false;
-      alert("You Do Have Have Permission To Create An Account");
+      alert("You Do Have Have Permission To Create Inventory Entries");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.post<Account>(
-      apiHost + "/api/accounts",
+    const response = await api.post<Inventory>(
+      apiHost + "/api/inventory",
       {
-        id: newAccount.id,
-        firstname: newAccount.firstname,
-        lastname: newAccount.lastname,
-        email: newAccount.email,
-        phone: newAccount.phone,
-        username: newAccount.username,
-        password: newAccount.password,
-        role: newAccount.role.Value,
-        active: newAccount.active,
-        created: newAccount.created,
+        id: newInventory.id,
+        item: newInventory.item,
+        total: newInventory.total,
+        locations: newInventory.locations,
       },
       {
         // withCredentials: true,
@@ -90,24 +76,24 @@ export async function CreateAccount(
     return [successful, response.data];
   } catch (err) {
     console.error(err);
-    alert(`Error: Failed To Create Account: ${err}`);
+    alert(`Error: Failed To Create Inventory: ${err}`);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
 
-export async function GetAccounts(
+export async function GetAllInventory(
   initiatorAccount: AccountSliceState,
-): Promise<[boolean, Account[]]> {
+): Promise<[boolean, Inventory[]]> {
   let received: boolean;
-  let accounts: Account[];
+  let allInventory: Inventory[];
 
   try {
-    if (initiatorAccount.role !== "ADMIN") {
+    if (!initiatorAccount.userActive) {
       received = false;
-      alert("You Do Have Have Permission To View All Accounts");
+      alert("User Account Is Not Active!");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.get<Account[]>(apiHost + "/api/accounts", {
+    const response = await api.get<Inventory[]>(apiHost + "/api/inventory", {
       //withCredentials: true,
     });
     const data = response.data;
@@ -117,33 +103,39 @@ export async function GetAccounts(
       throw new Error("Response Status: NOT 'Ok'");
     }
     received = true;
-    accounts = data;
-    return [received, accounts];
+    allInventory = data;
+    return [received, allInventory];
   } catch (err) {
     console.error(err);
-    alert("Error: Failed To Get Accounts!: " + err);
+    alert("Error: Failed To Get Inventory!: " + err);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
 
-export async function GetAccount(
+export async function GetInventory(
   initiatorAccount: AccountSliceState,
   id: number,
-): Promise<[boolean, Account]> {
+): Promise<[boolean, Inventory]> {
   let received: boolean;
-  let account: Account;
+  let entry: Inventory;
 
   try {
-    if (initiatorAccount.id !== id && initiatorAccount.role !== "ADMIN") {
+    if (
+      initiatorAccount.role !== "ADMIN" &&
+      initiatorAccount.role !== "MANAGER"
+    ) {
       received = false;
-      alert("You Do Have Have Permission To View This Account");
+      alert("You Do Have Have Permission To View This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
 
-    console.log(`Attempting To Get Account [${id}] ...`);
-    const response = await api.get<Account>(apiHost + `/api/accounts/${id}`, {
-      //withCredentials: true,
-    });
+    console.log(`Attempting To Get Inventory Entry [${id}] ...`);
+    const response = await api.get<Inventory>(
+      apiHost + `/api/inventory/${id}`,
+      {
+        //withCredentials: true,
+      },
+    );
     const data = response.data;
     console.log("Raw API Response: ", data);
     if (response.status !== HttpStatusCode.Ok) {
@@ -151,84 +143,87 @@ export async function GetAccount(
       throw new Error("Response Status: NOT 'OK'");
     }
     received = true;
-    account = data;
-    return [received, account];
+    entry = data;
+    return [received, entry];
   } catch (err) {
     console.error(err);
-    alert(`Error: Failed To Get Account [${id}]: ` + err);
+    alert(`Error: Failed To Get Inventory Entry [${id}]: ` + err);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
 
-export async function UpdateAccount(
+export async function UpdateInventory(
   id: number,
   initiatorAccount: AccountSliceState,
-  newAccount: Account,
-): Promise<[boolean, Account]> {
+  newInventory: Inventory,
+): Promise<[boolean, Inventory]> {
   let success: boolean;
 
   try {
-    if (initiatorAccount.id !== id && initiatorAccount.role !== "ADMIN") {
+    if (
+      initiatorAccount.role !== "ADMIN" &&
+      initiatorAccount.role !== "MANAGER"
+    ) {
       success = false;
-      alert("You Do Have Have Permission To Update This Account");
+      alert("You Do Have Have Permission To Update This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    if (id !== newAccount.id && initiatorAccount.role !== "ADMIN") {
+    if (id !== newInventory.id) {
       console.error(
-        `Input ID and New Account's ID Do Not Match:\n\tInput: ${id}, Account: ${newAccount.id}`,
+        `Input ID and New Inventory's ID Do Not Match:\n\tInput: ${id}, Entry: ${newInventory.id}`,
       );
       throw new Error(
-        `Input ID and New Account's ID Do Not Match:\n\tInput: ${id}, Account: ${newAccount.id}`,
+        `Input ID and New Inventory's ID Do Not Match:\n\tInput: ${id}, Entry: ${newInventory.id}`,
       );
     }
-    const response = await api.put<Account>(
-      apiHost + `/api/accounts/${id}`,
+    const response = await api.put<Inventory>(
+      apiHost + `/api/inventory/${id}`,
       {
-        id: newAccount.id,
-        firstname: newAccount.firstname,
-        lastname: newAccount.lastname,
-        email: newAccount.email,
-        phone: newAccount.phone,
-        username: newAccount.username,
-        password: newAccount.password,
-        role: newAccount.role,
-        active: newAccount.active,
-        created: newAccount.created,
+        id: newInventory.id,
+        item: newInventory.item,
+        total: newInventory.total,
+        locations: newInventory.locations,
       },
       {
         //withCredentials: true,
       },
     );
-    const accountData = response.data;
-    console.log("Raw API Response: ", accountData);
+    const inventoryData = response.data;
+    console.log("Raw API Response: ", inventoryData);
     if (response.status !== HttpStatusCode.Accepted) {
       success = false;
       throw new Error(`Unexpected Response Status`);
     }
     success = true;
-    return [success, accountData];
+    return [success, inventoryData];
   } catch (err) {
     console.error(err);
-    alert(`Error: Failed To Update Account [${id}]: ` + err);
+    alert(`Error: Failed To Update Inventory Entry [${id}]: ` + err);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
 
-export async function DeleteAccount(
+export async function DeleteInventory(
   initiatorAccount: AccountSliceState,
   id: number,
 ): Promise<[boolean, number]> {
   let success: boolean;
 
   try {
-    if (initiatorAccount.id !== id && initiatorAccount.role !== "ADMIN") {
+    if (
+      initiatorAccount.role !== "ADMIN" &&
+      initiatorAccount.role !== "MANAGER"
+    ) {
       success = false;
-      alert("You Do Have Have Permission To Delete This Account");
+      alert("You Do Have Have Permission To Delete This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.delete<number>(apiHost + `/api/accounts/${id}`, {
-      //withCredentials: true,
-    });
+    const response = await api.delete<number>(
+      apiHost + `/api/inventory/${id}`,
+      {
+        //withCredentials: true,
+      },
+    );
     const data = response.data;
     console.log("Raw API Response: ", data);
     if (response.status !== HttpStatusCode.Accepted) {
@@ -239,7 +234,7 @@ export async function DeleteAccount(
     return [success, data];
   } catch (err) {
     console.error(err);
-    alert(`Error: Failed To Delete Account [${id}]: ` + err);
+    alert(`Error: Failed To Delete Inventory Entry [${id}]: ` + err);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }

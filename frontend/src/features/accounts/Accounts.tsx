@@ -9,7 +9,7 @@ import { selectRole, selectUserState } from "./accountSlice";
 import type { Account } from "../../app/models";
 import { GetAccounts } from "../../services/accountApi";
 
-export default function AllAccounts() {
+export default function Accounts() {
   const userRole = useAppSelector(selectRole);
   const userState = useAppSelector(selectUserState);
   const appActive = useAppSelector(selectAppActive);
@@ -64,16 +64,19 @@ export default function AllAccounts() {
     <div className="flex w-full py-20 justify-center">
       <div className="mt-10 border-3 border-cyan-600 rounded bg-gray-900 p-20 items-center gap-y-2 flex flex-col">
         <div className="font-extrabold mb-10 text-center text-xl text-cyan-500">
-          <h1>Accounts</h1>
+          <h1>Account Manager</h1>
         </div>
         <div className="mt-10 mb-20 flex w-11/12 flex-col self-center">
           <div id="home-container">
             <div
               id="tasks-info-container"
-              className="rounded-2xl border-2 border-cyan-500 py-5"
+              className="rounded-2xl flex flex-col items-center border-2 border-cyan-500 py-5"
             >
-              <div id="tasks-info" className="text-center mb-3">
-                <h2>Accounts Information:</h2>
+              <div id="tasks-info" className="mb-3">
+                <div className="flex space-x-1">
+                  <h2>Accounts:</h2>
+                  <p className="text-cyan-200">{allAccounts.length}</p>
+                </div>
               </div>
               <div
                 id="tasks-info-buttons"

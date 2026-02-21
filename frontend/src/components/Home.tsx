@@ -6,7 +6,9 @@ import { selectAppActive } from "../features/appSlice";
 import { selectAppUser } from "../features/appSlice";
 import { selectErrorActive } from "../features/errors/errorSlice";
 import { useNavigate } from "react-router";
-import { InitAPI } from "../services/accountApi";
+import { InitInvAPI } from "../services/inventoryApi";
+import { InitAccAPI } from "../services/accountApi";
+import { InitItemAPI } from "../services/itemApi";
 
 export default function Home() {
   const appActive = useAppSelector(selectAppActive);
@@ -14,7 +16,9 @@ export default function Home() {
   const errorState = useAppSelector(selectErrorActive);
   const navigate = useNavigate();
 
-  InitAPI();
+  InitAccAPI();
+  InitInvAPI();
+  InitItemAPI();
 
   useEffect(() => {
     if (!appActive || !userState.userActive) {

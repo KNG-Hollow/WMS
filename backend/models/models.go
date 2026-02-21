@@ -58,9 +58,18 @@ type ImageData struct {
 }
 
 func (i *ImageData) Scan(value any) error {
+	/*
+		if value == nil {
+			i.Valid = false
+			return errors.New("Invalid image data")
+		}
+	*/
 	if value == nil {
-		i.Valid = false
-		return errors.New("Invalid image data")
+		i.Data = nil
+		i.Name = ""
+		i.Valid = true
+
+		return nil
 	}
 	byteData, ok := value.([]byte)
 	if !ok {

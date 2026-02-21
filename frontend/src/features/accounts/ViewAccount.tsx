@@ -9,7 +9,7 @@ import { GetAccount } from "../../services/accountApi";
 import { selectUserState } from "./accountSlice";
 import type { Account } from "../../app/models";
 
-export default function Account() {
+export default function ViewAccount() {
   const appActive = useAppSelector(selectAppActive);
   const errorActive = useAppSelector(selectErrorActive);
   const userState = useAppSelector(selectUserState);

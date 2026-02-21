@@ -6,7 +6,7 @@ import { useAppSelector } from "../../app/hooks";
 import { selectAppActive } from "../appSlice";
 import { selectErrorActive } from "../errors/errorSlice";
 
-export default function Shipment() {
+export default function ViewShipment() {
   const appActive = useAppSelector(selectAppActive);
   const errorActive = useAppSelector(selectErrorActive);
   const navigate = useNavigate();

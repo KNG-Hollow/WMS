@@ -6,7 +6,7 @@ import { useAppSelector } from "../../app/hooks";
 import { selectAppActive } from "../appSlice";
 import { selectErrorActive } from "../errors/errorSlice";
 
-export default function AllShipments() {
+export default function Shipments() {
   const appActive = useAppSelector(selectAppActive);
   const errorActive = useAppSelector(selectErrorActive);
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export default function AllShipments() {
 
   return (
     <div className="text-amber-600 font-extrabold text-center pt-20">
-      <h2>All Shipments Routing Works!</h2>
+      <h2>Shipments Manager Routing Works!</h2>
     </div>
   );
 }

@@ -42,14 +42,16 @@ export default function Logout() {
     };
   }, [navigate, appActive, dispatch]);
   return (
-    <div className=" flex h-svh w-full flex-1 flex-col items-center">
-      <div className="mt-20 mb-10 flex justify-center self-center text-2xl font-bold">
-        <h2>Logging Out</h2>
-      </div>
+    <div className="py-20 flex justify-center">
+      {/*
+        <div className="mt-20 text-cyan-500 mb-10 flex justify-center self-center text-2xl font-bold">
+          <h2>Logging Out</h2>
+        </div>
+      */}
       <div className="mt-10 flex flex-col items-center text-xl">
         <div
           id="logout-container"
-          className="justify-center mb-20 space-y-3 border-3 px-20 rounded-xl py-10 bg-gray-900 flex h-full flex-col items-center"
+          className="justify-center space-y-3 border-3 px-20 rounded-xl border-cyan-600 py-10 bg-gray-900 flex h-full flex-col items-center"
         >
           <div id="logout-header" className="mt-5 flex flex-col justify-center">
             <p>You are being logged out in...</p>

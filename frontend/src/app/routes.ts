@@ -14,44 +14,44 @@ export default [
   route("error", "../features/errors/Error.tsx"),
 
   ...prefix("accounts", [
-    index("../features/accounts/AllAccounts.tsx"),
+    index("../features/accounts/Accounts.tsx"),
     route("create", "../features/accounts/CreateAccount.tsx"),
-    route(":id", "../features/accounts/Account.tsx"),
+    route(":id", "../features/accounts/ViewAccount.tsx"),
     route(":id/edit", "../features/accounts/EditAccount.tsx"),
   ]),
 
   ...prefix("items", [
-    index("../features/items/AllItems.tsx"),
+    index("../features/items/Items.tsx"),
     route("create", "../features/items/CreateItem.tsx"),
-    route(":id", "../features/items/Item.tsx"),
+    route(":id", "../features/items/ViewItem.tsx"),
     route(":id/edit", "../features/items/EditItem.tsx"),
   ]),
 
   ...prefix("boxes", [
-    index("../features/boxes/AllBoxes.tsx"),
+    index("../features/boxes/Boxes.tsx"),
     route("create", "../features/boxes/CreateBox.tsx"),
-    route(":id", "../features/boxes/Box.tsx"),
+    route(":id", "../features/boxes/ViewBox.tsx"),
     route(":id/edit", "../features/boxes/EditBox.tsx"),
   ]),
 
   ...prefix("inventory", [
-    index("../features/inventory/AllInventory.tsx"),
+    index("../features/inventory/Inventory.tsx"),
     route("create", "../features/inventory/CreateInventory.tsx"),
-    route(":id", "../features/inventory/Inventory.tsx"),
+    route(":id", "../features/inventory/ViewInventory.tsx"),
     route(":id/edit", "../features/inventory/EditInventory.tsx"),
   ]),
 
   ...prefix("orders", [
-    index("../features/orders/AllOrders.tsx"),
+    index("../features/orders/Orders.tsx"),
     route("create", "../features/orders/CreateOrder.tsx"),
-    route(":id", "../features/orders/Order.tsx"),
+    route(":id", "../features/orders/ViewOrder.tsx"),
     route(":id/edit", "../features/orders/EditOrder.tsx"),
   ]),
 
   ...prefix("shipments", [
-    index("../features/shipments/AllShipments.tsx"),
+    index("../features/shipments/Shipments.tsx"),
     route("create", "../features/shipments/CreateShipment.tsx"),
-    route(":id", "../features/shipments/Shipment.tsx"),
+    route(":id", "../features/shipments/ViewShipment.tsx"),
     route(":id/edit", "../features/shipments/EditShipment.tsx"),
   ]),
 ] satisfies RouteConfig;

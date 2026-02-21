@@ -11,12 +11,12 @@ import { Link } from "react-router";
 export default function Navbar() {
   const appActive = useAppSelector(selectAppActive);
   const userState = useAppSelector(selectAppUser);
-  const [connected, setConnected] = useState<boolean>(false);
+  const [connected, setConnected] = useState<boolean>(true);
 
   useEffect(() => {
     const interval = setInterval(async () => {
       setConnected(await PingHealth());
-    }, 4000);
+    }, 60000);
 
     return () => clearInterval(interval);
   }, []);
