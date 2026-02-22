@@ -94,7 +94,7 @@ export default function EditAccount() {
     let success: boolean;
     let responseId: number;
 
-    console.log("Attempting to update account...");
+    console.log("Attempting to delete account...");
     try {
       [success, responseId] = await DeleteAccount(userState, +id!);
       if (!success || responseId === null) {
@@ -112,7 +112,7 @@ export default function EditAccount() {
       dispatch(
         insertError([
           "Api Service Failure",
-          `Failed To Populate The Database And Get A Successful Response ::\n${err}`,
+          `Failed To Delete From Database And Get A Successful Response ::\n${err}`,
           true,
         ]),
       );

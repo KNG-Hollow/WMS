@@ -205,7 +205,7 @@ export async function UpdateItem(
   }
 }
 
-export async function DeleteInventory(
+export async function DeleteItem(
   initiatorAccount: AccountSliceState,
   id: number,
 ): Promise<[boolean, number]> {

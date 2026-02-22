@@ -18,19 +18,18 @@ export default function ViewItem() {
   const { id } = useParams();
   const [item, setItem] = useState<Item | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [weightDisplay, setWeightDisplay] = useState<string | null>(null);
 
-  // TODO Convert image Blob data into base64 and display into view
-  const convertToBase64 = (imageData: Blob): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(imageData);
-      fileReader.onload = () => {
-        resolve(fileReader.result as string);
-      };
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
+  const imageToBase64 = (imageData: string) => {
+    return `data:image/png;base64,${imageData}`;
+  };
+
+  const convertWeight = (input: number) => {
+    if (input < 1) {
+      setWeightDisplay(`${input} oz.`);
+    } else {
+      setWeightDisplay(`${input} lb.`);
+    }
   };
 
   useEffect(() => {
@@ -50,10 +49,9 @@ export default function ViewItem() {
         if (!successful || fetchedItem === null) {
           throw new Error("Failed to get item");
         }
+        convertWeight(fetchedItem.weight);
         if (fetchedItem.image) {
-          convertToBase64(fetchedItem.image.data).then((base64) => {
-            setImageUrl(base64);
-          });
+          setImageUrl(imageToBase64(fetchedItem.image.data));
         }
         setItem(fetchedItem);
       } catch (err) {
@@ -80,27 +78,36 @@ export default function ViewItem() {
   return (
     <div className="py-20 flex justify-center">
       <div className="flex flex-col gap-y-5 p-20 bg-gray-900 border-3 border-cyan-600">
-        <div className="text-xl font-bold">
-          <h1>{item?.name}</h1>
-        </div>
-        <div className="flex gap-x-2">
-          <h2>UPC:</h2>
-          <h2>{item?.upc}</h2>
-        </div>
-        <div className="flex gap-x-2">
-          <h2>Description:</h2>
-          <h2>{item?.description}</h2>
-        </div>
-        <div className="flex gap-x-2">
-          <h2>Weight:</h2>
-          <h2>{item?.weight}</h2>
-        </div>
-        <div className="flex flex-col gap-x-2">
-          <h2>Image:</h2>
-          <div>
-            <input type="file" accept=".png" />
-            {imageUrl && <img src={imageUrl} alt="Loading..." />}
+        <div className="flex flex-col gap-y-5">
+          <div className="text-xl text-center mb-5 font-bold">
+            <h1>{item?.name}</h1>
           </div>
+          <div className="flex gap-x-2">
+            <h2 className="font-bold">UPC:</h2>
+            <h2>{item?.upc}</h2>
+          </div>
+          <div className="flex gap-x-2">
+            <h2 className="font-bold">Description:</h2>
+            <h2>{item?.description}</h2>
+          </div>
+          <div className="flex gap-x-2">
+            <h2 className="font-bold">Weight:</h2>
+            <h2>{weightDisplay}</h2>
+          </div>
+          <div className="flex items-center flex-col gap-y-7">
+            <h2 className="font-bold">Sample Image:</h2>
+            <div className="w-1/2 h-1/2 border">
+              {imageUrl ? (
+                <img src={imageUrl} alt={`${item?.name} image`} />
+              ) : (
+                <p>Loading...</p>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-y-1 mt-10 self-center">
+          <button onClick={() => navigate("./edit")}>Edit</button>
+          <button onClick={() => navigate(-1)}>Back</button>
         </div>
       </div>
     </div>

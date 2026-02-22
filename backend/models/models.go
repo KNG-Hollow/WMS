@@ -52,9 +52,9 @@ type Item struct {
 }
 
 type ImageData struct {
-	Name  string
-	Data  []byte
-	Valid bool
+	Name  string `json:"name" db:"name"`
+	Data  []byte `json:"data" db:"data"`
+	Valid bool   `json:"valid" db:"valid"`
 }
 
 func (i *ImageData) Scan(value any) error {

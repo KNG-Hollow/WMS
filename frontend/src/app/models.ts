@@ -50,7 +50,7 @@ export interface Item {
 
 export interface ImageInfo {
   name: string;
-  data: Blob;
+  data: string;
   valid: boolean;
 }
 
