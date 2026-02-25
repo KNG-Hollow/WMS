@@ -45,7 +45,12 @@ export interface Item {
   name: string;
   description: string;
   weight: number;
-  image: ImageInfo;
+  image: ImageInfo | null;
+}
+
+export interface ItemInfo {
+  id: number;
+  name: string;
 }
 
 export interface ImageInfo {

@@ -42,7 +42,12 @@ export const errorSlice = createAppSlice({
       state.message = "";
     }),
     insertError: create.reducer(
-      (state, action: PayloadAction<[string, string, boolean]>) => {
+      (
+        state,
+        action: PayloadAction<
+          [header: string, message: string, active: boolean]
+        >,
+      ) => {
         [state.header, state.message, state.errorActive] = action.payload;
       },
     ),

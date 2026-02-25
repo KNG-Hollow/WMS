@@ -319,7 +319,7 @@ func GetItems() ([]models.Item, error) {
 	defer conn.Close(context.Background())
 
 	fmt.Println("Attempting to get items...")
-	rows, _ := conn.Query(context.Background(), "select * from item")
+	rows, _ := conn.Query(context.Background(), "select id,upc,name,description,weight from item")
 	items, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (models.Item, error) {
 		var n models.Item
 		err := row.Scan(
@@ -328,7 +328,6 @@ func GetItems() ([]models.Item, error) {
 			&n.Name,
 			&n.Description,
 			&n.Weight,
-			&n.Image,
 		)
 		if err != nil {
 			return models.Item{}, err
@@ -341,6 +340,36 @@ func GetItems() ([]models.Item, error) {
 	}
 	if len(items) < 1 {
 		return []models.Item{}, errors.New("Item table is empty")
+	}
+
+	fmt.Println("Successfully retrieved items!")
+	return items, nil
+}
+
+func GetItemsList() ([]models.ItemInfo, error) {
+	conn := Connect()
+
+	defer conn.Close(context.Background())
+
+	fmt.Println("Attempting to get list of items...")
+	rows, _ := conn.Query(context.Background(), "select id, name from item")
+	items, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (models.ItemInfo, error) {
+		var n models.ItemInfo
+		err := row.Scan(
+			&n.ID,
+			&n.Name,
+		)
+		if err != nil {
+			return models.ItemInfo{}, err
+		}
+		return n, err
+	})
+	if err != nil {
+		fmt.Printf("CollectRows error: %v", err)
+		return []models.ItemInfo{}, err
+	}
+	if len(items) < 1 {
+		return []models.ItemInfo{}, errors.New("Item table is empty")
 	}
 
 	fmt.Println("Successfully retrieved items!")

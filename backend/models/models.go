@@ -51,6 +51,11 @@ type Item struct {
 	Image       ImageData `json:"image" db:"image"`
 }
 
+type ItemInfo struct {
+	ID   int64  `json:"id" db:"id"`
+	Name string `json:"name" db:"name"`
+}
+
 type ImageData struct {
 	Name  string `json:"name" db:"name"`
 	Data  []byte `json:"data" db:"data"`

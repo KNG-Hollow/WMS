@@ -9,6 +9,7 @@ import { useNavigate } from "react-router";
 import { InitInvAPI } from "../services/inventoryApi";
 import { InitAccAPI } from "../services/accountApi";
 import { InitItemAPI } from "../services/itemApi";
+import { InitBoxAPI } from "../services/boxApi";
 
 export default function Home() {
   const appActive = useAppSelector(selectAppActive);
@@ -19,6 +20,7 @@ export default function Home() {
   InitAccAPI();
   InitInvAPI();
   InitItemAPI();
+  InitBoxAPI();
 
   useEffect(() => {
     if (!appActive || !userState.userActive) {

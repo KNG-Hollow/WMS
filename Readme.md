@@ -23,3 +23,6 @@ This project uses _Postgresql_ for complex query capability and full ACID compli
 - FRONTEND
   - // Shipment Services
   - // Query Interface for Search Engine
+
+- DATABASE
+  - // Relate box and inventory tables to the item table entry it references

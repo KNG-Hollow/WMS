@@ -39,6 +39,7 @@ func InitRouter(e *echo.Echo, jwtConfig echo.MiddlewareFunc) {
 	api.GET("/accounts/:id", ctrl.GetAccount)
 	api.GET("/items", ctrl.GetItems)
 	api.GET("/items/:id", ctrl.GetItem)
+	api.GET("/items/list", ctrl.GetItemsList)
 	api.GET("/orders", ctrl.GetOrders)
 	api.GET("/orders/:id", ctrl.GetOrder)
 	api.GET("/boxes", ctrl.GetBoxes)

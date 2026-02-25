@@ -27,15 +27,15 @@ export default function ViewAccount() {
     }
 
     const fetchAccount = async (id: number) => {
-      let Successful = false;
+      let successful = false;
 
       try {
         const [fetchSuccessful, fetchedAccount] = await GetAccount(
           userState,
           id,
         );
-        Successful = fetchSuccessful;
-        if (!Successful || fetchedAccount === null) {
+        successful = fetchSuccessful;
+        if (!successful || fetchedAccount === null) {
           throw new Error("Failed to get account");
         }
         setAccount(fetchedAccount);

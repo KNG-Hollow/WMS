@@ -76,9 +76,9 @@ INSERT INTO box (
 VALUES (
         6,
         '123456',
-        '{"beans": 1234}',
+        '{"id": 6,"upc": "12345","name": "beans","descriptions": "beans are beans","weight": 1.0, "image": null}',
         '2x2x4',
-        123
+        100
     );
 INSERT INTO inventory (id, item, total, locations)
 VALUES (

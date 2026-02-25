@@ -105,7 +105,7 @@ export default function CreateItemForm() {
         updatedItem.name,
         updatedItem.description,
         updatedItem.weight,
-        updatedItem.image,
+        updatedItem.image!,
       );
       if (!success || responseItem === null) {
         console.error(

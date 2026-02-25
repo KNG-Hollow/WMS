@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import axios, { HttpStatusCode } from "axios";
-import type { ImageInfo, Item, ItemInfo } from "../app/models";
+import type { Box, Dimensions, Item } from "../app/models";
 import {
   selectJWT,
   type AccountSliceState,
@@ -20,7 +20,11 @@ const api = axios.create({
   },
 });
 
-export function InitItemAPI() {
+export function ConvertDimensions(dims: Dimensions): string {
+  return `${dims.length}x${dims.width}x${dims.height}`;
+}
+
+export function InitBoxAPI() {
   const token = useAppSelector(selectJWT);
   api.interceptors.request.use((config) => {
     if (token) {
@@ -30,54 +34,21 @@ export function InitItemAPI() {
   });
 }
 
-export async function GetItemsList(
-  initiatorAccount: AccountSliceState,
-): Promise<[boolean, ItemInfo[]]> {
-  let received: boolean;
-  let itemsInfo: ItemInfo[];
-
-  try {
-    if (!initiatorAccount.userActive) {
-      received = false;
-      alert("User Account Is Not Active!");
-      throw new Error("Initiator's Account Is Not Privileged");
-    }
-    const response = await api.get<ItemInfo[]>(apiHost + "/api/items/list", {
-      //withCredentials: true,
-    });
-    const data = response.data;
-    console.log("Raw API Response: ", data);
-    if (response.status !== HttpStatusCode.Ok) {
-      received = false;
-      throw new Error("Response Status: NOT 'Ok'");
-    }
-    received = true;
-    itemsInfo = data;
-    return [received, itemsInfo];
-  } catch (err) {
-    console.error(err);
-    alert("Error: Failed To Get Item Names!: " + err);
-    throw new Error("Failed To Query RESTapi: " + err);
-  }
-}
-
-export async function CreateItem(
+export async function CreateBox(
   initiatorAccount: AccountSliceState,
   id: number | null,
   upc: string,
-  name: string,
-  description: string,
-  weight: number,
-  image: ImageInfo,
-): Promise<[boolean, Item]> {
+  item: Item,
+  dimensions: Dimensions,
+  count: number,
+): Promise<[boolean, Box]> {
   let successful: boolean;
-  const newItem: Item = {
+  const newBox: Box = {
     id: id,
     upc: upc,
-    name: name,
-    description: description,
-    weight: weight,
-    image: image,
+    item: item,
+    dimensions: ConvertDimensions(dimensions),
+    count: count,
   };
 
   try {
@@ -86,18 +57,17 @@ export async function CreateItem(
       initiatorAccount.role !== "MANAGER"
     ) {
       successful = false;
-      alert("You Do Have Have Permission To Create Items");
+      alert("You Do Have Have Permission To Create Box Entries");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.post<Item>(
-      apiHost + "/api/items",
+    const response = await api.post<Box>(
+      apiHost + "/api/boxes",
       {
-        id: newItem.id,
-        upc: newItem.upc,
-        name: newItem.name,
-        description: newItem.description,
-        weight: newItem.weight,
-        image: newItem.image!.data,
+        id: newBox.id,
+        upc: newBox.upc,
+        item: newBox.item,
+        dimensions: newBox.dimensions,
+        count: newBox.count,
       },
       {
         // withCredentials: true,
@@ -113,16 +83,16 @@ export async function CreateItem(
     return [successful, response.data];
   } catch (err) {
     console.error(err);
-    alert(`Error: Failed To Create Item: ${err}`);
+    alert(`Error: Failed To Create Box: ${err}`);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
 
-export async function GetItems(
+export async function GetAllBoxes(
   initiatorAccount: AccountSliceState,
-): Promise<[boolean, Item[]]> {
+): Promise<[boolean, Box[]]> {
   let received: boolean;
-  let items: Item[];
+  let allBoxes: Box[];
 
   try {
     if (!initiatorAccount.userActive) {
@@ -130,7 +100,7 @@ export async function GetItems(
       alert("User Account Is Not Active!");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.get<Item[]>(apiHost + "/api/items", {
+    const response = await api.get<Box[]>(apiHost + "/api/boxes", {
       //withCredentials: true,
     });
     const data = response.data;
@@ -140,31 +110,34 @@ export async function GetItems(
       throw new Error("Response Status: NOT 'Ok'");
     }
     received = true;
-    items = data;
-    return [received, items];
+    allBoxes = data;
+    return [received, allBoxes];
   } catch (err) {
     console.error(err);
-    alert("Error: Failed To Get Items!: " + err);
+    alert("Error: Failed To Get Boxes!: " + err);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
 
-export async function GetItem(
+export async function GetBox(
   initiatorAccount: AccountSliceState,
   id: number,
-): Promise<[boolean, Item]> {
+): Promise<[boolean, Box]> {
   let received: boolean;
-  let item: Item;
+  let entry: Box;
 
   try {
-    if (!initiatorAccount.userActive) {
+    if (
+      initiatorAccount.role !== "ADMIN" &&
+      initiatorAccount.role !== "MANAGER"
+    ) {
       received = false;
-      alert("User Account Is Not Active!");
+      alert("You Do Have Have Permission To View This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
 
-    console.log(`Attempting To Get Item [${id}] ...`);
-    const response = await api.get<Item>(apiHost + `/api/items/${id}`, {
+    console.log(`Attempting To Get Box Entry [${id}] ...`);
+    const response = await api.get<Box>(apiHost + `/api/boxes/${id}`, {
       //withCredentials: true,
     });
     const data = response.data;
@@ -174,20 +147,20 @@ export async function GetItem(
       throw new Error("Response Status: NOT 'OK'");
     }
     received = true;
-    item = data;
-    return [received, item];
+    entry = data;
+    return [received, entry];
   } catch (err) {
     console.error(err);
-    alert(`Error: Failed To Get Item [${id}]: ` + err);
+    alert(`Error: Failed To Get Box Entry [${id}]: ` + err);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
 
-export async function UpdateItem(
+export async function UpdateBox(
   id: number,
   initiatorAccount: AccountSliceState,
-  newItem: Item,
-): Promise<[boolean, Item]> {
+  newBox: Box,
+): Promise<[boolean, Box]> {
   let success: boolean;
 
   try {
@@ -196,47 +169,46 @@ export async function UpdateItem(
       initiatorAccount.role !== "MANAGER"
     ) {
       success = false;
-      alert("You Do Have Have Permission To Update This Item");
+      alert("You Do Have Have Permission To Update This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    if (id !== newItem.id) {
+    if (id !== newBox.id) {
       console.error(
-        `Input ID and New Item's ID Do Not Match:\n\tInput: ${id}, Entry: ${newItem.id}`,
+        `Input ID and New Box's ID Do Not Match:\n\tInput: ${id}, Entry: ${newBox.id}`,
       );
       throw new Error(
-        `Input ID and New Item's ID Do Not Match:\n\tInput: ${id}, Entry: ${newItem.id}`,
+        `Input ID and New Box's ID Do Not Match:\n\tInput: ${id}, Entry: ${newBox.id}`,
       );
     }
-    const response = await api.put<Item>(
-      apiHost + `/api/items/${id}`,
+    const response = await api.put<Box>(
+      apiHost + `/api/boxes/${id}`,
       {
-        id: newItem.id,
-        upc: newItem.upc,
-        name: newItem.name,
-        description: newItem.description,
-        weight: newItem.weight,
-        image: newItem.image!.data,
+        id: newBox.id,
+        upc: newBox.upc,
+        item: newBox.item,
+        dimensions: newBox.dimensions,
+        count: newBox.count,
       },
       {
         //withCredentials: true,
       },
     );
-    const itemData = response.data;
-    console.log("Raw API Response: ", itemData);
+    const boxData = response.data;
+    console.log("Raw API Response: ", boxData);
     if (response.status !== HttpStatusCode.Accepted) {
       success = false;
       throw new Error(`Unexpected Response Status`);
     }
     success = true;
-    return [success, itemData];
+    return [success, boxData];
   } catch (err) {
     console.error(err);
-    alert(`Error: Failed To Update Item [${id}]: ` + err);
+    alert(`Error: Failed To Update Box Entry [${id}]: ` + err);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
 
-export async function DeleteItem(
+export async function DeleteBox(
   initiatorAccount: AccountSliceState,
   id: number,
 ): Promise<[boolean, number]> {
@@ -248,10 +220,10 @@ export async function DeleteItem(
       initiatorAccount.role !== "MANAGER"
     ) {
       success = false;
-      alert("You Do Have Have Permission To Delete This Item!");
+      alert("You Do Have Have Permission To Delete This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.delete<number>(apiHost + `/api/items/${id}`, {
+    const response = await api.delete<number>(apiHost + `/api/boxes/${id}`, {
       //withCredentials: true,
     });
     const data = response.data;
@@ -264,7 +236,7 @@ export async function DeleteItem(
     return [success, data];
   } catch (err) {
     console.error(err);
-    alert(`Error: Failed To Delete Item [${id}]: ` + err);
+    alert(`Error: Failed To Delete Box Entry [${id}]: ` + err);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
