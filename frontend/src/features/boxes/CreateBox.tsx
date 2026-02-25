@@ -11,7 +11,6 @@ import type { Dimensions, Box, Item, ItemInfo } from "../../app/models";
 import { CreateBox } from "../../services/boxApi";
 import { GetItem, GetItemsList } from "../../services/itemApi";
 
-// TODO Add box api and dropdown of item-names for selecting item into box
 export default function CreateBoxForm() {
   const userRole = useAppSelector(selectRole);
   const appActive = useAppSelector(selectAppActive);

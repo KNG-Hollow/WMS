@@ -107,6 +107,13 @@ export default function Inventory() {
                       </p>
                     ))}
                   </td>
+                  <td>
+                    <button
+                      onClick={() => navigate(`./${mapInventory.id}/edit`)}
+                    >
+                      Edit
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
