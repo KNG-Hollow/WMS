@@ -4,10 +4,6 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "dev": "vite",
     "build": "react-router build",
@@ -55,5 +51,5 @@
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
   },
-  "packageManager": "yarn@4.12.0"
+  "packageManager": "yarn@4.13.0"
 }
