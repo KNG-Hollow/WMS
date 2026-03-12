@@ -19,6 +19,8 @@ This project uses _Postgresql_ for complex query capability and full ACID compli
   - // Backend Homepage To Give Restricted Summary Data To Admins
   - // autotls with Let's Encrypt for production ssl keys and certs
   - // Search Engine for Query Interface
+  - // Redis for session and page-caching to reduce server load
+  - // Redis to store online user information
 
 - FRONTEND
   - // Shipment Services

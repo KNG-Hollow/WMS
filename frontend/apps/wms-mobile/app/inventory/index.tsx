@@ -14,19 +14,19 @@ export default function AllInventory() {
         <SafeAreaView className="gap-y-4 w-3/4">
           <Pressable
             className="bg-cyan-600 rounded items-center p-2"
-            onPress={() => router.navigate("/inventory/items")}
+            onPress={() => router.navigate("/inventory/allItems")}
           >
             <Text>All Items</Text>
           </Pressable>
           <Pressable
             className="bg-cyan-600 rounded items-center p-2"
-            onPress={() => router.navigate("/inventory/all")}
+            onPress={() => router.navigate("/inventory/allInv")}
           >
             <Text>All Inventory</Text>
           </Pressable>
           <Pressable
             className="bg-cyan-600 rounded items-center p-2"
-            onPress={() => router.navigate("/inventory/add")}
+            onPress={() => router.navigate("/inventory/addInv")}
           >
             <Text>Add Inventory</Text>
           </Pressable>
