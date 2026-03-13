@@ -37,9 +37,9 @@ export default function StackLayout() {
         }}
       />
       <Stack.Screen
-        name="allItems"
+        name="viewInv"
         options={{
-          title: "All Items",
+          title: "View Inventory",
           headerShown: true,
           headerStyle: {
             backgroundColor: "#25292e",

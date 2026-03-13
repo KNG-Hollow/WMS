@@ -66,6 +66,7 @@ export default function Login() {
             value={usernameIn}
             placeholder="Username"
             placeholderTextColor="#fff"
+            autoCapitalize="none"
           />
           <TextInput
             className="border-2 text-center text-white border-white rounded-xl"
@@ -73,6 +74,7 @@ export default function Login() {
             value={passwordIn}
             placeholder="Password"
             placeholderTextColor="#fff"
+            autoCapitalize="none"
             secureTextEntry={true}
             onSubmitEditing={handleLogin}
           />
