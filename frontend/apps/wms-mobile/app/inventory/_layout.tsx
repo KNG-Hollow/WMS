@@ -15,7 +15,7 @@ export default function StackLayout() {
         }}
       />
       <Stack.Screen
-        name="addInv"
+        name="add"
         options={{
           title: "Add Inventory",
           headerShown: true,
@@ -26,7 +26,7 @@ export default function StackLayout() {
         }}
       />
       <Stack.Screen
-        name="allInv"
+        name="all"
         options={{
           title: "All Inventory",
           headerShown: true,
@@ -37,7 +37,7 @@ export default function StackLayout() {
         }}
       />
       <Stack.Screen
-        name="viewInv"
+        name="[inventoryId]"
         options={{
           title: "View Inventory",
           headerShown: true,

@@ -20,13 +20,13 @@ export default function AllInventory() {
           </Pressable>
           <Pressable
             className="bg-cyan-600 rounded items-center p-2"
-            onPress={() => router.navigate("/inventory/allInv")}
+            onPress={() => router.navigate("/inventory/all")}
           >
             <Text>All Inventory</Text>
           </Pressable>
           <Pressable
             className="bg-cyan-600 rounded items-center p-2"
-            onPress={() => router.navigate("/inventory/addInv")}
+            onPress={() => router.navigate("/inventory/add")}
           >
             <Text>Add Inventory</Text>
           </Pressable>

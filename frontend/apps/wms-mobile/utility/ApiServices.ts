@@ -113,7 +113,7 @@ export async function AuthorizeUser(
 }
 
 export async function CreateInventory(
-  initiatorAccount: Account,
+  initiatorAccount: UserState,
   id: number | null,
   item: Item,
   total: number,
@@ -129,8 +129,8 @@ export async function CreateInventory(
 
   try {
     if (
-      initiatorAccount.role.Value !== "ADMIN" &&
-      initiatorAccount.role.Value !== "MANAGER"
+      initiatorAccount.role !== "ADMIN" &&
+      initiatorAccount.role !== "MANAGER"
     ) {
       successful = false;
       alert("You Do Have Have Permission To Create Inventory Entries");
@@ -164,13 +164,13 @@ export async function CreateInventory(
 }
 
 export async function GetAllInventory(
-  initiatorAccount: Account,
+  initiatorAccount: UserState,
 ): Promise<[boolean, Inventory[]]> {
   let received: boolean;
   let allInventory: Inventory[];
 
   try {
-    if (!initiatorAccount.active) {
+    if (!initiatorAccount.userActive) {
       received = false;
       alert("User Account Is Not Active!");
       throw new Error("Initiator's Account Is Not Privileged");
@@ -195,7 +195,7 @@ export async function GetAllInventory(
 }
 
 export async function GetInventory(
-  initiatorAccount: Account,
+  initiatorAccount: UserState,
   id: number,
 ): Promise<[boolean, Inventory]> {
   let received: boolean;
@@ -203,8 +203,8 @@ export async function GetInventory(
 
   try {
     if (
-      initiatorAccount.role.Value !== "ADMIN" &&
-      initiatorAccount.role.Value !== "MANAGER"
+      initiatorAccount.role !== "ADMIN" &&
+      initiatorAccount.role !== "MANAGER"
     ) {
       received = false;
       alert("You Do Have Have Permission To View This Entry");
@@ -236,15 +236,15 @@ export async function GetInventory(
 
 export async function UpdateInventory(
   id: number,
-  initiatorAccount: Account,
+  initiatorAccount: UserState,
   newInventory: Inventory,
 ): Promise<[boolean, Inventory]> {
   let success: boolean;
 
   try {
     if (
-      initiatorAccount.role.Value !== "ADMIN" &&
-      initiatorAccount.role.Value !== "MANAGER"
+      initiatorAccount.role !== "ADMIN" &&
+      initiatorAccount.role !== "MANAGER"
     ) {
       success = false;
       alert("You Do Have Have Permission To Update This Entry");
@@ -286,15 +286,15 @@ export async function UpdateInventory(
 }
 
 export async function DeleteInventory(
-  initiatorAccount: Account,
+  initiatorAccount: UserState,
   id: number,
 ): Promise<[boolean, number]> {
   let success: boolean;
 
   try {
     if (
-      initiatorAccount.role.Value !== "ADMIN" &&
-      initiatorAccount.role.Value !== "MANAGER"
+      initiatorAccount.role !== "ADMIN" &&
+      initiatorAccount.role !== "MANAGER"
     ) {
       success = false;
       alert("You Do Have Have Permission To Delete This Entry");

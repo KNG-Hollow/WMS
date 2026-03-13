@@ -13,6 +13,10 @@ export default function AllItems() {
   const userData = globalCtx?.userData;
   const router = useRouter();
   const [allItems, setAllItems] = useState<Item[] | null>(null);
+  const [page, setPage] = useState<number>(0);
+  const itemsPerPage = 10;
+  const from = page * itemsPerPage;
+  const to = (page + 1) * itemsPerPage;
 
   useEffect(() => {
     if (globalCtx?.userData === undefined || !globalCtx?.appActive) {
@@ -43,7 +47,7 @@ export default function AllItems() {
   return (
     <SafeAreaProvider>
       <SafeAreaView className="flex flex-1">
-        <SafeAreaView className="">
+        <SafeAreaView className="flex-1">
           <DataTable className="">
             <DataTable.Header className="">
               <DataTable.Title>UPC</DataTable.Title>
@@ -56,9 +60,9 @@ export default function AllItems() {
                 <DataTable.Cell>{mapItem.upc}</DataTable.Cell>
                 <DataTable.Cell>{mapItem.name}</DataTable.Cell>
                 <DataTable.Cell>{mapItem.description}</DataTable.Cell>
-                <DataTable.Cell>
+                <DataTable.Cell className="justify-end">
                   <Link
-                    className="underline font-bold text-cyan-600"
+                    className="underline font-bold text-lg text-cyan-600"
                     href={{
                       pathname: "/products/[productId]",
                       params: { productId: mapItem.id! },
@@ -70,6 +74,17 @@ export default function AllItems() {
               </DataTable.Row>
             ))}
           </DataTable>
+        </SafeAreaView>
+        <SafeAreaView>
+          {allItems ? (
+            <DataTable.Pagination
+              className=""
+              page={page}
+              numberOfPages={Math.floor(allItems!.length / itemsPerPage)}
+              onPageChange={(page) => setPage(page)}
+              label={`${from + 1}-${to} of ${allItems?.length}`}
+            />
+          ) : null}
         </SafeAreaView>
       </SafeAreaView>
     </SafeAreaProvider>
