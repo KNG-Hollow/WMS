@@ -3,6 +3,7 @@
 import { GetAllInventory } from "@/utility/ApiServices";
 import { GlobalContext } from "@/utility/GlobalContext";
 import { Inventory, LocationData } from "@/utility/Models";
+import { Ionicons } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
@@ -48,7 +49,7 @@ export default function AllInventory() {
   }, [globalCtx, router, userData]);
 
   const displayLocations = (data: LocationData[]) => {
-    if (data.length < 3) {
+    if (data.length < 5) {
       return (
         <View className="flex-1">
           {data.map((entry: LocationData) => (
@@ -63,7 +64,7 @@ export default function AllInventory() {
     } else {
       return (
         <View className="flex flex-1">
-          {data.slice(0, 2).map((entry: LocationData) => (
+          {data.slice(0, 5).map((entry: LocationData) => (
             <View key={entry.area} className="flex-row gap-x-2">
               <Text className="font-medium">{entry.area}</Text>
               <Text>:</Text>
@@ -90,7 +91,7 @@ export default function AllInventory() {
               <DataTable.Row key={mapInv.id} className="flex flex-1">
                 <DataTable.Cell>
                   <Link
-                    className="font-bold text-cyan-600"
+                    className="flex-row"
                     href={{
                       pathname: "/inventory/[inventoryId]",
                       params: {
@@ -99,7 +100,14 @@ export default function AllInventory() {
                       },
                     }}
                   >
-                    {mapInv.item.name}
+                    <Text className="font-bold text-cyan-600 mr-0.5">
+                      {mapInv.item.name}
+                    </Text>
+                    <Ionicons
+                      style={{ color: "#0891b2" }}
+                      name="navigate"
+                      size={12}
+                    />
                   </Link>
                 </DataTable.Cell>
                 <DataTable.Cell>{mapInv.total}</DataTable.Cell>

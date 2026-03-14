@@ -18,31 +18,47 @@ export default function AboutScreen() {
     return () => clearInterval(interval);
   }, []);
 
+  const footer = () => {
+    const copyright = String.fromCodePoint(0x00a9);
+    const year = new Date().getFullYear();
+    const companyName = "Jaylen Holloway";
+
+    return (
+      <Text className="text-cyan-400">{`${copyright} ${year} ${companyName}. All Rights Reserved.`}</Text>
+    );
+  };
+
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="flex items-center flex-1 bg-darkbg justify-center align-middle">
-        <Text className="text-white">
-          Warehouse Management System - Inventory Manager
-        </Text>
-        <Text className="mt-15 text-white">Version: {version}</Text>
-        <Pressable
-          className="mt-10"
-          onPress={() =>
-            Linking.openURL(
-              "https://github.com/KNG-Hollow/WMS/tree/feature/wms-mobile/frontend/apps/wms-mobile",
-            )
-          }
-        >
-          <Ionicons name="logo-github" size={40} color="white" />
-        </Pressable>
-        <Text className="mt-20 text-white">
-          Connection:{"\t"}
-          {connected ? (
-            <Text className="text-green-600">Active</Text>
-          ) : (
-            <Text className="text-red-600">Inactive</Text>
-          )}
-        </Text>
+      <SafeAreaView className="flex flex-1 items-center justify-center align-middle bg-darkbg">
+        <SafeAreaView className="flex items-center flex-1 justify-center">
+          <Text className="text-white">
+            Warehouse Management System - Inventory Manager
+          </Text>
+          <Text className="mt-15 text-white">Version: {version}</Text>
+
+          <Text className="mt-20 text-white">
+            Connection:{"\t"}
+            {connected ? (
+              <Text className="text-green-600">Active</Text>
+            ) : (
+              <Text className="text-red-600">Inactive</Text>
+            )}
+          </Text>
+        </SafeAreaView>
+        <SafeAreaView className="mb-2">
+          <Pressable
+            className="mb-5 self-center"
+            onPress={() =>
+              Linking.openURL(
+                "https://github.com/KNG-Hollow/WMS/tree/feature/wms-mobile/frontend/apps/wms-mobile",
+              )
+            }
+          >
+            <Ionicons name="logo-github" size={40} color="white" />
+          </Pressable>
+          {footer()}
+        </SafeAreaView>
       </SafeAreaView>
     </SafeAreaProvider>
   );

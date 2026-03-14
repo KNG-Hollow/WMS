@@ -61,10 +61,10 @@ INSERT INTO shipment (
     )
 VALUES (
         6,
-        '{"name": "beans"}',
+        '{"name": "beans sup"}',
         'beans united',
         now(),
-        '{"beans": 1234}'
+        '{"demo item": 1234}'
     );
 INSERT INTO box (
         id,
@@ -76,14 +76,14 @@ INSERT INTO box (
 VALUES (
         6,
         '123456',
-        '{"id": 6,"upc": "12345","name": "beans","descriptions": "beans are beans","weight": 1.0, "image": null}',
+        '{"id": 6,"upc": "123456","name": "demo item","description": "demo item demo item demo item","weight": 1.0, "image": null}',
         '2x2x4',
         100
     );
 INSERT INTO inventory (id, item, total, locations)
 VALUES (
         6,
-        '{"id": 6, "upc": "123456", "name": "beans", "description": "beans are beans are beans.", "weight": 2.3, "image": null}',
+        '{"id": 6, "upc": "123456", "name": "demo item", "description": "demo item demo item demo item", "weight": 1.0, "image": null}',
         1234,
         '{"A21": 1234}'
     );

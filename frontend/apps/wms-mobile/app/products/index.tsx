@@ -3,8 +3,10 @@
 import { GetItems } from "@/utility/ApiServices";
 import { GlobalContext } from "@/utility/GlobalContext";
 import { Item } from "@/utility/Models";
+import { Ionicons } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
+import { Text } from "react-native";
 import { DataTable } from "react-native-paper";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -14,7 +16,7 @@ export default function AllItems() {
   const router = useRouter();
   const [allItems, setAllItems] = useState<Item[] | null>(null);
   const [page, setPage] = useState<number>(0);
-  const itemsPerPage = 10;
+  const itemsPerPage = 20;
   const from = page * itemsPerPage;
   const to = (page + 1) * itemsPerPage;
 
@@ -58,17 +60,19 @@ export default function AllItems() {
             {allItems?.map((mapItem: Item) => (
               <DataTable.Row key={mapItem.id} className="">
                 <DataTable.Cell>{mapItem.upc}</DataTable.Cell>
-                <DataTable.Cell>{mapItem.name}</DataTable.Cell>
+                <DataTable.Cell>
+                  <Text className="font-semibold">{mapItem.name}</Text>
+                </DataTable.Cell>
                 <DataTable.Cell>{mapItem.description}</DataTable.Cell>
-                <DataTable.Cell className="justify-end">
+                <DataTable.Cell className="justify-end right-4">
                   <Link
-                    className="underline font-bold text-lg text-cyan-600"
+                    className="text-cyan-600"
                     href={{
                       pathname: "/products/[productId]",
                       params: { productId: mapItem.id! },
                     }}
                   >
-                    View
+                    <Ionicons name="arrow-forward-circle" size={24} />
                   </Link>
                 </DataTable.Cell>
               </DataTable.Row>
