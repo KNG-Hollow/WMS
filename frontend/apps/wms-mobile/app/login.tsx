@@ -79,7 +79,7 @@ export default function Login() {
             onSubmitEditing={handleLogin}
           />
           <Pressable
-            className="bg-white p-3 w-20 self-center items-center rounded-lg"
+            className="mt-5 bg-white p-3 w-20 self-center items-center rounded-lg"
             onPress={handleLogin}
           >
             <Text className="font-bold">Submit</Text>

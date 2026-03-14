@@ -20,13 +20,19 @@ export default function Index() {
     }
   }, [globalCtx?.appActive, globalCtx?.userData, router]);
 
-  function capitalize(str: string | undefined): string {
+  const handleRestart = () => {
+    globalCtx?.resetError();
+    globalCtx?.resetJWT();
+    globalCtx?.resetUser();
+  };
+
+  const capitalize = (str: string | undefined): string => {
     if (str === undefined) {
       return "";
     } else {
       return str?.charAt(0).toUpperCase() + str?.slice(1);
     }
-  }
+  };
 
   return (
     <SafeAreaProvider>
@@ -50,6 +56,20 @@ export default function Index() {
           >
             <Text>Account</Text>
           </Pressable>
+          <Pressable
+            className="bg-darkbg rounded items-center p-2"
+            onPress={handleRestart}
+          >
+            <Text className="text-white">Logout</Text>
+          </Pressable>
+          {userData?.role === "ADMIN" ? (
+            <Pressable
+              className="bg-red-600 rounded items-center p-2"
+              onPress={() => router.navigate("/error")}
+            >
+              <Text>Error</Text>
+            </Pressable>
+          ) : null}
         </SafeAreaView>
       </SafeAreaView>
     </SafeAreaProvider>

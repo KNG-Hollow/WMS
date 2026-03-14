@@ -26,6 +26,7 @@ export default function RootLayout() {
           />
           <Stack.Screen name="inventory" options={{ headerShown: false }} />
           <Stack.Screen name="products" options={{ headerShown: false }} />
+          <Stack.Screen name="error" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="light" />
       </PaperProvider>

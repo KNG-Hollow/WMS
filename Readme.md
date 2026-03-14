@@ -21,10 +21,11 @@ This project uses _Postgresql_ for complex query capability and full ACID compli
   - // Search Engine for Query Interface
   - // Redis for session and page-caching to reduce server load
   - // Redis to store online user information
+  - // Redis to store image data
 
 - FRONTEND
   - // Shipment Services
   - // Query Interface for Search Engine
 
 - DATABASE
-  - // Relate box and inventory tables to the item table entry it references
+  - // Relate all tables to the columns they reference
