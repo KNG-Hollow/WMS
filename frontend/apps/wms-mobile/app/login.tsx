@@ -79,10 +79,10 @@ export default function Login() {
             onSubmitEditing={handleLogin}
           />
           <Pressable
-            className="mt-5 bg-white p-3 w-20 self-center items-center rounded-lg"
+            className="mt-5 bg-cyan-600 p-3 w-20 self-center items-center rounded-lg"
             onPress={handleLogin}
           >
-            <Text className="font-bold">Submit</Text>
+            <Text className="font-bold text-white">Submit</Text>
           </Pressable>
         </SafeAreaView>
       </SafeAreaView>

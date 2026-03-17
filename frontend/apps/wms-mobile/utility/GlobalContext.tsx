@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import { createContext, ReactNode, useState } from "react";
-import { ErrorState, UserState } from "./Models";
+import { ErrorState, ScannedCode, UserState } from "./Models";
 
 export interface GlobalContextType {
   jwToken: string | undefined;
   appActive: boolean | undefined;
   userData: UserState | undefined;
   errorData: ErrorState | undefined;
+  scannedCode: ScannedCode | undefined;
   insertJWT: (jwt: string) => void;
   resetJWT: () => void;
   activateApp: () => void;
@@ -16,6 +17,8 @@ export interface GlobalContextType {
   resetUser: () => void;
   insertError: (error: ErrorState) => void;
   resetError: () => void;
+  insertScan: (code: ScannedCode) => void;
+  resetScan: () => void;
 }
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
@@ -25,6 +28,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [appActive, setAppActive] = useState<boolean>();
   const [userData, setUserData] = useState<UserState>();
   const [errorData, setErrorData] = useState<ErrorState>();
+  const [scannedCode, setScannedCode] = useState<ScannedCode>();
 
   const insertJWT = (jwt: string) => {
     setJWToken(jwt);
@@ -54,6 +58,13 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setErrorData(undefined);
   };
 
+  const insertScan = (code: ScannedCode) => {
+    setScannedCode(code);
+  };
+  const resetScan = () => {
+    setScannedCode(undefined);
+  };
+
   return (
     <GlobalContext
       value={{
@@ -61,6 +72,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         appActive,
         userData,
         errorData,
+        scannedCode,
         insertJWT,
         resetJWT,
         activateApp,
@@ -69,6 +81,8 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         resetUser,
         insertError,
         resetError,
+        insertScan,
+        resetScan,
       }}
     >
       {children}

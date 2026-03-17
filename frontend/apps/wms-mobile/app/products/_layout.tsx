@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0
+
 import { Stack } from "expo-router";
 
 export default function StackLayout() {

@@ -104,3 +104,8 @@ export interface LocationData {
   area: string;
   count: number;
 }
+
+export interface ScannedCode {
+  type: string;
+  value: string;
+}
