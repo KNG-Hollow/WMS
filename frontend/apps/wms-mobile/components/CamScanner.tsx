@@ -33,8 +33,7 @@ export default function CamScanner({
         console.log(`Scanned Type: ${code.type}`);
         console.log(`Scanned Value: ${code.value}`);
         const scannedType = code.type;
-        const scannedValue =
-          scannedType === "upc-a" ? code.value?.slice(1)! : code.value!;
+        const scannedValue = code.value!;
         globalctx?.insertScan({ type: scannedType, value: scannedValue });
         scannerActive(false);
         console.log("Scanner Deactivated!");

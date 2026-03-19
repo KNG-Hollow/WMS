@@ -8,6 +8,7 @@ import type {
   Account,
   Inventory,
   Item,
+  ItemInfo,
   JwtObject,
   LocationData,
   UserState,
@@ -349,6 +350,37 @@ export async function GetAccount(id: number): Promise<[boolean, Account]> {
 }
 
 // Items API
+
+export async function GetItemsList(
+  initiatorAccount: UserState,
+): Promise<[boolean, ItemInfo[]]> {
+  let received: boolean;
+  let itemsInfo: ItemInfo[];
+
+  try {
+    if (!initiatorAccount.userActive) {
+      received = false;
+      alert("User Account Is Not Active!");
+      throw new Error("Initiator's Account Is Not Privileged");
+    }
+    const response = await api.get<ItemInfo[]>(apiHost + "/api/items/list", {
+      //withCredentials: true,
+    });
+    const data = response.data;
+    console.log("Raw API Response: ", data);
+    if (response.status !== HttpStatusCode.Ok) {
+      received = false;
+      throw new Error("Response Status: NOT 'Ok'");
+    }
+    received = true;
+    itemsInfo = data;
+    return [received, itemsInfo];
+  } catch (err) {
+    console.error(err);
+    alert("Error: Failed To Get Item Names!: " + err);
+    throw new Error("Failed To Query RESTapi: " + err);
+  }
+}
 
 export async function GetItems(
   initiatorAccount: UserState,

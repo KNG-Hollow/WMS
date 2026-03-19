@@ -70,7 +70,9 @@ export interface Item {
 
 export interface ItemInfo {
   id: number;
+  upc: string;
   name: string;
+  count: number;
 }
 
 export interface ImageInfo {

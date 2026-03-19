@@ -1,22 +1,31 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { PingHealth } from "@/utility/ApiServices";
+import { GlobalContext } from "@/utility/GlobalContext";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
+import { useContext, useEffect } from "react";
 import { Linking, Pressable, Text } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { version } from "../../package.json";
 
 export default function AboutScreen() {
-  const [connected, setConnected] = useState<boolean>(true);
+  //const [connected, setConnected] = useState<boolean>(true);
+  const globalCtx = useContext(GlobalContext);
+  const connected = globalCtx?.APIActive;
+  const router = useRouter();
 
   useEffect(() => {
+    if (!globalCtx?.appActive || globalCtx.userData === undefined) {
+      router.navigate("/login");
+    }
+    /*
     const interval = setInterval(async () => {
       setConnected(await PingHealth());
     }, 60000);
 
     return () => clearInterval(interval);
-  }, []);
+    */
+  }, [globalCtx?.appActive, globalCtx?.userData, router]);
 
   const footer = () => {
     const copyright = String.fromCodePoint(0x00a9);

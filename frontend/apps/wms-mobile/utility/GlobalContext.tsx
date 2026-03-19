@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { PingHealth } from "./ApiServices";
 import { ErrorState, ScannedCode, UserState } from "./Models";
 
 export interface GlobalContextType {
@@ -9,6 +10,7 @@ export interface GlobalContextType {
   userData: UserState | undefined;
   errorData: ErrorState | undefined;
   scannedCode: ScannedCode | undefined;
+  APIActive: boolean;
   insertJWT: (jwt: string) => void;
   resetJWT: () => void;
   activateApp: () => void;
@@ -29,6 +31,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [userData, setUserData] = useState<UserState>();
   const [errorData, setErrorData] = useState<ErrorState>();
   const [scannedCode, setScannedCode] = useState<ScannedCode>();
+  const [APIActive, setAPIActive] = useState<boolean>(true);
 
   const insertJWT = (jwt: string) => {
     setJWToken(jwt);
@@ -65,6 +68,14 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setScannedCode(undefined);
   };
 
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      setAPIActive(await PingHealth());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  });
+
   return (
     <GlobalContext
       value={{
@@ -73,6 +84,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         userData,
         errorData,
         scannedCode,
+        APIActive,
         insertJWT,
         resetJWT,
         activateApp,

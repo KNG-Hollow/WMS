@@ -4,7 +4,7 @@ import { AuthorizeUser } from "@/utility/ApiServices";
 import { GlobalContext } from "@/utility/GlobalContext";
 import { JwtObject } from "@/utility/Models";
 import { router } from "expo-router";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { Pressable, Text, TextInput } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -12,6 +12,7 @@ export default function Login() {
   const [usernameIn, setUsernameValue] = useState("");
   const [passwordIn, setPasswordValue] = useState("");
   const globalCtx = useContext(GlobalContext);
+  const passwordRef = useRef<TextInput | null>(null);
 
   let exists: boolean;
   let token: string;
@@ -67,9 +68,14 @@ export default function Login() {
             placeholder="Username"
             placeholderTextColor="#fff"
             autoCapitalize="none"
+            autoFocus={true}
+            returnKeyType="next"
+            submitBehavior="submit"
+            onSubmitEditing={() => passwordRef.current?.focus()}
           />
           <TextInput
             className="border-2 text-center text-white border-white rounded-xl"
+            ref={passwordRef}
             onChangeText={setPasswordValue}
             value={passwordIn}
             placeholder="Password"
