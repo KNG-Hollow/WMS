@@ -10,12 +10,12 @@ import { version } from "../../package.json";
 
 export default function AboutScreen() {
   //const [connected, setConnected] = useState<boolean>(true);
-  const globalCtx = useContext(GlobalContext);
-  const connected = globalCtx?.APIActive;
+  const globalctx = useContext(GlobalContext);
+  const connected = globalctx?.APIActive;
   const router = useRouter();
 
   useEffect(() => {
-    if (!globalCtx?.appActive || globalCtx.userData === undefined) {
+    if (!globalctx?.appActive || globalctx.userData === undefined) {
       router.navigate("/login");
     }
     /*
@@ -25,7 +25,7 @@ export default function AboutScreen() {
 
     return () => clearInterval(interval);
     */
-  }, [globalCtx?.appActive, globalCtx?.userData, router]);
+  }, [globalctx?.appActive, globalctx?.userData, router]);
 
   const footer = () => {
     const copyright = String.fromCodePoint(0x00a9);

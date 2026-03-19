@@ -3,12 +3,18 @@
 import CamScanner from "@/components/CamScanner";
 import { GetItemsList } from "@/utility/ApiServices";
 import { GlobalContext } from "@/utility/GlobalContext";
-import { ItemInfo } from "@/utility/Models";
+import { Inventory, Item, ItemInfo } from "@/utility/Models";
 import { Ionicons } from "@expo/vector-icons";
-import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { DataTable } from "react-native-paper";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -76,7 +82,7 @@ export default function AddInventory() {
         id: tempItem.at(0)!.id,
         upc: tempItem.at(0)!.upc,
         name: tempItem.at(0)!.name,
-        count: tempItem.at(0)!.count,
+        count: (tempItem.at(0)!.count = 0),
       },
     ]);
 
@@ -84,9 +90,9 @@ export default function AddInventory() {
     setProductValue("");
   };
 
-  const handleTextSubmit = () => {
+  const handleTextSubmit = (productName: string) => {
     const tempItem = productList!.filter(
-      (item) => item.name === productIn.trim(),
+      (item) => item.name === productName.trim(),
     );
     if (tempItem.length === 0) {
       alert("Product Name Not Recognized!");
@@ -121,7 +127,7 @@ export default function AddInventory() {
           id: tempItem.at(0)!.id,
           upc: tempItem.at(0)!.upc,
           name: tempItem.at(0)!.name,
-          count: tempItem.at(0)!.count,
+          count: (tempItem.at(0)!.count = 0),
         },
       ]);
     } else {
@@ -186,6 +192,42 @@ export default function AddInventory() {
     });
   };
 
+  const handleSubmit = async () => {
+    let success: boolean;
+    let responseItem: Item;
+    let responseEntry: Inventory;
+
+    if (productQueue.length === 0) {
+      alert("Queue Is Empty!");
+      return;
+    } else if (productQueue.filter((v) => v.count < 1).length > 0) {
+      alert("Unit Count Cannot Be Empty, Please Adjust");
+      return;
+    }
+    console.log("Submit Query Pressed!");
+    alert("Submit Query Pressed!");
+  };
+
+  const SearchDropdown: React.FC<{ options: ItemInfo[] }> = ({ options }) => {
+    return (
+      <FlatList
+        className=""
+        data={filteredOptions}
+        renderItem={({ item }) => (
+          <Pressable
+            className="border-2 border-cyan-700 items-center py-1 bg-slate-300"
+            onPress={() => {
+              handleTextSubmit(item.name);
+            }}
+          >
+            <Text className="font-semibold">{item.name}</Text>
+          </Pressable>
+        )}
+        keyExtractor={(item) => item.id.toString()}
+      />
+    );
+  };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView className="flex flex-1 items-center">
@@ -193,10 +235,6 @@ export default function AddInventory() {
           <TextInput
             className="border-2 border-cyan-600"
             onChangeText={(text: string) => {
-              if (scannerValue) {
-                handleBarcodeSubmit();
-                return;
-              }
               setProductValue(text);
               setFilteredOptions(
                 productList?.filter((option) =>
@@ -213,31 +251,16 @@ export default function AddInventory() {
             onSubmitEditing={handleQueueSubmit}
           />
           {productIn && !scannerValue && (
-            <Picker
-              selectedValue={productIn}
-              onValueChange={(v, i) => {
-                // Runs when item is selected
-                setProductValue(v);
-              }}
-              mode="dropdown"
-              numberOfLines={10}
-            >
-              {filteredOptions &&
-                filteredOptions.map((option, index) => (
-                  <Picker.Item
-                    key={index}
-                    label={option.name}
-                    value={option.name}
-                  />
-                ))}
-            </Picker>
+            <SearchDropdown options={filteredOptions!} />
           )}
         </SafeAreaView>
 
         {productQueue.length > 0 ? (
-          <SafeAreaView className=" w-11/12 flex flex-1 items-center border-2 border-cyan-600">
-            <Text className="font-semibold">Queue</Text>
-            <DataTable className="">
+          <SafeAreaView className="bg-slate-400 w-11/12 mb-10 flex flex-1 items-center border-2 border-cyan-500">
+            <Text className="w-full py-2 border-b-2 border-cyan-500 text-center font-semibold">
+              Queue
+            </Text>
+            <DataTable className="flex-1">
               <DataTable.Header className="">
                 <DataTable.Title>
                   <Text className="font-bold">Name</Text>
@@ -246,48 +269,55 @@ export default function AddInventory() {
                   <Text className="font-bold">Count</Text>
                 </DataTable.Title>
               </DataTable.Header>
-              {productQueue.map((mapQueue, mapIndex) => (
-                <DataTable.Row key={mapIndex} className="flex">
-                  <DataTable.Cell className="">
-                    <Text>{mapQueue.name}</Text>
-                  </DataTable.Cell>
-                  <DataTable.Cell className="">
-                    <View className="items-center flex-row">
-                      <Pressable
-                        className="py-1 px-3 rounded-full bg-cyan-500"
-                        onPress={() => handleDecrement(mapIndex)}
-                      >
-                        <Text className="font-extrabold">-</Text>
+              <ScrollView className="max-h-fix">
+                {productQueue.map((mapQueue, mapIndex) => (
+                  <DataTable.Row key={mapIndex} className="flex">
+                    <DataTable.Cell className="">
+                      <Text>{mapQueue.name}</Text>
+                    </DataTable.Cell>
+                    <DataTable.Cell className="justify-center">
+                      <View className="items-center flex-row">
+                        <Pressable
+                          className="py-1 px-3 rounded-full bg-cyan-500"
+                          onPress={() => handleDecrement(mapIndex)}
+                        >
+                          <Text className="font-extrabold">-</Text>
+                        </Pressable>
+                        <TextInput
+                          className="border mx-2"
+                          onChangeText={(text: string) =>
+                            handleCountChange(mapIndex, parseInt(text) || 0)
+                          }
+                          value={mapQueue.count.toString()}
+                          placeholder="0"
+                          placeholderTextColor="#fff"
+                          keyboardType="number-pad"
+                          submitBehavior="blurAndSubmit"
+                        />
+                        <Pressable
+                          className="py-1 px-3 rounded-full bg-cyan-500"
+                          onPress={() => {
+                            handleIncrement(mapIndex);
+                          }}
+                        >
+                          <Text className="font-extrabold">+</Text>
+                        </Pressable>
+                      </View>
+                    </DataTable.Cell>
+                    <DataTable.Cell className="justify-end right-4">
+                      <Pressable onPress={() => handleQueueRemove(mapIndex)}>
+                        <Ionicons name="trash" color="red" size={24} />
                       </Pressable>
-                      <TextInput
-                        className="border mx-2"
-                        onChangeText={(text: string) =>
-                          handleCountChange(mapIndex, parseInt(text) || 0)
-                        }
-                        value={mapQueue.count.toString()}
-                        placeholder="0"
-                        placeholderTextColor="#fff"
-                        keyboardType="number-pad"
-                        submitBehavior="blurAndSubmit"
-                      />
-                      <Pressable
-                        className="py-1 px-3 rounded-full bg-cyan-500"
-                        onPress={() => {
-                          console.log("Increment Button Pressed!");
-                          handleIncrement(mapIndex);
-                        }}
-                      >
-                        <Text className="font-extrabold">+</Text>
-                      </Pressable>
-                    </View>
-                  </DataTable.Cell>
-                  <DataTable.Cell className="justify-end right-4">
-                    <Pressable onPress={() => handleQueueRemove(mapIndex)}>
-                      <Ionicons name="trash" color="red" size={24} />
-                    </Pressable>
-                  </DataTable.Cell>
-                </DataTable.Row>
-              ))}
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                ))}
+              </ScrollView>
+              <Pressable
+                className="self-center top-5  bg-cyan-600 rounded p-2"
+                onPress={handleSubmit}
+              >
+                <Text>Submit</Text>
+              </Pressable>
             </DataTable>
           </SafeAreaView>
         ) : null}
@@ -299,7 +329,7 @@ export default function AddInventory() {
             value={scannerValue?.value!}
           />
         ) : (
-          <SafeAreaView className="w-3/4 absolute bottom-20">
+          <SafeAreaView className="w-3/4 mt-auto">
             <Pressable
               className="bg-cyan-600 justify-center rounded p-3 flex-row gap-x-1"
               onPress={() => {

@@ -8,22 +8,22 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   const router = useRouter();
-  const globalCtx = useContext(GlobalContext);
-  let userData = globalCtx?.userData;
+  const globalctx = useContext(GlobalContext);
+  let userData = globalctx?.userData;
 
   useEffect(() => {
-    if (!globalCtx?.appActive || globalCtx?.userData === undefined) {
+    if (!globalctx?.appActive || globalctx?.userData === undefined) {
       const timeoutId = setTimeout(() => {
         router.navigate("/login");
       }, 100);
       return () => clearTimeout(timeoutId);
     }
-  }, [globalCtx?.appActive, globalCtx?.userData, router]);
+  }, [globalctx?.appActive, globalctx?.userData, router]);
 
   const handleRestart = () => {
-    globalCtx?.resetError();
-    globalCtx?.resetJWT();
-    globalCtx?.resetUser();
+    globalctx?.resetError();
+    globalctx?.resetJWT();
+    globalctx?.resetUser();
   };
 
   const capitalize = (str: string | undefined): string => {
