@@ -24,12 +24,14 @@ export default function AllInventory() {
           >
             <Text>All Inventory</Text>
           </Pressable>
+          {/*
           <Pressable
             className="bg-cyan-600 rounded items-center p-2"
             onPress={() => router.navigate("/products")}
           >
             <Text>All Products</Text>
           </Pressable>
+          */}
         </SafeAreaView>
       </SafeAreaView>
     </SafeAreaProvider>

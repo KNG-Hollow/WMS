@@ -52,17 +52,17 @@ export default function AllItems() {
         <SafeAreaView className="flex-1">
           <DataTable className="">
             <DataTable.Header className="">
-              <DataTable.Title>UPC</DataTable.Title>
               <DataTable.Title>Name</DataTable.Title>
+              <DataTable.Title>UPC</DataTable.Title>
               <DataTable.Title>Description</DataTable.Title>
               <DataTable.Title>{""}</DataTable.Title>
             </DataTable.Header>
             {allItems?.map((mapItem: Item) => (
               <DataTable.Row key={mapItem.id} className="">
-                <DataTable.Cell>{mapItem.upc}</DataTable.Cell>
                 <DataTable.Cell>
                   <Text className="font-semibold">{mapItem.name}</Text>
                 </DataTable.Cell>
+                <DataTable.Cell>{mapItem.upc}</DataTable.Cell>
                 <DataTable.Cell>{mapItem.description}</DataTable.Cell>
                 <DataTable.Cell className="justify-end right-4">
                   <Link

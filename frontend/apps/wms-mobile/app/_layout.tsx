@@ -11,8 +11,11 @@ export default function RootLayout() {
     <GlobalProvider>
       <PaperProvider>
         <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(home)" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
+          {/* 
+          <Stack.Screen name="inventory" options={{ headerShown: false }} />
+          <Stack.Screen name="products" options={{ headerShown: false }} />
           <Stack.Screen
             name="account"
             options={{
@@ -24,8 +27,8 @@ export default function RootLayout() {
               headerTintColor: "#fff",
             }}
           />
-          <Stack.Screen name="inventory" options={{ headerShown: false }} />
-          <Stack.Screen name="products" options={{ headerShown: false }} />
+          <Stack.Screen name="about" options={{ headerShown: false }} />
+          */}
           <Stack.Screen name="error" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="light" />

@@ -44,6 +44,7 @@ export default function Index() {
           </Text>
         </SafeAreaView>
         <SafeAreaView className="gap-y-4">
+          {/*
           <Pressable
             className="bg-cyan-600 rounded items-center p-2"
             onPress={() => router.navigate("/inventory")}
@@ -56,6 +57,7 @@ export default function Index() {
           >
             <Text>Account</Text>
           </Pressable>
+          */}
           <Pressable
             className="bg-darkbg rounded items-center p-2"
             onPress={handleRestart}

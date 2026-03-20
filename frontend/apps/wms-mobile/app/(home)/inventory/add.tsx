@@ -206,7 +206,7 @@ export default function AddInventory() {
       alert("Queue Is Empty!");
       return;
     } else if (productQueue.filter((v) => v.count < 1).length > 0) {
-      alert("Unit Count Cannot Be Empty, Please Adjust");
+      alert("Unit Count Cannot Be Empty, Please Adjust!");
       return;
     }
 
@@ -278,7 +278,28 @@ export default function AddInventory() {
   return (
     <SafeAreaProvider>
       <SafeAreaView className="flex flex-1 items-center">
-        <SafeAreaView className="h-1/5 w-11/12 mt-5">
+        {scannerActive ? (
+          <CamScanner
+            scannerActive={setScannerActive}
+            type={scannerValue?.type!}
+            value={scannerValue?.value!}
+          />
+        ) : (
+          <SafeAreaView className="w-11/12 mt-5">
+            <Pressable
+              className="bg-cyan-600 justify-center rounded p-3 flex-row gap-x-1"
+              onPress={() => {
+                console.log("Scanner Activated!");
+                setScannerActive(true);
+              }}
+            >
+              <Text className="text-white font-semibold">Activate Scanner</Text>
+              <Ionicons name="barcode" color="white" size={22} />
+            </Pressable>
+          </SafeAreaView>
+        )}
+
+        <SafeAreaView className="h-1/5 w-11/12">
           <TextInput
             className="border-2 border-cyan-600"
             onChangeText={(text: string) => {
@@ -368,27 +389,6 @@ export default function AddInventory() {
             </DataTable>
           </SafeAreaView>
         ) : null}
-
-        {scannerActive ? (
-          <CamScanner
-            scannerActive={setScannerActive}
-            type={scannerValue?.type!}
-            value={scannerValue?.value!}
-          />
-        ) : (
-          <SafeAreaView className="w-3/4 mt-auto">
-            <Pressable
-              className="bg-cyan-600 justify-center rounded p-3 flex-row gap-x-1"
-              onPress={() => {
-                console.log("Scanner Activated!");
-                setScannerActive(true);
-              }}
-            >
-              <Text className="text-white font-semibold">Activate Scanner</Text>
-              <Ionicons name="barcode" color="white" size={22} />
-            </Pressable>
-          </SafeAreaView>
-        )}
       </SafeAreaView>
     </SafeAreaProvider>
   );
