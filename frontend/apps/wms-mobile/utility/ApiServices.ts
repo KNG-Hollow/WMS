@@ -204,8 +204,8 @@ export async function GetInventory(
 
   try {
     if (
-      initiatorAccount.role !== "ADMIN" &&
-      initiatorAccount.role !== "MANAGER"
+      initiatorAccount.role === "CUSTOMER" ||
+      initiatorAccount.role === "SUPPLIER"
     ) {
       received = false;
       alert("You Do Have Have Permission To View This Entry");
@@ -244,8 +244,8 @@ export async function UpdateInventory(
 
   try {
     if (
-      initiatorAccount.role !== "ADMIN" &&
-      initiatorAccount.role !== "MANAGER"
+      initiatorAccount.role === "CUSTOMER" ||
+      initiatorAccount.role === "SUPPLIER"
     ) {
       success = false;
       alert("You Do Have Have Permission To Update This Entry");

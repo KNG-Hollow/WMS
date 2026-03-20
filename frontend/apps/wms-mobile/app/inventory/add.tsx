@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import CamScanner from "@/components/CamScanner";
-import { GetItemsList } from "@/utility/ApiServices";
+import {
+  GetInventory,
+  GetItemsList,
+  UpdateInventory,
+} from "@/utility/ApiServices";
 import { GlobalContext } from "@/utility/GlobalContext";
-import { Inventory, Item, ItemInfo } from "@/utility/Models";
+import { Inventory, ItemInfo } from "@/utility/Models";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   FlatList,
   Pressable,
@@ -40,9 +44,6 @@ export default function AddInventory() {
     if (globalctx?.errorData?.active) {
       router.navigate("/error");
     }
-    if (scannerValue !== undefined) {
-      setProductValue(scannerValue.value);
-    }
 
     const fetchProductList = async () => {
       console.log("Attempting to get product list...");
@@ -68,8 +69,10 @@ export default function AddInventory() {
     fetchProductList();
   }, [globalctx, router, scannerValue, userData]);
 
-  const handleBarcodeSubmit = () => {
-    const tempItem = productList!.filter((item) => item.upc === productIn);
+  const handleBarcodeSubmit = useCallback(() => {
+    const tempItem = productList!.filter(
+      (item) => item.upc === globalctx?.scannedCode?.value,
+    );
     if (tempItem.length === 0) {
       alert("Product Barcode Not Recognized!");
       globalctx?.resetScan();
@@ -88,7 +91,13 @@ export default function AddInventory() {
 
     globalctx?.resetScan();
     setProductValue("");
-  };
+  }, [globalctx, productList, productQueue]);
+
+  useEffect(() => {
+    if (scannerValue !== undefined) {
+      handleBarcodeSubmit();
+    }
+  }, [handleBarcodeSubmit, scannerValue]);
 
   const handleTextSubmit = (productName: string) => {
     const tempItem = productList!.filter(
@@ -193,10 +202,6 @@ export default function AddInventory() {
   };
 
   const handleSubmit = async () => {
-    let success: boolean;
-    let responseItem: Item;
-    let responseEntry: Inventory;
-
     if (productQueue.length === 0) {
       alert("Queue Is Empty!");
       return;
@@ -204,8 +209,50 @@ export default function AddInventory() {
       alert("Unit Count Cannot Be Empty, Please Adjust");
       return;
     }
-    console.log("Submit Query Pressed!");
-    alert("Submit Query Pressed!");
+
+    console.log("Attempting to update inventory...");
+    try {
+      for (const entry of productQueue) {
+        const [getSuccess, prevInv] = await GetInventory(userData!, entry.id);
+        if (!getSuccess || prevInv === null) {
+          console.error(`Failed To Get Inventory At Id:  ${entry.id}`);
+          return;
+        }
+        let prevLocation = prevInv.locations.find((v) => v.area === "Stock");
+        if (prevLocation) {
+          prevLocation.count += entry.count;
+        } else {
+          console.error("Stock Location Not In Database Entry");
+          return;
+        }
+        const updatedInv: Inventory = {
+          id: prevInv.id,
+          item: prevInv.item,
+          total: prevInv.total + entry.count,
+          locations: prevInv.locations,
+        };
+        const [updateSuccess, response] = await UpdateInventory(
+          entry.id,
+          userData!,
+          updatedInv,
+        );
+        if (!updateSuccess || response === null) {
+          console.error("Update Response Not Successful");
+          return;
+        }
+        console.log("Updated Stock: ", entry.name);
+      }
+      setProductQueue([]);
+      console.log("Successfully Processed Queue!");
+      alert("Successfully Processed Queue!");
+    } catch (err) {
+      console.error("ApiService Failed To Update Inventory: " + err);
+      globalctx?.insertError({
+        title: "Failed To Update Inventory",
+        message: `${err}`,
+        active: true,
+      });
+    }
   };
 
   const SearchDropdown: React.FC<{ options: ItemInfo[] }> = ({ options }) => {
