@@ -51,28 +51,33 @@ export default function ViewAccount() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="flex flex-1 justify-center items-center">
+      <SafeAreaView
+        style={{
+          experimental_backgroundImage: "linear-gradient(#0891b2, #25292e)",
+        }}
+        className="flex flex-1 justify-center items-center"
+      >
         <SafeAreaView>
-          <Text className="font-semibold text-lg mb-20">{`${capitalize(account?.firstname)} ${capitalize(account?.lastname)}`}</Text>
+          <Text className="text-white font-semibold text-lg mb-20">{`${capitalize(account?.firstname)} ${capitalize(account?.lastname)}`}</Text>
         </SafeAreaView>
         <SafeAreaView className="gap-y-4">
-          <Text>
+          <Text className="text-white">
             <Text className="font-semibold">Username: {"\t\t"}</Text>
             <Text>{account?.username}</Text>
           </Text>
-          <Text>
+          <Text className="text-white">
             <Text className="font-semibold">Email: {"\t\t\t\t\t\t"}</Text>
             <Text>{account?.email}</Text>
           </Text>
-          <Text>
+          <Text className="text-white">
             <Text className="font-semibold">Phone: {"\t\t\t\t\t"}</Text>
             <Text>{account?.phone}</Text>
           </Text>
-          <Text>
+          <Text className="text-white">
             <Text className="font-semibold">Role: {"\t\t\t\t\t\t\t"}</Text>
             <Text>{account?.role.Value}</Text>
           </Text>
-          <Text>
+          <Text className="text-white">
             <Text className="font-semibold">Created: {"\t\t\t\t"}</Text>
             <Text>{account?.created.toString()}</Text>
           </Text>

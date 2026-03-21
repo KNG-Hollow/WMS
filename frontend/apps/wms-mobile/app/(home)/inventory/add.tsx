@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import {
+  Alert,
   FlatList,
   Pressable,
   ScrollView,
@@ -255,6 +256,23 @@ export default function AddInventory() {
     }
   };
 
+  const showConfirmDialog = () => {
+    Alert.alert(
+      "Confirm?",
+      "Do you commit to sending these products to inventory?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Submit",
+          onPress: () => {
+            handleSubmit();
+          },
+          style: "default",
+        },
+      ],
+    );
+  };
+
   const SearchDropdown: React.FC<{ options: ItemInfo[] }> = ({ options }) => {
     return (
       <FlatList
@@ -382,7 +400,7 @@ export default function AddInventory() {
               </ScrollView>
               <Pressable
                 className="self-center top-5  bg-cyan-600 rounded p-2"
-                onPress={handleSubmit}
+                onPress={showConfirmDialog}
               >
                 <Text>Submit</Text>
               </Pressable>

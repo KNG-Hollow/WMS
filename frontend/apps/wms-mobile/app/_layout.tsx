@@ -13,22 +13,6 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="(home)" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
-          {/* 
-          <Stack.Screen name="inventory" options={{ headerShown: false }} />
-          <Stack.Screen name="products" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="account"
-            options={{
-              title: "Account",
-              headerShown: true,
-              headerStyle: {
-                backgroundColor: "#25292e",
-              },
-              headerTintColor: "#fff",
-            }}
-          />
-          <Stack.Screen name="about" options={{ headerShown: false }} />
-          */}
           <Stack.Screen name="error" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="light" />

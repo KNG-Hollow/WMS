@@ -82,7 +82,7 @@ export default function Login() {
             placeholderTextColor="#fff"
             autoCapitalize="none"
             secureTextEntry={true}
-            onSubmitEditing={handleLogin}
+            submitBehavior="blurAndSubmit"
           />
           <Pressable
             className="mt-5 bg-cyan-600 p-3 w-20 self-center items-center rounded-lg"

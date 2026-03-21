@@ -1,10 +1,46 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { GlobalContext } from "@/utility/GlobalContext";
+import { useRouter } from "expo-router";
 import { Drawer } from "expo-router/drawer";
+import { useContext } from "react";
+import { Pressable, Text, View } from "react-native";
 
 export default function Layout() {
+  const globalctx = useContext(GlobalContext);
+  const router = useRouter();
+  const handleRestart = () => {
+    router.navigate("/login");
+    setTimeout(() => {
+      globalctx?.resetError();
+      globalctx?.resetJWT();
+      globalctx?.resetUser();
+    }, 500);
+  };
+
   return (
-    <Drawer>
+    <Drawer
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#25292e",
+        },
+        headerShadowVisible: false,
+        headerTintColor: "#fff",
+        drawerStyle: {
+          backgroundColor: "#0891b2",
+        },
+        drawerInactiveTintColor: "#fff",
+        drawerActiveBackgroundColor: "white",
+        drawerActiveTintColor: "#0891b2",
+        headerRight: () => (
+          <View className="flex-row mr-5">
+            <Pressable onPress={handleRestart}>
+              <Text className="text-white font-semibold text-lg">Logout</Text>
+            </Pressable>
+          </View>
+        ),
+      }}
+    >
       <Drawer.Screen
         name="index"
         options={{
@@ -43,51 +79,5 @@ export default function Layout() {
         }}
       />
     </Drawer>
-
-    /*
-    <Tabs
-        screenOptions={{
-          tabBarActiveTintColor: "#0092b8",
-          headerStyle: {
-            backgroundColor: "#25292e",
-          },
-          headerShadowVisible: false,
-          headerTintColor: "#fff",
-          tabBarStyle: {
-            backgroundColor: "#25292e",
-          },
-        }}
-      >
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: "Home",
-            tabBarIcon: ({ color, focused }) => (
-              <Ionicons
-                name={focused ? "home-sharp" : "home-outline"}
-                color={color}
-                size={24}
-              />
-            ),
-          }}
-        />
-
-        <Tabs.Screen
-          name="about"
-          options={{
-            title: "About",
-            tabBarIcon: ({ color, focused }) => (
-              <Ionicons
-                name={
-                  focused ? "information-circle" : "information-circle-outline"
-                }
-                color={color}
-                size={24}
-              />
-            ),
-          }}
-        />
-      </Tabs>
-    */
   );
 }

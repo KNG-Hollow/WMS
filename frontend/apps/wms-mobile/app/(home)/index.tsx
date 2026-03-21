@@ -20,10 +20,13 @@ export default function Index() {
     }
   }, [globalctx?.appActive, globalctx?.userData, router]);
 
-  const handleRestart = () => {
-    globalctx?.resetError();
-    globalctx?.resetJWT();
-    globalctx?.resetUser();
+  const handleLogout = () => {
+    router.navigate("/login");
+    setTimeout(() => {
+      globalctx?.resetError();
+      globalctx?.resetJWT();
+      globalctx?.resetUser();
+    });
   };
 
   const capitalize = (str: string | undefined): string => {
@@ -36,9 +39,14 @@ export default function Index() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="flex items-center flex-1 justify-center align-middle">
+      <SafeAreaView
+        style={{
+          experimental_backgroundImage: "linear-gradient(#0891b2, #25292e)",
+        }}
+        className="flex items-center flex-1 justify-center align-middle"
+      >
         <SafeAreaView className="mb-20">
-          <Text className="font-semibold text-lg">
+          <Text className="font-semibold text-lg text-white">
             Hello{" "}
             <Text className="underline">{capitalize(userData?.username)}</Text>
           </Text>
@@ -60,7 +68,7 @@ export default function Index() {
           */}
           <Pressable
             className="bg-darkbg rounded items-center p-2"
-            onPress={handleRestart}
+            onPress={handleLogout}
           >
             <Text className="text-white">Logout</Text>
           </Pressable>

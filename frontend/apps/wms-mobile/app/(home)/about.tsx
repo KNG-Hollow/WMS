@@ -18,13 +18,6 @@ export default function AboutScreen() {
     if (!globalctx?.appActive || globalctx.userData === undefined) {
       router.navigate("/login");
     }
-    /*
-    const interval = setInterval(async () => {
-      setConnected(await PingHealth());
-    }, 60000);
-
-    return () => clearInterval(interval);
-    */
   }, [globalctx?.appActive, globalctx?.userData, router]);
 
   const footer = () => {
@@ -39,7 +32,12 @@ export default function AboutScreen() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="flex flex-1 items-center justify-center align-middle bg-darkbg">
+      <SafeAreaView
+        style={{
+          experimental_backgroundImage: "linear-gradient(#0891b2, #25292e)",
+        }}
+        className="flex flex-1 items-center justify-center align-middle bg-darkbg"
+      >
         <SafeAreaView className="flex items-center flex-1 justify-center">
           <Text className="text-white">
             Warehouse Management System - Inventory Manager
@@ -49,7 +47,7 @@ export default function AboutScreen() {
           <Text className="mt-20 text-white">
             Connection:{"\t"}
             {connected ? (
-              <Text className="text-green-600">Active</Text>
+              <Text className="text-green-600 font-bold">Active</Text>
             ) : (
               <Text className="text-red-600">Inactive</Text>
             )}

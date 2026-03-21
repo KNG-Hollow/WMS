@@ -358,11 +358,13 @@ export async function GetItemsList(
   let itemsInfo: ItemInfo[];
 
   try {
+    /*
     if (!initiatorAccount.userActive) {
       received = false;
       alert("User Account Is Not Active!");
       throw new Error("Initiator's Account Is Not Privileged");
     }
+    */
     const response = await api.get<ItemInfo[]>(apiHost + "/api/items/list", {
       //withCredentials: true,
     });
@@ -389,11 +391,13 @@ export async function GetItems(
   let items: Item[];
 
   try {
+    /*
     if (!initiatorAccount.userActive) {
       received = false;
       alert("User Account Is Not Active!");
       throw new Error("Initiator's Account Is Not Privileged");
     }
+    */
     const response = await api.get<Item[]>(apiHost + "/api/items", {
       //withCredentials: true,
     });
@@ -421,11 +425,13 @@ export async function GetItem(
   let item: Item;
 
   try {
+    /*
     if (!initiatorAccount.userActive) {
       received = false;
       alert("User Account Is Not Active!");
       throw new Error("Initiator's Account Is Not Privileged");
     }
+      */
 
     console.log(`Attempting To Get Item [${id}] ...`);
     const response = await api.get<Item>(apiHost + `/api/items/${id}`, {

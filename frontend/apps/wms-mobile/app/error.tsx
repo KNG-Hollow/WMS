@@ -7,16 +7,16 @@ import { BackHandler, Pressable, Text } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function ViewError() {
-  const globalCtx = useContext(GlobalContext);
-  const errorData = globalCtx?.errorData;
+  const globalctx = useContext(GlobalContext);
+  const errorData = globalctx?.errorData;
   const router = useRouter();
 
   useEffect(() => {
-    if (globalCtx?.userData === undefined || !globalCtx?.appActive) {
+    if (globalctx?.userData === undefined || !globalctx?.appActive) {
       router.navigate("/login");
     }
     if (errorData === undefined) {
-      globalCtx?.insertError({
+      globalctx?.insertError({
         title: "Unknown Error",
         message:
           "You were directed to the error page without having an error, please restart the app!",
@@ -40,9 +40,12 @@ export default function ViewError() {
   );
 
   const handleRestart = () => {
-    globalCtx?.resetError();
-    globalCtx?.resetJWT();
-    globalCtx?.resetUser();
+    router.navigate("/login");
+    setTimeout(() => {
+      globalctx?.resetError();
+      globalctx?.resetJWT();
+      globalctx?.resetUser();
+    }, 500);
   };
 
   return (
