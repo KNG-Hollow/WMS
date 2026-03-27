@@ -1,15 +1,17 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import type { Box, Dimensions, Item, ItemInfo } from "../../app/models";
+import { ConvertDimensions, GetBox, UpdateBox } from "../../services/boxApi";
+import { GetItem, GetItemsList } from "../../services/itemApi";
+import { selectRole, selectUserState } from "../accounts/accountSlice";
 import { selectAppActive } from "../appSlice";
 import { insertError, selectErrorActive } from "../errors/errorSlice";
-import type { ItemInfo, Dimensions, Item, Box } from "../../app/models";
-import { GetItemsList, GetItem } from "../../services/itemApi";
-import { selectRole, selectUserState } from "../accounts/accountSlice";
-import { ConvertDimensions, GetBox, UpdateBox } from "../../services/boxApi";
-import DOMPurify from "dompurify";
+
+// TODO Replace Dropdown item_id With Item's Name
 
 export default function EditBox() {
   const userRole = useAppSelector(selectRole);
@@ -133,7 +135,7 @@ export default function EditBox() {
             type="text"
             value={nameIn}
             onChange={handleChange}
-            placeholder={box?.item.name}
+            placeholder={box?.item_id.toString()}
           />
           {nameIn && (
             <ul
@@ -215,9 +217,9 @@ export default function EditBox() {
     const updatedBox: Box = {
       id: +id!,
       upc: upcIn,
-      item: item!,
       dimensions: ConvertDimensions(dimensionsIn!),
       count: countIn,
+      item_id: item!.id!,
     };
 
     console.log("Attempting to create Box...");

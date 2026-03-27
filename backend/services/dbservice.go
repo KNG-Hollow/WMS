@@ -98,6 +98,8 @@ func ConvertImageToByte(image image.Image) ([]byte, error) {
 	return imageData, nil
 }
 
+// Account Services
+
 func AddAccount(account models.Account) error {
 	hashPass, err := hashPassword(account.Password)
 	if err != nil {
@@ -130,109 +132,6 @@ func AddAccount(account models.Account) error {
 	}
 
 	fmt.Println("Successfully added account!")
-	return nil
-}
-
-func AddItem(item models.Item) error {
-	conn := Connect()
-	defer conn.Close(context.Background())
-
-	fmt.Println("Attempting to add item to database...")
-	//imageBytes, err := models.ConvertImageToByte(item.Image.Img)
-	//if err != nil {
-	//	return err
-	//}
-
-	commandstr := "insert into item (id, upc, name, description, weight, image) values ($1, $2, $3, $4, $5, $6)"
-	command, err := conn.Exec(context.Background(), commandstr,
-		item.ID,
-		item.UPC,
-		item.Name,
-		item.Description,
-		item.Weight,
-		item.Image.Data,
-	)
-	if err != nil {
-		return err
-	}
-	if command.RowsAffected() != 1 {
-		return errors.New("No new item created")
-	}
-
-	fmt.Println("Successfully added item!")
-	return nil
-}
-
-func AddOrder(order models.Order) error {
-	conn := Connect()
-	defer conn.Close(context.Background())
-
-	fmt.Println("Attempting to add order to database!")
-	commandstr := "insert into order_data (id, customer, address, timeOrdered, payload) values ($1, $2, $3, $4, $5)"
-	command, err := conn.Exec(context.Background(), commandstr,
-		order.ID,
-		order.Customer,
-		order.Address,
-		order.TimeOrdered,
-		order.Payload,
-	)
-	if err != nil {
-		return err
-	}
-	if command.RowsAffected() != 1 {
-		return errors.New("No new order created")
-	}
-
-	fmt.Println("Successfully added order!")
-	return nil
-}
-
-func AddBox(box models.Box) error {
-	conn := Connect()
-	defer conn.Close(context.Background())
-
-	fmt.Println("Attempting to add box to database!")
-
-	commandstr := "insert into box (id, upc, item, dimensions, count) values ($1, $2, $3, $4, $5)"
-	command, err := conn.Exec(context.Background(), commandstr,
-		box.ID,
-		box.UPC,
-		box.Item,
-		box.Dimensions,
-		box.Count,
-	)
-	if err != nil {
-		return err
-	}
-	if command.RowsAffected() != 1 {
-		return errors.New("No new row created")
-	}
-
-	fmt.Println("Successfully added box!")
-	return nil
-}
-
-func AddInventory(inv models.Inventory) error {
-	conn := Connect()
-	defer conn.Close(context.Background())
-
-	fmt.Println("Attempting to add inventory to database!")
-
-	commandstr := "insert into inventory (id, item, total, locations) values ($1, $2, $3, $4)"
-	command, err := conn.Exec(context.Background(), commandstr,
-		inv.ID,
-		inv.Item,
-		inv.TotalCount,
-		inv.Locations,
-	)
-	if err != nil {
-		return err
-	}
-	if command.RowsAffected() != 1 {
-		return errors.New("No new row created")
-	}
-
-	fmt.Println("Successfully added inventory!")
 	return nil
 }
 
@@ -313,6 +212,88 @@ func GetAccount(id int) (models.Account, error) {
 	return account, nil
 }
 
+func UpdateAccount(id int, newData models.Account) error {
+	hashPass, err := hashPassword(newData.Password)
+	if err != nil {
+		return errors.New("failed to hash password")
+	}
+
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Printf("Attempting to update account: %v...\n", id)
+	commandstr := "update account set firstname=$1, lastname=$2, email=$3, phone=$4, username=$5, password=$6, role=$7, active=$8 where id=$9"
+	command, err := conn.Exec(context.Background(), commandstr,
+		newData.Firstname,
+		newData.Lastname,
+		newData.Email,
+		newData.Phone,
+		newData.Username,
+		hashPass,
+		newData.Role.Value,
+		newData.Active,
+		id,
+	)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No account updated")
+	}
+
+	fmt.Printf("Successfully updated account: %v!\n", id)
+	return nil
+}
+
+func DeleteAccount(id int) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Printf("Attempting to delete account: %v...\n", id)
+	command, err := conn.Exec(context.Background(), "delete from account where id=$1", id)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No account deleted!")
+	}
+
+	fmt.Printf("Successfully deleted account: %v!\n", id)
+	return nil
+}
+
+// Item Services
+
+func AddItem(item models.Item) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Println("Attempting to add item to database...")
+	//imageBytes, err := models.ConvertImageToByte(item.Image.Img)
+	//if err != nil {
+	//	return err
+	//}
+
+	commandstr := "insert into item (id, upc, name, description, weight, image) values ($1, $2, $3, $4, $5, $6)"
+	command, err := conn.Exec(context.Background(), commandstr,
+		item.ID,
+		item.UPC,
+		item.Name,
+		item.Description,
+		item.Weight,
+		item.Image.Data,
+	)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No new item created")
+	}
+
+	fmt.Println("Successfully added item!")
+	return nil
+}
+
 func GetItems() ([]models.Item, error) {
 	conn := Connect()
 
@@ -352,11 +333,12 @@ func GetItemsList() ([]models.ItemInfo, error) {
 	defer conn.Close(context.Background())
 
 	fmt.Println("Attempting to get list of items...")
-	rows, _ := conn.Query(context.Background(), "select id, name from item")
+	rows, _ := conn.Query(context.Background(), "select id, upc, name from item")
 	items, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (models.ItemInfo, error) {
 		var n models.ItemInfo
 		err := row.Scan(
 			&n.ID,
+			&n.UPC,
 			&n.Name,
 		)
 		if err != nil {
@@ -408,6 +390,74 @@ func GetItem(id int) (models.Item, error) {
 
 	fmt.Printf("Successfully retrieved item: %v!\n", id)
 	return item, nil
+}
+
+func UpdateItem(id int, newData models.Item) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Printf("Attempting to update item: %v...\n", id)
+	commandstr := "update item set upc=$1, name=$2, description=$3, weight=$4, image=$5 where id=$6"
+	command, err := conn.Exec(context.Background(), commandstr,
+		newData.UPC,
+		newData.Name,
+		newData.Description,
+		newData.Weight,
+		newData.Image.Data,
+		id,
+	)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No item updated")
+	}
+
+	fmt.Printf("Successfully updated item: %v!\n", id)
+	return nil
+}
+
+func DeleteItem(id int) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Printf("Attempting to delete item: %v...\n", id)
+	command, err := conn.Exec(context.Background(), "delete from item where id=$1", id)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No item deleted!")
+	}
+
+	fmt.Printf("Successfully deleted item: %v!\n", id)
+	return nil
+}
+
+// Order Services
+
+func AddOrder(order models.Order) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Println("Attempting to add order to database!")
+	commandstr := "insert into order_data (id, customer, address, timeOrdered, payload) values ($1, $2, $3, $4, $5)"
+	command, err := conn.Exec(context.Background(), commandstr,
+		order.ID,
+		order.Customer,
+		order.Address,
+		order.TimeOrdered,
+		order.Payload,
+	)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No new order created")
+	}
+
+	fmt.Println("Successfully added order!")
+	return nil
 }
 
 func GetOrders() ([]models.Order, error) {
@@ -476,6 +526,75 @@ func GetOrder(id int) (models.Order, error) {
 	return order, nil
 }
 
+func UpdateOrder(id int, newData models.Order) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Printf("Attempting to update order: %v...\n", id)
+	commandstr := "update order_data set customer=$1, address=$2, timeOrdered=$3, payload=$4 where id=$5"
+
+	command, err := conn.Exec(context.Background(), commandstr,
+		newData.Customer,
+		newData.Address,
+		newData.TimeOrdered,
+		newData.Payload,
+		id,
+	)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No order updated")
+	}
+
+	fmt.Printf("Successfully updated order: %v!\n", id)
+	return nil
+}
+
+func DeleteOrder(id int) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Printf("Attempting to delete order: %v...\n", id)
+	command, err := conn.Exec(context.Background(), "delete from order_data where id=$1", id)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No order deleted!")
+	}
+
+	fmt.Printf("Successfully deleted order: %v!\n", id)
+	return nil
+}
+
+// Box Services
+
+func AddBox(box models.Box) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Println("Attempting to add box to database!")
+
+	commandstr := "insert into box (id, upc, dimensions, count, item_id) values ($1, $2, $3, $4, $5)"
+	command, err := conn.Exec(context.Background(), commandstr,
+		box.ID,
+		box.UPC,
+		box.Dimensions,
+		box.Count,
+		box.ItemID,
+	)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No new row created")
+	}
+
+	fmt.Println("Successfully added box!")
+	return nil
+}
+
 func GetBoxes() ([]models.Box, error) {
 	conn := Connect()
 
@@ -488,9 +607,9 @@ func GetBoxes() ([]models.Box, error) {
 		err := row.Scan(
 			&n.ID,
 			&n.UPC,
-			&n.Item,
 			&n.Dimensions,
 			&n.Count,
+			&n.ItemID,
 		)
 		if err != nil {
 			return models.Box{}, err
@@ -519,9 +638,9 @@ func GetBox(id int) (models.Box, error) {
 		err := row.Scan(
 			&n.ID,
 			&n.UPC,
-			&n.Item,
 			&n.Dimensions,
 			&n.Count,
+			&n.ItemID,
 		)
 		if err != nil {
 			return models.Box{}, err
@@ -542,6 +661,74 @@ func GetBox(id int) (models.Box, error) {
 	return box, nil
 }
 
+func UpdateBox(id int, newData models.Box) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Printf("Attempting to update box: %v...\n", id)
+	commandstr := "update box set upc=$1, dimensions=$2, count=$3, item_id=$4 where id=$5"
+
+	command, err := conn.Exec(context.Background(), commandstr,
+		newData.UPC,
+		newData.Dimensions,
+		newData.Count,
+		newData.ItemID,
+		id,
+	)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No box updated")
+	}
+
+	fmt.Printf("Successfully updated box: %v!\n", id)
+	return nil
+}
+
+func DeleteBox(id int) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Printf("Attempting to delete box: %v...\n", id)
+	command, err := conn.Exec(context.Background(), "delete from box where id=$1", id)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No box deleted!")
+	}
+
+	fmt.Printf("Successfully deleted box: %v!\n", id)
+	return nil
+}
+
+// Inventory Services
+
+func AddInventory(inv models.Inventory) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Println("Attempting to add inventory to database!")
+
+	commandstr := "insert into inventory (id, item_id, total, locations) values ($1, $2, $3, $4)"
+	command, err := conn.Exec(context.Background(), commandstr,
+		inv.ID,
+		inv.ItemID,
+		inv.TotalCount,
+		inv.Locations,
+	)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No new row created")
+	}
+
+	fmt.Println("Successfully added inventory!")
+	return nil
+}
+
 func GetAllInventory() ([]models.Inventory, error) {
 	conn := Connect()
 
@@ -553,7 +740,7 @@ func GetAllInventory() ([]models.Inventory, error) {
 		var n models.Inventory
 		err := row.Scan(
 			&n.ID,
-			&n.Item,
+			&n.ItemID,
 			&n.TotalCount,
 			&n.Locations,
 		)
@@ -583,7 +770,7 @@ func GetInventory(id int) (models.Inventory, error) {
 		var n models.Inventory
 		err := row.Scan(
 			&n.ID,
-			&n.Item,
+			&n.ItemID,
 			&n.TotalCount,
 			&n.Locations,
 		)
@@ -606,124 +793,16 @@ func GetInventory(id int) (models.Inventory, error) {
 	return inv, nil
 }
 
-func UpdateAccount(id int, newData models.Account) error {
-	hashPass, err := hashPassword(newData.Password)
-	if err != nil {
-		return errors.New("failed to hash password")
-	}
-
-	conn := Connect()
-	defer conn.Close(context.Background())
-
-	fmt.Printf("Attempting to update account: %v...\n", id)
-	commandstr := "update account set firstname=$1, lastname=$2, email=$3, phone=$4, username=$5, password=$6, role=$7, active=$8 where id=$9"
-	command, err := conn.Exec(context.Background(), commandstr,
-		newData.Firstname,
-		newData.Lastname,
-		newData.Email,
-		newData.Phone,
-		newData.Username,
-		hashPass,
-		newData.Role.Value,
-		newData.Active,
-		id,
-	)
-	if err != nil {
-		return err
-	}
-	if command.RowsAffected() != 1 {
-		return errors.New("No account updated")
-	}
-
-	fmt.Printf("Successfully updated account: %v!\n", id)
-	return nil
-}
-
-func UpdateItem(id int, newData models.Item) error {
-	conn := Connect()
-	defer conn.Close(context.Background())
-
-	fmt.Printf("Attempting to update item: %v...\n", id)
-	commandstr := "update item set upc=$1, name=$2, description=$3, weight=$4, image=$5 where id=$6"
-	command, err := conn.Exec(context.Background(), commandstr,
-		newData.UPC,
-		newData.Name,
-		newData.Description,
-		newData.Weight,
-		newData.Image.Data,
-		id,
-	)
-	if err != nil {
-		return err
-	}
-	if command.RowsAffected() != 1 {
-		return errors.New("No item updated")
-	}
-
-	fmt.Printf("Successfully updated item: %v!\n", id)
-	return nil
-}
-
-func UpdateOrder(id int, newData models.Order) error {
-	conn := Connect()
-	defer conn.Close(context.Background())
-
-	fmt.Printf("Attempting to update order: %v...\n", id)
-	commandstr := "update order_data set customer=$1, address=$2, timeOrdered=$3, payload=$4 where id=$5"
-
-	command, err := conn.Exec(context.Background(), commandstr,
-		newData.Customer,
-		newData.Address,
-		newData.TimeOrdered,
-		newData.Payload,
-		id,
-	)
-	if err != nil {
-		return err
-	}
-	if command.RowsAffected() != 1 {
-		return errors.New("No order updated")
-	}
-
-	fmt.Printf("Successfully updated order: %v!\n", id)
-	return nil
-}
-
-func UpdateBox(id int, newData models.Box) error {
-	conn := Connect()
-	defer conn.Close(context.Background())
-
-	fmt.Printf("Attempting to update box: %v...\n", id)
-	commandstr := "update box set upc=$1, item=$2, dimensions=$3, count=$4 where id=$5"
-
-	command, err := conn.Exec(context.Background(), commandstr,
-		newData.UPC,
-		newData.Item,
-		newData.Dimensions,
-		newData.Count,
-		id,
-	)
-	if err != nil {
-		return err
-	}
-	if command.RowsAffected() != 1 {
-		return errors.New("No box updated")
-	}
-
-	fmt.Printf("Successfully updated box: %v!\n", id)
-	return nil
-}
-
 func UpdateInventory(id int, newData models.Inventory) error {
 	conn := Connect()
 	defer conn.Close(context.Background())
 
 	fmt.Printf("Attempting to update inventory: %v...\n", id)
-	commandstr := "update inventory set id=$1, item=$2, total=$3, locations=$4 where id=$5"
+	commandstr := "update inventory set id=$1, item_id=$2, total=$3, locations=$4 where id=$5"
 
 	command, err := conn.Exec(context.Background(), commandstr,
 		newData.ID,
-		newData.Item,
+		newData.ItemID,
 		newData.TotalCount,
 		newData.Locations,
 		id,
@@ -736,74 +815,6 @@ func UpdateInventory(id int, newData models.Inventory) error {
 	}
 
 	fmt.Printf("Successfully updated inventory: %v!\n", id)
-	return nil
-}
-
-func DeleteAccount(id int) error {
-	conn := Connect()
-	defer conn.Close(context.Background())
-
-	fmt.Printf("Attempting to delete account: %v...\n", id)
-	command, err := conn.Exec(context.Background(), "delete from account where id=$1", id)
-	if err != nil {
-		return err
-	}
-	if command.RowsAffected() != 1 {
-		return errors.New("No account deleted!")
-	}
-
-	fmt.Printf("Successfully deleted account: %v!\n", id)
-	return nil
-}
-
-func DeleteItem(id int) error {
-	conn := Connect()
-	defer conn.Close(context.Background())
-
-	fmt.Printf("Attempting to delete item: %v...\n", id)
-	command, err := conn.Exec(context.Background(), "delete from item where id=$1", id)
-	if err != nil {
-		return err
-	}
-	if command.RowsAffected() != 1 {
-		return errors.New("No item deleted!")
-	}
-
-	fmt.Printf("Successfully deleted item: %v!\n", id)
-	return nil
-}
-
-func DeleteOrder(id int) error {
-	conn := Connect()
-	defer conn.Close(context.Background())
-
-	fmt.Printf("Attempting to delete order: %v...\n", id)
-	command, err := conn.Exec(context.Background(), "delete from order_data where id=$1", id)
-	if err != nil {
-		return err
-	}
-	if command.RowsAffected() != 1 {
-		return errors.New("No order deleted!")
-	}
-
-	fmt.Printf("Successfully deleted order: %v!\n", id)
-	return nil
-}
-
-func DeleteBox(id int) error {
-	conn := Connect()
-	defer conn.Close(context.Background())
-
-	fmt.Printf("Attempting to delete box: %v...\n", id)
-	command, err := conn.Exec(context.Background(), "delete from box where id=$1", id)
-	if err != nil {
-		return err
-	}
-	if command.RowsAffected() != 1 {
-		return errors.New("No box deleted!")
-	}
-
-	fmt.Printf("Successfully deleted box: %v!\n", id)
 	return nil
 }
 

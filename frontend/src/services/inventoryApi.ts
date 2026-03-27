@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import axios, { HttpStatusCode } from "axios";
-import type { Inventory, Item, LocationData } from "../app/models";
+import { useAppSelector } from "../app/hooks";
+import type { Inventory, LocationData } from "../app/models";
 import {
   selectJWT,
   type AccountSliceState,
 } from "../features/accounts/accountSlice";
-import { useAppSelector } from "../app/hooks";
 
 const apiHost: string =
   import.meta.env.VITE_API_URL || "https://localhost:1323";
@@ -33,14 +33,14 @@ export function InitInvAPI() {
 export async function CreateInventory(
   initiatorAccount: AccountSliceState,
   id: number | null,
-  item: Item,
+  item_id: number,
   total: number,
   locations: LocationData[],
 ): Promise<[boolean, Inventory]> {
   let successful: boolean;
   const newInventory: Inventory = {
     id: id,
-    item: item,
+    item_id: item_id,
     total: total,
     locations: locations,
   };
@@ -58,7 +58,7 @@ export async function CreateInventory(
       apiHost + "/api/inventory",
       {
         id: newInventory.id,
-        item: newInventory.item,
+        item_id: newInventory.item_id,
         total: newInventory.total,
         locations: newInventory.locations,
       },
@@ -180,7 +180,7 @@ export async function UpdateInventory(
       apiHost + `/api/inventory/${id}`,
       {
         id: newInventory.id,
-        item: newInventory.item,
+        item_id: newInventory.item_id,
         total: newInventory.total,
         locations: newInventory.locations,
       },

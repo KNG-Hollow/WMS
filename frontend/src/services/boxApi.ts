@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import axios, { HttpStatusCode } from "axios";
-import type { Box, Dimensions, Item } from "../app/models";
+import { useAppSelector } from "../app/hooks";
+import type { Box, Dimensions } from "../app/models";
 import {
   selectJWT,
   type AccountSliceState,
 } from "../features/accounts/accountSlice";
-import { useAppSelector } from "../app/hooks";
 
 const apiHost: string =
   import.meta.env.VITE_API_URL || "https://localhost:1323";
@@ -38,17 +38,17 @@ export async function CreateBox(
   initiatorAccount: AccountSliceState,
   id: number | null,
   upc: string,
-  item: Item,
   dimensions: Dimensions,
   count: number,
+  item_id: number,
 ): Promise<[boolean, Box]> {
   let successful: boolean;
   const newBox: Box = {
     id: id,
     upc: upc,
-    item: item,
     dimensions: ConvertDimensions(dimensions),
     count: count,
+    item_id: item_id,
   };
 
   try {
@@ -65,9 +65,9 @@ export async function CreateBox(
       {
         id: newBox.id,
         upc: newBox.upc,
-        item: newBox.item,
         dimensions: newBox.dimensions,
         count: newBox.count,
+        item_id: newBox.item_id,
       },
       {
         // withCredentials: true,
@@ -185,9 +185,9 @@ export async function UpdateBox(
       {
         id: newBox.id,
         upc: newBox.upc,
-        item: newBox.item,
         dimensions: newBox.dimensions,
         count: newBox.count,
+        item_id: newBox.item_id,
       },
       {
         //withCredentials: true,

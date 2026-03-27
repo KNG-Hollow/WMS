@@ -148,7 +148,7 @@ func TestOrderService(t *testing.T) {
 		Address:     "12345 N. test Ln.",
 		TimeOrdered: time.Now(),
 		Payload: []models.ItemGroup{
-			{Item: testItem, Count: 123},
+			{ItemID: testItem.ID, Count: 123},
 		},
 	}
 	stat := AddOrder(testOrder)
@@ -181,7 +181,8 @@ func TestOrderService(t *testing.T) {
 		},
 		Address: "23456 S. test St.",
 		Payload: []models.ItemGroup{
-			{Item: testItem, Count: 234},
+			{ItemID: testItem.ID, Count: 234},
+			{ItemID: testItem.ID, Count: 123},
 		},
 	}
 
@@ -198,9 +199,9 @@ func TestBoxService(t *testing.T) {
 	testBox = models.Box{
 		ID:         66,
 		UPC:        "123456",
-		Item:       testItem,
 		Dimensions: "2x2x4",
 		Count:      123,
+		ItemID:     7,
 	}
 
 	stat := AddBox(testBox)
@@ -220,9 +221,9 @@ func TestBoxService(t *testing.T) {
 	updatebox := models.Box{
 		ID:         66,
 		UPC:        "23456",
-		Item:       testItem,
 		Dimensions: "4x4x8",
 		Count:      234,
+		ItemID:     8,
 	}
 
 	stat = UpdateBox(int(updatebox.ID), updatebox)
@@ -237,7 +238,7 @@ func TestInventoryService(t *testing.T) {
 	// AddInventory
 	testInventory = models.Inventory{
 		ID:         66,
-		Item:       testItem,
+		ItemID:     7,
 		TotalCount: 2345,
 		Locations: []models.LocationData{
 			{
@@ -267,7 +268,7 @@ func TestInventoryService(t *testing.T) {
 	// UpdateInventory
 	updateInventory := models.Inventory{
 		ID:         66,
-		Item:       testItem,
+		ItemID:     8,
 		TotalCount: 3333,
 		Locations: []models.LocationData{
 			{

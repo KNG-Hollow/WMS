@@ -1,19 +1,21 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectAppActive } from "../appSlice";
-import { insertError, selectErrorActive } from "../errors/errorSlice";
-import { selectRole, selectUserState } from "../accounts/accountSlice";
 import type { Inventory, Item, ItemInfo, LocationData } from "../../app/models";
-import { GetItem, GetItemsList } from "../../services/itemApi";
 import {
   DeleteInventory,
   GetInventory,
   UpdateInventory,
 } from "../../services/inventoryApi";
-import DOMPurify from "dompurify";
+import { GetItem, GetItemsList } from "../../services/itemApi";
+import { selectRole, selectUserState } from "../accounts/accountSlice";
+import { selectAppActive } from "../appSlice";
+import { insertError, selectErrorActive } from "../errors/errorSlice";
+
+// TODO Replace Header item_id with Item's Name
 
 export default function EditInventory() {
   const userRole = useAppSelector(selectRole);
@@ -251,7 +253,7 @@ export default function EditInventory() {
 
     const updatedEntry: Inventory = {
       id: +id!,
-      item: item!,
+      item_id: item!.id!,
       total: total,
       locations: locationsIn!,
     };
@@ -292,7 +294,7 @@ export default function EditInventory() {
         className="border-3 items-center border-cyan-600 rounded bg-gray-900 p-20 gap-y-2 flex flex-col"
       >
         <div className="font-bold text-xl mb-5 text-cyan-500">
-          <h1>{entry?.item.name}</h1>
+          <h1>{entry?.item_id}</h1>
         </div>
         <SearchDropdown options={allItemInfo!} />
         <div id="input-total">

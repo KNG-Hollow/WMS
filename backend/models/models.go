@@ -53,6 +53,7 @@ type Item struct {
 
 type ItemInfo struct {
 	ID   int64  `json:"id" db:"id"`
+	UPC  string `json:"upc" db:"upc"`
 	Name string `json:"name" db:"name"`
 }
 
@@ -97,14 +98,14 @@ func (i *ImageData) Value() (driver.Value, error) {
 type Box struct {
 	ID         int64  `json:"id" db:"id"`
 	UPC        string `json:"upc" db:"upc"`
-	Item       Item   `json:"item" db:"item"`
 	Dimensions string `json:"dimensions" db:"dimensions"`
 	Count      int64  `json:"count" db:"count"`
+	ItemID     int64  `json:"item_id" db:"item_id"`
 }
 
 type Inventory struct {
 	ID         int64          `json:"id" db:"id"`
-	Item       Item           `json:"item" db:"item"`
+	ItemID     int64          `json:"item_id" db:"item_id"`
 	TotalCount int64          `json:"total" db:"total"`
 	Locations  []LocationData `json:"locations" db:"locations"`
 }
@@ -131,8 +132,8 @@ type Shipment struct {
 }
 
 type ItemGroup struct {
-	Item  Item  `json:"item"`
-	Count int64 `json:"count"`
+	ItemID int64 `json:"item_id"`
+	Count  int64 `json:"count"`
 }
 
 type LoginDetails struct {

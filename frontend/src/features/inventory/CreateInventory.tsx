@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import type { Inventory, Item, ItemInfo, LocationData } from "../../app/models";
+import { CreateInventory } from "../../services/inventoryApi";
+import { GetItem, GetItemsList } from "../../services/itemApi";
+import { selectRole, selectUserState } from "../accounts/accountSlice";
 import { selectAppActive } from "../appSlice";
 import { insertError, selectErrorActive } from "../errors/errorSlice";
-import { selectRole, selectUserState } from "../accounts/accountSlice";
-import type { Inventory, Item, ItemInfo, LocationData } from "../../app/models";
-import { GetItem, GetItemsList } from "../../services/itemApi";
-import { CreateInventory } from "../../services/inventoryApi";
-import DOMPurify from "dompurify";
 
 export default function CreateInventoryForm() {
   const userRole = useAppSelector(selectRole);
@@ -182,7 +182,7 @@ export default function CreateInventoryForm() {
 
     const updatedEntry: Inventory = {
       id: null,
-      item: item!,
+      item_id: item!.id!,
       total: total,
       locations: locationsIn!,
     };
@@ -192,7 +192,7 @@ export default function CreateInventoryForm() {
       [success, responseEntry] = await CreateInventory(
         userState,
         null,
-        updatedEntry.item,
+        updatedEntry.item_id,
         updatedEntry.total,
         updatedEntry.locations,
       );

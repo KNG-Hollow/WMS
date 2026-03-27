@@ -40,24 +40,17 @@ var (
 		Weight:      1.0,
 		Image:       models.ImageData{Name: "test.png", Data: nil, Valid: true},
 	}
-	mockOrder models.Order = models.Order{ID: 66, Customer: models.Account{ID: 66, Firstname: "test", Lastname: "test", Email: "test@test.com", Phone: "123-456-7890", Username: "test", Password: "test", Role: models.Role{Value: "CUSTOMER"}, Active: true, Created: time.Now()}, Address: "12345 N. test ln.", TimeOrdered: time.Now(), Payload: []models.ItemGroup{models.ItemGroup{Item: models.Item{
-		ID:          66,
-		UPC:         "123456",
-		Name:        "test",
-		Description: "test item",
-		Weight:      1.0,
-		Image:       models.ImageData{Name: "test.png", Data: nil, Valid: true}}, Count: 55}},
-	}
-	mockBox models.Box = models.Box{
+	mockOrder models.Order = models.Order{ID: 66, Customer: mockAccount, Address: "12345 N. test ln.", TimeOrdered: time.Now(), Payload: []models.ItemGroup{{ItemID: 66, Count: 123}}}
+	mockBox   models.Box   = models.Box{
 		ID:         66,
 		UPC:        "123456",
-		Item:       mockItem,
 		Dimensions: "2x2x4",
 		Count:      66,
+		ItemID:     7,
 	}
 	mockInv models.Inventory = models.Inventory{
 		ID:         66,
-		Item:       mockItem,
+		ItemID:     7,
 		TotalCount: 2345,
 		Locations: []models.LocationData{
 			{
@@ -106,28 +99,21 @@ var (
 		TimeOrdered: time.Now(),
 		Payload: []models.ItemGroup{
 			{
-				Item: models.Item{
-					ID:          66,
-					UPC:         "234567",
-					Name:        "test1",
-					Description: "test item1",
-					Weight:      1.0,
-					Image:       models.ImageData{Name: "test.png", Data: nil, Valid: true},
-				},
-				Count: 55,
+				ItemID: mockItem.ID,
+				Count:  55,
 			},
 		},
 	}
 	mockBox1 models.Box = models.Box{
 		ID:         66,
 		UPC:        "234567",
-		Item:       mockItem1,
 		Dimensions: "4x4x8",
 		Count:      667,
+		ItemID:     8,
 	}
 	mockInv1 models.Inventory = models.Inventory{
 		ID:         66,
-		Item:       mockItem1,
+		ItemID:     8,
 		TotalCount: 1234,
 		Locations: []models.LocationData{
 			{

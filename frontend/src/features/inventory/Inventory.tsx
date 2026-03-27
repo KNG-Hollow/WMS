@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import type { Inventory, LocationData } from "../../app/models";
+import { GetAllInventory } from "../../services/inventoryApi";
+import { selectUserState } from "../accounts/accountSlice";
 import { selectAppActive } from "../appSlice";
 import { insertError, selectErrorActive } from "../errors/errorSlice";
-import type { Inventory, LocationData } from "../../app/models";
-import { selectUserState } from "../accounts/accountSlice";
-import { GetAllInventory } from "../../services/inventoryApi";
 
+// TODO Item Names From GetItemsList()
+//      Should Replace item_id In The Table-Row
 // TODO Link Item's Name To Item Data
 // TODO Link Location Data To Edit Mode
 export default function Inventory() {
@@ -91,12 +93,12 @@ export default function Inventory() {
                   key={mapInventory.id}
                   className="border-b text-center font-semibold border-cyan-400"
                 >
-                  <td key={mapInventory.item.id} className="hover:underline">
+                  <td key={mapInventory.item_id} className="hover:underline">
                     <Link
-                      to={`../items/${mapInventory.item.id}`}
+                      to={`../items/${mapInventory.item_id}`}
                       className="hover:text-cyan-400"
                     >
-                      {mapInventory.item.name}
+                      {mapInventory.item_id}
                     </Link>
                   </td>
                   <td>{mapInventory.total}</td>

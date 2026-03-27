@@ -50,6 +50,7 @@ export interface Item {
 
 export interface ItemInfo {
   id: number;
+  upc: string;
   name: string;
 }
 
@@ -62,9 +63,9 @@ export interface ImageInfo {
 export interface Box {
   id: number | null;
   upc: string;
-  item: Item;
   dimensions: string;
   count: number;
+  item_id: number;
 }
 
 export interface Dimensions {
@@ -75,7 +76,7 @@ export interface Dimensions {
 
 export interface Inventory {
   id: number | null;
-  item: Item;
+  item_id: number;
   total: number;
   locations: LocationData[];
 }
@@ -102,6 +103,6 @@ export interface Shipment {
 }
 
 export interface ItemGroup {
-  item: Item;
+  item_id: number;
   count: number;
 }

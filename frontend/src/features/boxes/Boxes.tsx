@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import type { Box } from "../../app/models";
+import { DeleteBox, GetAllBoxes } from "../../services/boxApi";
+import { selectRole, selectUserState } from "../accounts/accountSlice";
 import { selectAppActive } from "../appSlice";
 import { insertError, selectErrorActive } from "../errors/errorSlice";
-import type { Box } from "../../app/models";
-import { selectRole, selectUserState } from "../accounts/accountSlice";
-import { DeleteBox, GetAllBoxes } from "../../services/boxApi";
+
+// TODO Replace item_id With Item's Name
 
 export default function Boxes() {
   const userRole = useAppSelector(selectRole);
@@ -140,10 +142,10 @@ export default function Boxes() {
                           <td>{mapBox.upc}</td>
                           <td key={mapBox.id}>
                             <Link
-                              to={`../items/${mapBox.item.id}`}
+                              to={`../items/${mapBox.item_id}`}
                               className="hover:text-cyan-400"
                             >
-                              {mapBox.item.name}
+                              {mapBox.item_id}
                             </Link>
                           </td>
                           <td>{mapBox.dimensions}</td>

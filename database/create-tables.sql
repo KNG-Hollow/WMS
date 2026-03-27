@@ -35,13 +35,15 @@ CREATE TABLE IF NOT EXISTS shipment (
 CREATE TABLE IF NOT EXISTS box (
     id SERIAL PRIMARY KEY NOT NULL,
     upc VARCHAR(128) NOT NULL,
-    item JSON NOT NULL,
     dimensions VARCHAR(128) NOT NULL,
-    count INT NOT NULL
+    count INT NOT NULL,
+    item_id INT,
+    FOREIGN KEY (item_id) REFERENCES item(id)
 );
 CREATE TABLE IF NOT EXISTS inventory (
     id SERIAL PRIMARY KEY NOT NULL,
-    item JSON NOT NULL,
+    item_id INT,
+    FOREIGN KEY (item_id) REFERENCES item(id),
     total INT NOT NULL,
     locations JSON NOT NULL
 );

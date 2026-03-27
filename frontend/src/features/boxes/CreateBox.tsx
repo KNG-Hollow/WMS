@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import DOMPurify from "dompurify";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectAppActive } from "../appSlice";
-import { insertError, selectErrorActive } from "../errors/errorSlice";
-import { selectRole, selectUserState } from "../accounts/accountSlice";
-import DOMPurify from "dompurify";
-import type { Dimensions, Box, Item, ItemInfo } from "../../app/models";
+import type { Box, Dimensions, Item, ItemInfo } from "../../app/models";
 import { CreateBox } from "../../services/boxApi";
 import { GetItem, GetItemsList } from "../../services/itemApi";
+import { selectRole, selectUserState } from "../accounts/accountSlice";
+import { selectAppActive } from "../appSlice";
+import { insertError, selectErrorActive } from "../errors/errorSlice";
 
 export default function CreateBoxForm() {
   const userRole = useAppSelector(selectRole);
@@ -178,9 +178,9 @@ export default function CreateBoxForm() {
     const updatedBox: Box = {
       id: null,
       upc: upcIn,
-      item: item!,
       dimensions: "",
       count: countIn,
+      item_id: item!.id!,
     };
 
     console.log("Attempting to create Box...");
@@ -189,9 +189,9 @@ export default function CreateBoxForm() {
         userState,
         null,
         updatedBox.upc,
-        updatedBox.item,
         dimensionsIn!,
         updatedBox.count,
+        updatedBox.item_id,
       );
       if (!success || responseBox === null) {
         console.error(
