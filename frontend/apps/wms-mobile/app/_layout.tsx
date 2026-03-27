@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { GlobalProvider } from "@/utility/GlobalContext";
+import { GlobalProvider } from "@/utility/Providers";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { PaperProvider } from "react-native-paper";

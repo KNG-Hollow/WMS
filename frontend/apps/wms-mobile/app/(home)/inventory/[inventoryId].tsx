@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { GlobalContext } from "@/utility/GlobalContext";
+import { GlobalContext } from "@/utility/Contexts";
 import { Inventory, LocationData } from "@/utility/Models";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import { Text } from "react-native";
 import { DataTable } from "react-native-paper";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+
+// TODO
 
 export default function ViewInventory() {
   const globalCtx = useContext(GlobalContext);
@@ -42,20 +44,20 @@ export default function ViewInventory() {
               className="underline font-bold text-lg text-cyan-600"
               href={{
                 pathname: "/products/[productId]",
-                params: { productId: entry?.item.id! },
+                params: { productId: entry?.item_id! },
               }}
             >
-              {entry?.item.name}
+              {/*TODO Replace With Item Name*/ entry?.item_id}
             </Link>
             <Text className="font-bold text-lg">: :</Text>
             <Link
               className="underline font-bold text-lg text-cyan-600"
               href={{
                 pathname: "/products/[productId]",
-                params: { productId: entry?.item.id! },
+                params: { productId: entry?.item_id! },
               }}
             >
-              {entry?.item.upc}
+              {/*TODO Replace With Item UPC */ entry?.item_id}
             </Link>
           </SafeAreaView>
           <Text>{`Total:\t${entry?.total}`}</Text>

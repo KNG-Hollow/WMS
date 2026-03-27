@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import { GetItems } from "@/utility/ApiServices";
-import { GlobalContext } from "@/utility/GlobalContext";
+import { GlobalContext } from "@/utility/Contexts";
 import { Item } from "@/utility/Models";
 import { Ionicons } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
@@ -29,7 +29,7 @@ export default function AllItems() {
       let successful = false;
 
       try {
-        const [fetchSuccessful, fetchedItems] = await GetItems(userData!);
+        const [fetchSuccessful, fetchedItems] = await GetItems();
         successful = fetchSuccessful;
         if (!successful) {
           throw new Error("Failed to get Item array");

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import { GetAllInventory } from "@/utility/ApiServices";
-import { GlobalContext } from "@/utility/GlobalContext";
+import { GlobalContext } from "@/utility/Contexts";
 import { Inventory, LocationData } from "@/utility/Models";
 import { Ionicons } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
@@ -88,7 +88,7 @@ export default function AllInventory() {
               <DataTable.Title>Locations</DataTable.Title>
             </DataTable.Header>
             {allInventory?.map((mapInv: Inventory) => (
-              <DataTable.Row key={mapInv.id} className="flex flex-1">
+              <DataTable.Row key={mapInv.id} className="flex">
                 <DataTable.Cell>
                   <Link
                     className="flex-row"
@@ -101,7 +101,7 @@ export default function AllInventory() {
                     }}
                   >
                     <Text className="font-bold text-cyan-600 mr-0.5">
-                      {mapInv.item.name}
+                      {/* TODO Replace With Item Name */ mapInv.item_id}
                     </Text>
                     <Ionicons
                       style={{ color: "#0891b2" }}

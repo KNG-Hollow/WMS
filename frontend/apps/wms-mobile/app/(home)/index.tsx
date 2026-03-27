@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { GlobalContext } from "@/utility/GlobalContext";
+import { GlobalContext } from "@/utility/Contexts";
 import { useRouter } from "expo-router";
 import { useContext, useEffect } from "react";
 import { Pressable, Text } from "react-native";
@@ -9,7 +9,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 export default function Index() {
   const router = useRouter();
   const globalctx = useContext(GlobalContext);
-  let userData = globalctx?.userData;
+  const userData = globalctx?.userData;
 
   useEffect(() => {
     if (!globalctx?.appActive || globalctx?.userData === undefined) {

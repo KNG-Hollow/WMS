@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { GlobalContext } from "@/utility/GlobalContext";
+import { GlobalContext } from "@/utility/Contexts";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useContext, useEffect } from "react";
 import { BackHandler, Pressable, Text } from "react-native";

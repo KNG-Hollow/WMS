@@ -6,9 +6,10 @@ import {
   GetItemsList,
   UpdateInventory,
 } from "@/utility/ApiServices";
-import { GlobalContext } from "@/utility/GlobalContext";
+import { GlobalContext } from "@/utility/Contexts";
 import { Inventory, ItemInfo } from "@/utility/Models";
 import { Ionicons } from "@expo/vector-icons";
+import { useAudioPlayer } from "expo-audio";
 import { useRouter } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import {
@@ -24,9 +25,37 @@ import { DataTable } from "react-native-paper";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 // TODO Remove scannedCode from global context when exiting route
-// TODO Submit product query on barcode scan
-// TODO Add view showing queue of items about to be added to inventory, allow adjustment of amounts
-// TODO Fix Increment Button
+
+const audioSource = require("@/assets/audio/Confirmation.mp3");
+
+interface SearchDropdownProps {
+  options: ItemInfo[];
+  onItemSelect: (name: string) => void;
+}
+
+const SearchDropdown: React.FC<SearchDropdownProps> = ({
+  options,
+  onItemSelect,
+}) => {
+  return (
+    <FlatList
+      className=""
+      data={options}
+      renderItem={({ item }) => (
+        <Pressable
+          className="border-2 border-cyan-700 items-center py-1 bg-slate-300"
+          onPress={() => {
+            onItemSelect(item.name);
+          }}
+        >
+          <Text className="font-semibold">{item.name}</Text>
+        </Pressable>
+      )}
+      keyExtractor={(item) => item.id.toString()}
+    />
+  );
+};
+
 export default function AddInventory() {
   const globalctx = useContext(GlobalContext);
   const userData = globalctx?.userData;
@@ -37,6 +66,7 @@ export default function AddInventory() {
   const [productList, setProductList] = useState<ItemInfo[]>();
   const [filteredOptions, setFilteredOptions] = useState<ItemInfo[]>();
   const [productQueue, setProductQueue] = useState<ItemInfo[]>([]);
+  const player = useAudioPlayer(audioSource);
 
   useEffect(() => {
     if (globalctx?.userData === undefined || !globalctx?.appActive) {
@@ -49,7 +79,7 @@ export default function AddInventory() {
     const fetchProductList = async () => {
       console.log("Attempting to get product list...");
       try {
-        const [exists, productData] = await GetItemsList(userData!);
+        const [exists, productData] = await GetItemsList();
         console.log(
           `Exists: ${exists}, Products in list: ${productData.length}`,
         );
@@ -90,9 +120,12 @@ export default function AddInventory() {
       },
     ]);
 
+    player.seekTo(0);
+    player.play();
+
     globalctx?.resetScan();
     setProductValue("");
-  }, [globalctx, productList, productQueue]);
+  }, [globalctx, productList, productQueue, player]);
 
   useEffect(() => {
     if (scannerValue !== undefined) {
@@ -168,7 +201,7 @@ export default function AddInventory() {
   const handleQueueRemove = (index: number) => {
     console.log("Remove Button Pressed!");
     setProductQueue((prevQueue) => {
-      return prevQueue.filter((v, i) => v !== prevQueue[index]);
+      return prevQueue.filter((v) => v !== prevQueue[index]);
     });
   };
 
@@ -219,7 +252,7 @@ export default function AddInventory() {
           console.error(`Failed To Get Inventory At Id:  ${entry.id}`);
           return;
         }
-        let prevLocation = prevInv.locations.find((v) => v.area === "Stock");
+        const prevLocation = prevInv.locations.find((v) => v.area === "Stock");
         if (prevLocation) {
           prevLocation.count += entry.count;
         } else {
@@ -228,7 +261,7 @@ export default function AddInventory() {
         }
         const updatedInv: Inventory = {
           id: prevInv.id,
-          item: prevInv.item,
+          item_id: prevInv.item_id,
           total: prevInv.total + entry.count,
           locations: prevInv.locations,
         };
@@ -273,35 +306,11 @@ export default function AddInventory() {
     );
   };
 
-  const SearchDropdown: React.FC<{ options: ItemInfo[] }> = ({ options }) => {
-    return (
-      <FlatList
-        className=""
-        data={filteredOptions}
-        renderItem={({ item }) => (
-          <Pressable
-            className="border-2 border-cyan-700 items-center py-1 bg-slate-300"
-            onPress={() => {
-              handleTextSubmit(item.name);
-            }}
-          >
-            <Text className="font-semibold">{item.name}</Text>
-          </Pressable>
-        )}
-        keyExtractor={(item) => item.id.toString()}
-      />
-    );
-  };
-
   return (
     <SafeAreaProvider>
       <SafeAreaView className="flex flex-1 items-center">
         {scannerActive ? (
-          <CamScanner
-            scannerActive={setScannerActive}
-            type={scannerValue?.type!}
-            value={scannerValue?.value!}
-          />
+          <CamScanner scannerActive={setScannerActive} />
         ) : (
           <SafeAreaView className="w-11/12 mt-5">
             <Pressable
@@ -337,7 +346,10 @@ export default function AddInventory() {
             onSubmitEditing={handleQueueSubmit}
           />
           {productIn && !scannerValue && (
-            <SearchDropdown options={filteredOptions!} />
+            <SearchDropdown
+              options={filteredOptions!}
+              onItemSelect={handleTextSubmit}
+            />
           )}
         </SafeAreaView>
 

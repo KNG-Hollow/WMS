@@ -1,4 +1,4 @@
-import { GlobalContext } from "@/utility/GlobalContext";
+import { GlobalContext } from "@/utility/Contexts";
 import { Ionicons } from "@expo/vector-icons";
 import { useContext, useState } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
@@ -12,15 +12,9 @@ import {
 
 interface CameraProps {
   scannerActive: React.Dispatch<React.SetStateAction<boolean>>;
-  type: string;
-  value: string;
 }
 
-export default function CamScanner({
-  scannerActive,
-  type,
-  value,
-}: CameraProps) {
+export default function CamScanner({ scannerActive }: CameraProps) {
   const globalctx = useContext(GlobalContext);
   const device = useCameraDevice("back");
   const { hasPermission, requestPermission } = useCameraPermission();

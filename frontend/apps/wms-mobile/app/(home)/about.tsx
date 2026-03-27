@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { GlobalContext } from "@/utility/GlobalContext";
+import { GlobalContext } from "@/utility/Contexts";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useContext, useEffect } from "react";

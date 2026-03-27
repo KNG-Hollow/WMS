@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { GlobalContext } from "@/utility/GlobalContext";
+import { GlobalContext } from "@/utility/Contexts";
 import { useRouter } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { useContext } from "react";

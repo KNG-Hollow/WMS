@@ -3,7 +3,7 @@
 import axios, { HttpStatusCode } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useContext } from "react";
-import { GlobalContext } from "./GlobalContext";
+import { GlobalContext } from "./Contexts";
 import type {
   Account,
   Inventory,
@@ -116,14 +116,14 @@ export async function AuthorizeUser(
 export async function CreateInventory(
   initiatorAccount: UserState,
   id: number | null,
-  item: Item,
+  item_id: number,
   total: number,
   locations: LocationData[],
 ): Promise<[boolean, Inventory]> {
   let successful: boolean;
   const newInventory: Inventory = {
     id: id,
-    item: item,
+    item_id: item_id,
     total: total,
     locations: locations,
   };
@@ -141,7 +141,7 @@ export async function CreateInventory(
       apiHost + "/api/inventory",
       {
         id: newInventory.id,
-        item: newInventory.item,
+        item_id: newInventory.item_id,
         total: newInventory.total,
         locations: newInventory.locations,
       },
@@ -263,7 +263,7 @@ export async function UpdateInventory(
       apiHost + `/api/inventory/${id}`,
       {
         id: newInventory.id,
-        item: newInventory.item,
+        item_id: newInventory.item_id,
         total: newInventory.total,
         locations: newInventory.locations,
       },
@@ -351,9 +351,7 @@ export async function GetAccount(id: number): Promise<[boolean, Account]> {
 
 // Items API
 
-export async function GetItemsList(
-  initiatorAccount: UserState,
-): Promise<[boolean, ItemInfo[]]> {
+export async function GetItemsList(): Promise<[boolean, ItemInfo[]]> {
   let received: boolean;
   let itemsInfo: ItemInfo[];
 
@@ -384,9 +382,7 @@ export async function GetItemsList(
   }
 }
 
-export async function GetItems(
-  initiatorAccount: UserState,
-): Promise<[boolean, Item[]]> {
+export async function GetItems(): Promise<[boolean, Item[]]> {
   let received: boolean;
   let items: Item[];
 

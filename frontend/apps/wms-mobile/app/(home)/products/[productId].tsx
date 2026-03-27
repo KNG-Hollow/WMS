@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import { GetItem } from "@/utility/ApiServices";
-import { GlobalContext } from "@/utility/GlobalContext";
+import { GlobalContext } from "@/utility/Contexts";
 import { Item } from "@/utility/Models";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
