@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { useAppSelector } from "@/app/hooks";
+import { selectAppActive, selectAppUser } from "@/features/appSlice";
+import { PingHealth } from "@/services/utilityApi";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "../../app/hooks";
-import { selectAppActive, selectAppUser } from "../../features/appSlice";
-import { PingHealth } from "../../services/utilityApi";
 import { Link } from "react-router";
 
 // TODO Adjust CSS for smaller screen sizes

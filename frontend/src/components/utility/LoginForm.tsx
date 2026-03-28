@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { useState } from "react";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch } from "@/app/hooks";
+import type { JwtObject } from "@/app/models";
 import {
+  activateUser,
+  insertID,
   insertJWT,
   insertRole,
-  activateUser,
   insertUsername,
-  insertID,
-} from "../../features/accounts/accountSlice";
-import { insertAppUser, activateApp } from "../../features/appSlice";
-import { useNavigate } from "react-router";
-import type { JwtObject } from "../../app/models";
-import { AuthorizeUser } from "../../services/utilityApi";
+} from "@/features/accounts/accountSlice";
+import { activateApp, insertAppUser } from "@/features/appSlice";
+import { AuthorizeUser } from "@/services/utilityApi";
 import DOMPurify from "dompurify";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function LoginForm() {
   const dispatch = useAppDispatch();

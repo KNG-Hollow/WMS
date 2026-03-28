@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { useAppSelector } from "@/app/hooks";
+import { selectAppActive, selectAppUser } from "@/features/appSlice";
+import { selectErrorActive } from "@/features/errors/errorSlice";
+import { InitAccAPI } from "@/services/accountApi";
+import { InitBoxAPI } from "@/services/boxApi";
+import { InitInvAPI } from "@/services/inventoryApi";
+import { InitItemAPI } from "@/services/itemApi";
 import { useEffect } from "react";
-import { useAppSelector } from "../app/hooks";
-import { selectAppActive } from "../features/appSlice";
-import { selectAppUser } from "../features/appSlice";
-import { selectErrorActive } from "../features/errors/errorSlice";
 import { useNavigate } from "react-router";
-import { InitInvAPI } from "../services/inventoryApi";
-import { InitAccAPI } from "../services/accountApi";
-import { InitItemAPI } from "../services/itemApi";
-import { InitBoxAPI } from "../services/boxApi";
 
 export default function Home() {
   const appActive = useAppSelector(selectAppActive);

@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import type { Account } from "@/app/models";
+import { CreateAccount } from "@/services/accountApi";
+import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectAppActive } from "../appSlice";
-import { selectErrorActive, insertError } from "../errors/errorSlice";
-import DOMPurify from "dompurify";
+import { insertError, selectErrorActive } from "../errors/errorSlice";
 import { selectRole, selectUserState } from "./accountSlice";
-import type { Account } from "../../app/models";
-import { CreateAccount } from "../../services/accountApi";
 
 export default function CreateAccountForm() {
   const userRole = useAppSelector(selectRole);

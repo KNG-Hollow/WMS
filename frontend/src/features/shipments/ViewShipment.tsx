@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { useAppSelector } from "@/app/hooks";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useAppSelector } from "../../app/hooks";
 import { selectAppActive } from "../appSlice";
 import { selectErrorActive } from "../errors/errorSlice";
 

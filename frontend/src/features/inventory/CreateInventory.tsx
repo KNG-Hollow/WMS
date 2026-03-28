@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import type { Inventory, Item, ItemInfo, LocationData } from "@/app/models";
+import { CreateInventory } from "@/services/inventoryApi";
+import { GetItem, GetItemsList } from "@/services/itemApi";
 import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import type { Inventory, Item, ItemInfo, LocationData } from "../../app/models";
-import { CreateInventory } from "../../services/inventoryApi";
-import { GetItem, GetItemsList } from "../../services/itemApi";
 import { selectRole, selectUserState } from "../accounts/accountSlice";
 import { selectAppActive } from "../appSlice";
 import { insertError, selectErrorActive } from "../errors/errorSlice";

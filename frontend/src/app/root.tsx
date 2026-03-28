@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import packageJson from "@/../package.json";
+import backgroundImage from "@/assets/background.png";
+import Footer from "@/components/utility/Footer";
+import Navbar from "@/components/utility/Navbar";
+import { StrictMode, type ReactNode } from "react";
+import { Provider } from "react-redux";
 import {
-  Outlet,
-  Meta,
   Links,
+  Meta,
+  Outlet,
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./App.css";
-import { StrictMode, type ReactNode } from "react";
-import { Provider } from "react-redux";
 import { store } from "./store";
-import packageJson from "../../package.json";
-import Footer from "../components/utility/Footer";
-import Navbar from "../components/utility/Navbar";
-import backgroundImage from "../assets/background.png";
 
 export function Layout({ children }: { children: ReactNode }) {
   return (

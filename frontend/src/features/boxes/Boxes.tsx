@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import type { Box } from "@/app/models";
+import { DeleteBox, GetAllBoxes } from "@/services/boxApi";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import type { Box } from "../../app/models";
-import { DeleteBox, GetAllBoxes } from "../../services/boxApi";
 import { selectRole, selectUserState } from "../accounts/accountSlice";
 import { selectAppActive } from "../appSlice";
 import { insertError, selectErrorActive } from "../errors/errorSlice";

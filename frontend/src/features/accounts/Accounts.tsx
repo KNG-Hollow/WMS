@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import type { Account } from "@/app/models";
+import { GetAccounts } from "@/services/accountApi";
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useNavigate } from "react-router";
 import { selectAppActive } from "../appSlice";
 import { insertError, selectErrorActive } from "../errors/errorSlice";
-import { useNavigate } from "react-router";
 import { selectRole, selectUserState } from "./accountSlice";
-import type { Account } from "../../app/models";
-import { GetAccounts } from "../../services/accountApi";
 
 export default function Accounts() {
   const userRole = useAppSelector(selectRole);

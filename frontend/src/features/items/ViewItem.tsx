@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import type { Item } from "@/app/models";
+import { GetItem } from "@/services/itemApi";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { selectUserState } from "../accounts/accountSlice";
 import { selectAppActive } from "../appSlice";
 import { insertError, selectErrorActive } from "../errors/errorSlice";
-import { GetItem } from "../../services/itemApi";
-import { selectUserState } from "../accounts/accountSlice";
-import type { Item } from "../../app/models";
 
 export default function ViewItem() {
   const appActive = useAppSelector(selectAppActive);

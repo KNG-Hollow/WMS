@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { useAppSelector } from "../../app/hooks";
-import { selectAppActive } from "../../features/appSlice";
+import { useAppSelector } from "@/app/hooks";
+import { selectAppActive } from "@/features/appSlice";
 
 export default function Footer() {
   const appActive = useAppSelector(selectAppActive);

@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import type { Item } from "@/app/models";
+import { DeleteItem, GetItem, UpdateItem } from "@/services/itemApi";
+import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { selectRole, selectUserState } from "../accounts/accountSlice";
 import { selectAppActive } from "../appSlice";
 import { insertError, selectErrorActive } from "../errors/errorSlice";
-import { selectRole, selectUserState } from "../accounts/accountSlice";
-import type { Item } from "../../app/models";
-import { DeleteItem, GetItem, UpdateItem } from "../../services/itemApi";
-import DOMPurify from "dompurify";
 
 export default function EditItem() {
   const userRole = useAppSelector(selectRole);

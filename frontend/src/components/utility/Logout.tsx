@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { useNavigate } from "react-router";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import {
   deactivateApp,
   resetAppUser,
   selectAppActive,
-} from "../../features/appSlice";
+} from "@/features/appSlice";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function Logout() {
   const dispatch = useAppDispatch();

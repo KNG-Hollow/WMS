@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import axios, { HttpStatusCode } from "axios";
-import type { ImageInfo, Item, ItemInfo } from "../app/models";
+import { useAppSelector } from "@/app/hooks";
+import type { ImageInfo, Item, ItemInfo } from "@/app/models";
 import {
   selectJWT,
   type AccountSliceState,
-} from "../features/accounts/accountSlice";
-import { useAppSelector } from "../app/hooks";
+} from "@/features/accounts/accountSlice";
+import axios, { HttpStatusCode } from "axios";
 
 const apiHost: string =
   import.meta.env.VITE_API_URL || "https://localhost:1323";
