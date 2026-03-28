@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { GetAllInventory } from "@/utility/ApiServices";
+import { GetAllInventory, GetItemsList } from "@/utility/ApiServices";
 import { GlobalContext } from "@/utility/Contexts";
-import { Inventory, LocationData } from "@/utility/Models";
+import { Inventory, ItemInfo, LocationData } from "@/utility/Models";
 import { Ionicons } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { DataTable } from "react-native-paper";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -15,6 +15,7 @@ export default function AllInventory() {
   const userData = globalCtx?.userData;
   const router = useRouter();
   const [allInventory, setAllInventory] = useState<Inventory[] | null>(null);
+  const [itemsList, setItemsList] = useState<ItemInfo[] | null>(null);
   const [page, setPage] = useState<number>(0);
   const itemsPerPage = 10;
   const from = page * itemsPerPage;
@@ -45,13 +46,34 @@ export default function AllInventory() {
         });
       }
     };
+
+    const fetchItemsList = async () => {
+      let successful = false;
+
+      try {
+        const [fetchSuccessful, fetchedList] = await GetItemsList();
+        successful = fetchSuccessful;
+        if (!successful) {
+          throw new Error("Failed to get ItemInfo array");
+        }
+        setItemsList(fetchedList);
+      } catch (err) {
+        globalCtx?.insertError({
+          title: "Failed To Get Item List",
+          message: `Failed To Return An Acceptable ItemList Array ::\n${err}`,
+          active: true,
+        });
+      }
+    };
+
     fetchInventory();
+    fetchItemsList();
   }, [globalCtx, router, userData]);
 
   const displayLocations = (data: LocationData[]) => {
     if (data.length < 5) {
       return (
-        <View className="flex-1">
+        <View className="">
           {data.map((entry: LocationData) => (
             <View key={entry.area} className="flex-row gap-x-2">
               <Text className="font-medium">{entry.area}</Text>
@@ -63,14 +85,17 @@ export default function AllInventory() {
       );
     } else {
       return (
-        <View className="flex flex-1">
-          {data.slice(0, 5).map((entry: LocationData) => (
-            <View key={entry.area} className="flex-row gap-x-2">
-              <Text className="font-medium">{entry.area}</Text>
-              <Text>:</Text>
-              <Text>{entry.count}</Text>
-            </View>
-          ))}
+        <View className="">
+          {data
+            .slice(0, 2)
+            .concat(data.slice(-1))
+            .map((entry: LocationData) => (
+              <View key={entry.area} className="flex-row gap-x-2">
+                <Text className="font-medium">{entry.area}</Text>
+                <Text>:</Text>
+                <Text>{entry.count}</Text>
+              </View>
+            ))}
           <Text className="text-center text-cyan-600">...</Text>
         </View>
       );
@@ -87,47 +112,66 @@ export default function AllInventory() {
               <DataTable.Title>Total</DataTable.Title>
               <DataTable.Title>Locations</DataTable.Title>
             </DataTable.Header>
-            {allInventory?.map((mapInv: Inventory) => (
-              <DataTable.Row key={mapInv.id} className="flex">
-                <DataTable.Cell>
-                  <Link
-                    className="flex-row"
-                    href={{
-                      pathname: "/inventory/[inventoryId]",
-                      params: {
-                        inventoryId: mapInv.id!,
-                        jsonData: JSON.stringify(mapInv),
-                      },
-                    }}
-                  >
-                    <Text className="font-bold text-cyan-600 mr-0.5">
-                      {/* TODO Replace With Item Name */ mapInv.item_id}
-                    </Text>
-                    <Ionicons
-                      style={{ color: "#0891b2" }}
-                      name="navigate"
-                      size={12}
-                    />
-                  </Link>
-                </DataTable.Cell>
-                <DataTable.Cell>{mapInv.total}</DataTable.Cell>
-                <DataTable.Cell className="flex-1 flex">
-                  <Pressable
-                    onPress={() =>
-                      router.navigate({
+            <ScrollView className="max-h-fix">
+              {allInventory?.map((mapInv: Inventory) => (
+                <DataTable.Row key={mapInv.id} className="flex h-24">
+                  <DataTable.Cell>
+                    <Link
+                      className="flex-row"
+                      href={{
                         pathname: "/inventory/[inventoryId]",
                         params: {
                           inventoryId: mapInv.id!,
+                          itemName: itemsList
+                            ?.filter((v) => v.id === mapInv.item_id)
+                            .at(0)?.name,
+                          itemUPC: itemsList
+                            ?.filter((v) => v.id === mapInv.item_id)
+                            .at(0)?.upc,
                           jsonData: JSON.stringify(mapInv),
                         },
-                      })
-                    }
-                  >
-                    {displayLocations(mapInv.locations)}
-                  </Pressable>
-                </DataTable.Cell>
-              </DataTable.Row>
-            ))}
+                      }}
+                    >
+                      <Text className="font-bold text-cyan-600 mr-0.5">
+                        {
+                          itemsList
+                            ?.filter((v) => v.id === mapInv.item_id)
+                            .at(0)?.name
+                        }
+                      </Text>
+                      <Ionicons
+                        style={{ color: "#0891b2" }}
+                        name="navigate"
+                        size={12}
+                      />
+                    </Link>
+                  </DataTable.Cell>
+                  <DataTable.Cell>{mapInv.total}</DataTable.Cell>
+                  <DataTable.Cell className="my-auto">
+                    <Pressable
+                      className=""
+                      onPress={() =>
+                        router.navigate({
+                          pathname: "/inventory/[inventoryId]",
+                          params: {
+                            inventoryId: mapInv.id!,
+                            itemName: itemsList
+                              ?.filter((v) => v.id === mapInv.item_id)
+                              .at(0)?.name,
+                            itemUPC: itemsList
+                              ?.filter((v) => v.id === mapInv.item_id)
+                              .at(0)?.upc,
+                            jsonData: JSON.stringify(mapInv),
+                          },
+                        })
+                      }
+                    >
+                      {displayLocations(mapInv.locations)}
+                    </Pressable>
+                  </DataTable.Cell>
+                </DataTable.Row>
+              ))}
+            </ScrollView>
           </DataTable>
         </SafeAreaView>
         <SafeAreaView>

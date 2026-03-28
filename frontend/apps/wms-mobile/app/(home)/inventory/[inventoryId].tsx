@@ -2,19 +2,17 @@
 
 import { GlobalContext } from "@/utility/Contexts";
 import { Inventory, LocationData } from "@/utility/Models";
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
-import { Text } from "react-native";
+import { Pressable, Text } from "react-native";
 import { DataTable } from "react-native-paper";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-
-// TODO
 
 export default function ViewInventory() {
   const globalCtx = useContext(GlobalContext);
   const userData = globalCtx?.userData;
   const router = useRouter();
-  const { inventoryId, jsonData } = useLocalSearchParams();
+  const { inventoryId, itemName, itemUPC, jsonData } = useLocalSearchParams();
   const [entry, setEntry] = useState<Inventory>();
 
   useEffect(() => {
@@ -22,7 +20,7 @@ export default function ViewInventory() {
       router.navigate("/login");
     }
 
-    if (jsonData.length === 0) {
+    if (jsonData?.length === 0) {
       alert("Data Failed To Transfer");
       globalCtx?.insertError({
         title: "Failed To Transfer Data",
@@ -40,6 +38,7 @@ export default function ViewInventory() {
       <SafeAreaView className="flex flex-1 justify-center">
         <SafeAreaView className="self-center items-center">
           <SafeAreaView className="flex-row gap-x-3">
+            {/*
             <Link
               className="underline font-bold text-lg text-cyan-600"
               href={{
@@ -47,9 +46,35 @@ export default function ViewInventory() {
                 params: { productId: entry?.item_id! },
               }}
             >
-              {/*TODO Replace With Item Name*/ entry?.item_id}
+              {itemName}
             </Link>
+            */}
+            <Pressable
+              onPress={() => {
+                router.push({
+                  pathname: "/products/[productId]",
+                  params: { productId: entry?.item_id! },
+                });
+              }}
+            >
+              <Text className="underline font-bold text-lg text-cyan-600">
+                {itemName}
+              </Text>
+            </Pressable>
             <Text className="font-bold text-lg">: :</Text>
+            <Pressable
+              onPress={() => {
+                router.push({
+                  pathname: "/products/[productId]",
+                  params: { productId: entry?.item_id! },
+                });
+              }}
+            >
+              <Text className="underline font-bold text-lg text-cyan-600">
+                {itemUPC}
+              </Text>
+            </Pressable>
+            {/*
             <Link
               className="underline font-bold text-lg text-cyan-600"
               href={{
@@ -57,8 +82,9 @@ export default function ViewInventory() {
                 params: { productId: entry?.item_id! },
               }}
             >
-              {/*TODO Replace With Item UPC */ entry?.item_id}
+              {itemUPC}
             </Link>
+            */}
           </SafeAreaView>
           <Text>{`Total:\t${entry?.total}`}</Text>
         </SafeAreaView>

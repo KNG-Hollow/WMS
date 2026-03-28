@@ -4,9 +4,9 @@ import { GetItems } from "@/utility/ApiServices";
 import { GlobalContext } from "@/utility/Contexts";
 import { Item } from "@/utility/Models";
 import { Ionicons } from "@expo/vector-icons";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
-import { Text } from "react-native";
+import { Pressable, Text } from "react-native";
 import { DataTable } from "react-native-paper";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -65,15 +65,31 @@ export default function AllItems() {
                 <DataTable.Cell>{mapItem.upc}</DataTable.Cell>
                 <DataTable.Cell>{mapItem.description}</DataTable.Cell>
                 <DataTable.Cell className="justify-end right-4">
+                  {/*
                   <Link
                     className="text-cyan-600"
                     href={{
                       pathname: "/products/[productId]",
                       params: { productId: mapItem.id! },
                     }}
-                  >
+                    >
                     <Ionicons name="arrow-forward-circle" size={24} />
                   </Link>
+                  */}
+                  <Pressable
+                    onPress={() => {
+                      router.push({
+                        pathname: "/products/[productId]",
+                        params: { productId: mapItem.id! },
+                      });
+                    }}
+                  >
+                    <Ionicons
+                      style={{ color: "#0891b2" }}
+                      name="arrow-forward-circle"
+                      size={24}
+                    />
+                  </Pressable>
                 </DataTable.Cell>
               </DataTable.Row>
             ))}

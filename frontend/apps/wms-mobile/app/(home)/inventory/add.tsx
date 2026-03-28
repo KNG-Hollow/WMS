@@ -25,6 +25,7 @@ import { DataTable } from "react-native-paper";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 // TODO Remove scannedCode from global context when exiting route
+// TODO Expand SearchDropdown To (5) Entries
 
 const audioSource = require("@/assets/audio/Confirmation.mp3");
 
@@ -40,7 +41,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
   return (
     <FlatList
       className=""
-      data={options}
+      data={options.slice(0, 9)}
       renderItem={({ item }) => (
         <Pressable
           className="border-2 border-cyan-700 items-center py-1 bg-slate-300"
@@ -290,6 +291,13 @@ export default function AddInventory() {
   };
 
   const showConfirmDialog = () => {
+    if (productQueue.length === 0) {
+      alert("Queue Is Empty!");
+      return;
+    } else if (productQueue.filter((v) => v.count < 1).length > 0) {
+      alert("Unit Count Cannot Be Empty, Please Adjust!");
+      return;
+    }
     Alert.alert(
       "Confirm?",
       "Do you commit to sending these products to inventory?",
@@ -326,7 +334,7 @@ export default function AddInventory() {
           </SafeAreaView>
         )}
 
-        <SafeAreaView className="h-1/5 w-11/12">
+        <SafeAreaView className="w-11/12">
           <TextInput
             className="border-2 border-cyan-600"
             onChangeText={(text: string) => {

@@ -37,6 +37,14 @@ export default function StackLayout() {
             backgroundColor: "#25292e",
           },
           headerTintColor: "#fff",
+          headerBackVisible: false,
+          headerRight: () => (
+            <View className="flex-row mr-2">
+              <Pressable onPress={() => router.back()}>
+                <Text className="text-white font-semibold text-lg">Back</Text>
+              </Pressable>
+            </View>
+          ),
         }}
       />
     </Stack>

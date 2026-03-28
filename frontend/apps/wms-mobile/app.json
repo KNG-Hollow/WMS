@@ -44,7 +44,9 @@
           "enableCodeScanner": true
         }
       ],
-      ["expo-router"],
+      [
+        "expo-router"
+      ],
       [
         "expo-splash-screen",
         {
@@ -64,7 +66,8 @@
           "enableBackgroundPlayback": true,
           "enableBackgroundRecording": false
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true,
