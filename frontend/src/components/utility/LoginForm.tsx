@@ -69,19 +69,19 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-full flex flex-col">
-      <div className="text-center w-3/4 py-2 border-2 bg-gray-900 self-center mt-15 text-2xl font-bold">
+    <div className="flex flex-1 gap-y-15 items-center justify-center flex-col">
+      <div className="text-center w-svh py-3 border-2 rounded bg-gray-900 text-2xl font-semibold">
         <h2>Login</h2>
       </div>
-      <div className="mt-5 flex justify-center">
+      <div className="w-svh flex justify-center">
         <div
           id="login-container"
-          className="mt-10 border-3 px-10 rounded-xl py-10 bg-gray-900 flex h-full flex-col items-center"
+          className="border-2 rounded-xl py-15 gap-y-10 bg-gray-900 flex w-full flex-col items-center justify-center"
         >
-          <div id="login-form">
+          <div id="login-form" className="space-y-5">
             <div
               id="input-username"
-              className="flex flex-row pr-22 space-x-2 font-extrabold"
+              className="flex flex-row pr-22 space-x-2 font-bold"
             >
               <label htmlFor="username-area">Username:</label>
               <input
@@ -101,7 +101,7 @@ export default function LoginForm() {
             </div>
             <div
               id="input-password"
-              className="mt-4 flex flex-row space-x-3 font-extrabold"
+              className="flex flex-row space-x-3 font-bold"
             >
               <label htmlFor="password-area">Password:</label>
               <input
@@ -120,7 +120,7 @@ export default function LoginForm() {
               />
             </div>
           </div>
-          <div id="login-buttons" className="mt-15">
+          <div id="login-buttons" className="">
             <div id="login-button">
               <button onClick={handleLogin}>Login</button>
             </div>

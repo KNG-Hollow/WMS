@@ -47,7 +47,7 @@ export default function App() {
     <StrictMode>
       <Provider store={store}>
         <div
-          className="bg-linear-to-b from-cyan-600 to-slate-600 bg-center bg-no-repeat min-h-screen"
+          className="flex bg-linear-to-b from-cyan-600 to-slate-600 bg-center bg-no-repeat min-h-screen"
           style={{ backgroundImage: `url(${backgroundImage})` }}
         >
           <Navbar />

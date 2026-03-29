@@ -28,13 +28,13 @@ export default function Navbar() {
   function UtilityNav() {
     return (
       <li className="group absolute left-2 bottom-1 ">
-        <div className="cursor-pointer w-8 h-8">
+        <div className="cursor-pointer">
           <svg
             viewBox="0 0 32 32"
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
             fill="#000000"
-            className="fill-cyan-400"
+            className="fill-cyan-400 w-8 h-8"
             data-darkreader-inline-fill=""
           >
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -75,7 +75,7 @@ export default function Navbar() {
             </g>
           </svg>
         </div>
-        <div className="hidden mt-0.5 bg-gray-800 group-hover:block absolute -left-5">
+        <div className="hidden mt-0.5 bg-gray-800 group-hover:block absolute">
           <Link
             id="link-home"
             to="/"
@@ -136,7 +136,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className="py-2 border-b-2 fixed top-0 left-0 flex w-full scale-z-100 content-center justify-center bg-cyan-800 border-cyan-600">
+    <div className="py-2 border-b-2 fixed top-0 left-0 flex w-svw scale-z-100 content-center justify-center bg-cyan-600 border-cyan-800">
       <nav>
         <ul className="flex flex-row gap-8">
           {UtilityNav()}
