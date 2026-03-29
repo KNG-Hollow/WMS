@@ -61,13 +61,13 @@ export default function Accounts() {
   }, [appActive, dispatch, errorActive, navigate, userRole, userState]);
 
   return (
-    <div className="flex w-full py-20 justify-center">
-      <div className="mt-10 border-3 border-cyan-600 rounded bg-gray-900 p-20 items-center gap-y-2 flex flex-col">
-        <div className="font-extrabold mb-10 text-center text-xl text-cyan-500">
+    <div className="flex flex-1 justify-center">
+      <div className="my-20 border-3 border-cyan-600 rounded bg-gray-900 p-20 gap-y-10 flex flex-col">
+        <div className="font-bold text-center text-xl text-cyan-500">
           <h1>Account Manager</h1>
         </div>
-        <div className="mt-10 mb-20 flex w-11/12 flex-col self-center">
-          <div id="home-container">
+        <div className="flex">
+          <div id="home-container" className="flex flex-col gap-y-10">
             <div
               id="tasks-info-container"
               className="rounded-2xl flex flex-col items-center border-2 border-cyan-500 py-5"
@@ -90,19 +90,16 @@ export default function Accounts() {
             </div>
             <div
               id="tasks-container"
-              className="mt-10 mb-10 rounded-l border-2 border-cyan-500 py-5"
+              className="rounded-l border-2 border-cyan-500 py-5"
             >
-              <div>
-                <div className="flex flex-col items-center justify-center">
-                  <div
-                    id="recent-tasks-text"
-                    className="w-11/12 border-2 border-cyan-500 py-3"
-                  >
-                    <h2 className="font-bold text-center">All Accounts:</h2>
+              <div className="flex flex-col gap-y-5">
+                <div className="flex justify-center">
+                  <div className="w-10/12 border-2 rounded border-cyan-500 py-3">
+                    <h2 className="font-semibold text-center">All Accounts:</h2>
                   </div>
                 </div>
-                <div className="mt-5 flex flex-col items-center justify-center">
-                  <table className="w-11/12">
+                <div className="">
+                  <table className="">
                     <thead>
                       <tr>
                         <th>Firstname:</th>

@@ -2,6 +2,7 @@
 
 import { useAppSelector } from "@/app/hooks";
 import { selectAppActive, selectAppUser } from "@/features/appSlice";
+import { selectErrorActive } from "@/features/errors/errorSlice";
 import { PingHealth } from "@/services/utilityApi";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
@@ -11,6 +12,7 @@ import { Link } from "react-router";
 export default function Navbar() {
   const appActive = useAppSelector(selectAppActive);
   const userState = useAppSelector(selectAppUser);
+  const errorActive = useAppSelector(selectErrorActive);
   const [connected, setConnected] = useState<boolean>(true);
 
   useEffect(() => {
@@ -21,7 +23,7 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, []);
 
-  if (!appActive || !userState.userActive) {
+  if (!appActive || !userState.userActive || errorActive) {
     return null;
   }
 

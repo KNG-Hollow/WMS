@@ -193,18 +193,18 @@ export default function EditAccount() {
   };
 
   return (
-    <div className="flex py-20 flex-col items-center">
+    <div className="flex flex-1 justify-center items-center">
       <div
         id="form-container"
-        className="mt-10 border-3 border-cyan-600 rounded bg-gray-900 p-20 gap-y-2 flex flex-col"
+        className="my-20 border-3 border-cyan-600 rounded bg-gray-900 p-20 gap-y-10 flex flex-col"
       >
-        <div className="font-extrabold mb-10 text-center text-xl text-cyan-500">
+        <div className="font-bold text-center text-xl text-cyan-500">
           <h1>Edit Account</h1>
         </div>
-        <div id="form" className="flex gap-y-5 flex-col items-center">
+        <div id="form" className="flex gap-y-5 flex-col items-start">
           {userRole === "ADMIN" ? (
-            <div id="input-username">
-              <label htmlFor="username-area" className="relative right-2">
+            <div id="input-username" className="space-x-2">
+              <label htmlFor="username-area" className="">
                 *Username:
               </label>
               <input
@@ -220,7 +220,7 @@ export default function EditAccount() {
               />
             </div>
           ) : null}
-          <div id="input-password">
+          <div id="input-password" className="space-x-3">
             <label htmlFor="password-area">*Password:</label>
             <input
               className="border-2 rounded text-center"
@@ -236,7 +236,7 @@ export default function EditAccount() {
           </div>
           {userRole === "ADMIN" ? (
             <>
-              <div id="input-firstname">
+              <div id="input-firstname" className="space-x-3">
                 <label htmlFor="firstname-area">*Firstname:</label>
                 <input
                   className="border-2 rounded text-center"
@@ -250,7 +250,7 @@ export default function EditAccount() {
                   }}
                 />
               </div>
-              <div id="input-lastname">
+              <div id="input-lastname" className="space-x-3">
                 <label htmlFor="lastname-area">*Lastname:</label>
                 <input
                   className="border-2 rounded text-center"
@@ -267,7 +267,7 @@ export default function EditAccount() {
             </>
           ) : null}
 
-          <div id="input-email">
+          <div id="input-email" className="space-x-14">
             <label htmlFor="email-area">Email:</label>
             <input
               className="border-2 rounded text-center"
@@ -284,7 +284,7 @@ export default function EditAccount() {
               }}
             />
           </div>
-          <div id="input-phone">
+          <div id="input-phone" className="space-x-12">
             <label htmlFor="phone-area">Phone:</label>
             <input
               className="border-2 rounded text-center"
@@ -304,7 +304,7 @@ export default function EditAccount() {
           {userRole === "ADMIN" ? (
             <div
               id="input-role"
-              className="border flex items-center py-2 flex-col w-1/2"
+              className="border-2 flex self-center items-center p-4 flex-col w-1/2 gap-y-2"
             >
               <label className="font-bold flex">Role:</label>
               <label htmlFor="role-customer">
@@ -341,7 +341,6 @@ export default function EditAccount() {
                 />
                 <span className="">Employee</span>
               </label>
-
               <label htmlFor="role-manager">
                 <input
                   className=""
@@ -395,7 +394,7 @@ export default function EditAccount() {
               </label>
             </div>
           ) : null}
-          <div className="mt-5 flex flex-col gap-y-2">
+          <div className="flex self-center flex-col gap-y-2">
             <button onClick={() => handleUpdate()}>Submit</button>
             {userRole === "ADMIN" ? (
               <button onClick={() => handleDelete()}>Delete</button>

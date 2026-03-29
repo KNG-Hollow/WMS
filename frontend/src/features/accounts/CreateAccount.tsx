@@ -123,17 +123,17 @@ export default function CreateAccountForm() {
   };
 
   return (
-    <div className="flex pt-20 pb-20 flex-col items-center">
+    <div className="flex flex-1 justify-center items-center">
       <div
         id="form-container"
-        className="border-3 items-center border-cyan-600 rounded bg-gray-900 p-20 gap-y-2 flex flex-col"
+        className="border-3 items-center border-cyan-600 rounded bg-gray-900 p-20 my-20 gap-y-10 flex flex-col"
       >
         <div className="font-bold text-xl text-cyan-500">
           <h1>Create Account</h1>
         </div>
-        <div id="form" className="flex mt-5 gap-y-5 flex-col items-center">
-          <div id="input-username">
-            <label htmlFor="username-area" className="relative right-2">
+        <div id="form" className="flex gap-y-5 flex-col items-start">
+          <div id="input-username" className="space-x-2">
+            <label htmlFor="username-area" className="">
               *Username:
             </label>
             <input
@@ -147,7 +147,7 @@ export default function CreateAccountForm() {
               }}
             />
           </div>
-          <div id="input-password">
+          <div id="input-password" className="space-x-3">
             <label htmlFor="password-area">*Password:</label>
             <input
               className="border-2 rounded"
@@ -160,7 +160,7 @@ export default function CreateAccountForm() {
               }}
             />
           </div>
-          <div id="input-firstname">
+          <div id="input-firstname" className="space-x-3">
             <label htmlFor="firstname-area">*Firstname:</label>
             <input
               className="border-2 rounded"
@@ -173,7 +173,7 @@ export default function CreateAccountForm() {
               }}
             />
           </div>
-          <div id="input-lastname">
+          <div id="input-lastname" className="space-x-3">
             <label htmlFor="lastname-area">*Lastname:</label>
             <input
               className="border-2 rounded"
@@ -186,7 +186,7 @@ export default function CreateAccountForm() {
               }}
             />
           </div>
-          <div id="input-email">
+          <div id="input-email" className="space-x-14">
             <label htmlFor="email-area">Email:</label>
             <input
               className="border-2 rounded"
@@ -202,7 +202,7 @@ export default function CreateAccountForm() {
               }}
             />
           </div>
-          <div id="input-phone">
+          <div id="input-phone" className="space-x-12">
             <label htmlFor="phone-area">Phone:</label>
             <input
               className="border-2 rounded"
@@ -220,7 +220,7 @@ export default function CreateAccountForm() {
           </div>
           <div
             id="input-role"
-            className="border flex items-center py-2 flex-col w-1/2"
+            className="border flex items-center self-center p-4 flex-col w-1/2 gap-y-2"
           >
             <label className="font-bold flex">Role:</label>
             <label htmlFor="role-customer">
@@ -309,7 +309,7 @@ export default function CreateAccountForm() {
               <span className="">Admin</span>
             </label>
           </div>
-          <div className="mt-5 flex flex-col gap-y-2">
+          <div className="flex flex-col self-center gap-y-2">
             <button onClick={() => handleCreate()}>Submit</button>
             <button onClick={() => navigate(-1)}>Back</button>
           </div>

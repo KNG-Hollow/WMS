@@ -46,14 +46,14 @@ export default function App() {
   return (
     <StrictMode>
       <Provider store={store}>
+        <Navbar />
         <div
           className="flex bg-linear-to-b from-cyan-600 to-slate-600 bg-center bg-no-repeat min-h-screen"
           style={{ backgroundImage: `url(${backgroundImage})` }}
         >
-          <Navbar />
           <Outlet />
-          <Footer />
         </div>
+        <Footer />
       </Provider>
     </StrictMode>
   );

@@ -1,37 +1,53 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { useAppSelector } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { selectAppActive } from "../appSlice";
-import { selectHeader, selectMessage } from "./errorSlice";
+import {
+  insertError,
+  selectErrorActive,
+  selectHeader,
+  selectMessage,
+} from "./errorSlice";
 
 export default function Error() {
   const errTitle = useAppSelector(selectHeader);
   const errMessage = useAppSelector(selectMessage);
   const appActive = useAppSelector(selectAppActive);
+  const errActive = useAppSelector(selectErrorActive);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!appActive) {
       navigate("/login");
     }
-  }, [appActive, navigate]);
+    if (!errActive) {
+      dispatch(
+        insertError([
+          "Unknown Error",
+          "You have been sent to the error screen without having an error active. Please refresh the application!",
+          true,
+        ]),
+      );
+    }
+  }, [appActive, dispatch, errActive, navigate]);
 
   return (
-    <div className="text-center flex flex-col items-center">
-      <div id="error-header" className="mt-20">
-        <h2 className="text-red-600 underline text-xl font-extrabold">ERROR</h2>
-      </div>
+    <div className="flex flex-1 flex-col justify-center items-center w-svw h-svh">
       <div
         id="error-container"
-        className="border-2 items-center border-red-600 w-11/12 bg-gray-900 py-10 gap-y-15 rounded flex-col flex mt-15"
+        className="border-2 text-center items-center border-red-600 p-10 bg-gray-900 gap-y-15 rounded flex-col flex"
       >
+        <div id="error-header" className="">
+          <h2 className="text-red-600 underline text-xl font-bold">ERROR</h2>
+        </div>
         <div className="space-y-3">
           <h2>Title:</h2>
           <h4
             id="error-title"
-            className="text-red-700 wrap-break-word font-bold text-lg w-2xl"
+            className="text-red-700 wrap-break-word font-bold w-xl"
           >
             {errTitle}
           </h4>
@@ -42,9 +58,9 @@ export default function Error() {
             {errMessage}
           </p>
         </div>
-      </div>
-      <div id="error-button" className="mt-15 mb-15">
-        <button onClick={() => window.location.reload()}>Refresh</button>
+        <div id="error-button" className="">
+          <button onClick={() => window.location.reload()}>Refresh</button>
+        </div>
       </div>
     </div>
   );
