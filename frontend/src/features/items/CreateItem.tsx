@@ -27,11 +27,12 @@ export default function CreateItemForm() {
   useEffect(() => {
     if (userRole !== "ADMIN") {
       dispatch(
-        insertError([
-          "Unauthorized!",
-          "You do not have the proper credentials to access this information",
-          true,
-        ]),
+        insertError({
+          header: "Unauthorized!",
+          message:
+            "You do not have the proper credentials to access this information",
+          errorActive: true,
+        }),
       );
     }
     if (!appActive) {
@@ -120,11 +121,11 @@ export default function CreateItemForm() {
     } catch (err) {
       console.error("ApiService Failed To Create Item: " + err);
       dispatch(
-        insertError([
-          "Api Service Failure",
-          `Failed To Populate The Database And Get A Successful Response ::\n${err}`,
-          true,
-        ]),
+        insertError({
+          header: "Api Service Failure",
+          message: `Failed To Populate The Database And Get A Successful Response ::\n${err}`,
+          errorActive: true,
+        }),
       );
     }
   };

@@ -21,11 +21,12 @@ export default function Accounts() {
   useEffect(() => {
     if (userRole !== "ADMIN") {
       dispatch(
-        insertError([
-          "Unauthorized!",
-          "You do not have the proper credentials to access this information",
-          true,
-        ]),
+        insertError({
+          header: "Unauthorized!",
+          message:
+            "You do not have the proper credentials to access this information",
+          errorActive: true,
+        }),
       );
     }
     if (!appActive) {
@@ -49,11 +50,11 @@ export default function Accounts() {
         console.error("Failed to get accounts array: " + err);
         alert("Failed to get accounts");
         dispatch(
-          insertError([
-            "Failed To Get Accounts",
-            `Failed To Return An Acceptable Accounts Array ::\n${err}`,
-            true,
-          ]),
+          insertError({
+            header: "Failed To Get Accounts",
+            message: `Failed To Return An Acceptable Accounts Array ::\n${err}`,
+            errorActive: true,
+          }),
         );
       }
     };
@@ -62,7 +63,7 @@ export default function Accounts() {
 
   return (
     <div className="flex flex-1 justify-center">
-      <div className="my-20 border-3 border-cyan-600 rounded bg-gray-900 p-20 gap-y-10 flex flex-col">
+      <div className="my-20 border-3 border-cyan-600 rounded bg-gray-900 p-20 gap-y-10 flex flex-col w-5/6 items-center">
         <div className="font-bold text-center text-xl text-cyan-500">
           <h1>Account Manager</h1>
         </div>

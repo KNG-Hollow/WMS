@@ -39,11 +39,11 @@ export default function Items() {
         console.error("Failed to get item array: " + err);
         alert("Failed To Get Items");
         dispatch(
-          insertError([
-            "Failed To Get Items",
-            `Failed To Return An Acceptable Item Array :: ${err}`,
-            true,
-          ]),
+          insertError({
+            header: "Failed To Get Items",
+            message: `Failed To Return An Acceptable Item Array :: ${err}`,
+            errorActive: true,
+          }),
         );
       }
     };

@@ -43,11 +43,11 @@ export default function ViewAccount() {
         console.error(`Failed To Get Account ${id}: ` + err);
         alert(`Failed To Get Account: ${id}`);
         dispatch(
-          insertError([
-            "Failed To Get Account!",
-            `Failed To Return An Acceptable Account Object With ID [${account?.id}] :: ${err}`,
-            true,
-          ]),
+          insertError({
+            header: "Failed To Get Account!",
+            message: `Failed To Return An Acceptable Account Object With ID [${account?.id}] :: ${err}`,
+            errorActive: true,
+          }),
         );
       }
     };

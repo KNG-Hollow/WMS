@@ -58,11 +58,11 @@ export default function ViewItem() {
         console.error(`Failed to get item ${id}: ` + err);
         alert(`Failed To Get Item: ${id}`);
         dispatch(
-          insertError([
-            "Failed To Get Item!",
-            `Failed To Return An Acceptable Item Object With ID: ${id}`,
-            true,
-          ]),
+          insertError({
+            header: "Failed To Get Item!",
+            message: `Failed To Return An Acceptable Item Object With ID: ${id}`,
+            errorActive: true,
+          }),
         );
       }
     };

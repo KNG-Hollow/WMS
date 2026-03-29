@@ -34,11 +34,12 @@ export default function EditAccount() {
   useEffect(() => {
     if (userRole !== "ADMIN" && userState.id !== +id!) {
       dispatch(
-        insertError([
-          "Unauthorized!",
-          "You do not have the proper credentials to access this information",
-          true,
-        ]),
+        insertError({
+          header: "Unauthorized!",
+          message:
+            "You do not have the proper credentials to access this information",
+          errorActive: true,
+        }),
       );
     }
     if (!appActive) {
@@ -65,11 +66,11 @@ export default function EditAccount() {
         console.error(`Failed To Get Account ${id}: ` + err);
         alert(`Failed To Get Account: ${id}`);
         dispatch(
-          insertError([
-            "Failed To Get Account!",
-            `Failed To Return An Acceptable Account Object With ID [${account?.id}] :: ${err}`,
-            true,
-          ]),
+          insertError({
+            header: "Failed To Get Account!",
+            message: `Failed To Return An Acceptable Account Object With ID [${account?.id}] :: ${err}`,
+            errorActive: true,
+          }),
         );
       }
     };
@@ -110,11 +111,11 @@ export default function EditAccount() {
     } catch (err) {
       console.error("ApiService Failed To Delete Account: " + err);
       dispatch(
-        insertError([
-          "Api Service Failure",
-          `Failed To Delete From Database And Get A Successful Response ::\n${err}`,
-          true,
-        ]),
+        insertError({
+          header: "Api Service Failure",
+          message: `Failed To Delete From Database And Get A Successful Response ::\n${err}`,
+          errorActive: true,
+        }),
       );
     }
   };
@@ -183,11 +184,11 @@ export default function EditAccount() {
     } catch (err) {
       console.error("ApiService Failed To Create Account: " + err);
       dispatch(
-        insertError([
-          "Api Service Failure",
-          `Failed To Populate The Database And Get A Successful Response ::\n${err}`,
-          true,
-        ]),
+        insertError({
+          header: "Api Service Failure",
+          message: `Failed To Populate The Database And Get A Successful Response ::\n${err}`,
+          errorActive: true,
+        }),
       );
     }
   };

@@ -25,11 +25,12 @@ export default function Error() {
     }
     if (!errActive) {
       dispatch(
-        insertError([
-          "Unknown Error",
-          "You have been sent to the error screen without having an error active. Please refresh the application!",
-          true,
-        ]),
+        insertError({
+          header: "Unknown Error",
+          message:
+            "You have been sent to the error screen without having an error active. Please refresh the application!",
+          errorActive: true,
+        }),
       );
     }
   }, [appActive, dispatch, errActive, navigate]);
