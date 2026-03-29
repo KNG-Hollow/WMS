@@ -1,0 +1,29 @@
+# IDE Specific
+*vscode*
+
+# Frontend
+node_modules/
+build/
+
+# Go
+*.exe
+*.out
+*.test
+*.tmp
+*.log
+WMS-server
+sample.png
+
+**/.git
+**/vendor
+**/bin
+**/obj
+
+# SQL
+WMS.session.sql
+
+# Secrets
+*.key
+*.crt
+*.pem
+*.env
