@@ -3,6 +3,8 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import type { Item } from "@/app/models";
 import { DeleteItem, GetItem, UpdateItem } from "@/services/itemApi";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -191,33 +193,17 @@ export default function EditItem() {
   };
 
   return (
-    <div className="flex py-20 flex-col items-center">
+    <div className="flex flex-1 justify-center">
       <div
         id="form-container"
-        className="mt-10 border-3 border-cyan-600 rounded bg-gray-900 p-20 gap-y-2 flex flex-col"
+        className="flex flex-col w-5/6 my-20 border-3 border-cyan-600 rounded bg-gray-900 p-20 gap-y-20"
       >
-        <div className="font-extrabold mb-10 text-center text-xl text-cyan-500">
+        <div className="font-bold text-center text-xl text-cyan-500">
           <h1>Edit Item</h1>
         </div>
-        <div id="form" className="flex gap-y-5 flex-col items-center">
-          <div id="input-upc">
-            <label htmlFor="upc-area" className="relative right-2">
-              UPC:
-            </label>
-            <input
-              className="border-2 rounded text-center"
-              type="text"
-              aria-label="upc"
-              placeholder={item?.upc}
-              value={upcIn}
-              onChange={(e) => {
-                const sanitizedValue = DOMPurify.sanitize(e.target.value);
-                setUpcValue(sanitizedValue);
-              }}
-            />
-          </div>
-          <div id="input-name">
-            <label htmlFor="name-area" className="relative right-2">
+        <div id="form" className="flex gap-y-10 flex-col items-center">
+          <div id="input-name" className="flex gap-x-2">
+            <label htmlFor="name-area" className="font-semibold">
               Name:
             </label>
             <input
@@ -232,11 +218,27 @@ export default function EditItem() {
               }}
             />
           </div>
-          <div id="input-description">
-            <label
-              htmlFor="description-area"
-              className="text-center relative right-2"
-            >
+          <div id="input-upc" className="flex gap-x-5">
+            <label htmlFor="upc-area" className="font-semibold">
+              UPC:
+            </label>
+            <input
+              className="border-2 rounded text-center"
+              type="text"
+              aria-label="upc"
+              placeholder={item?.upc}
+              value={upcIn}
+              onChange={(e) => {
+                const sanitizedValue = DOMPurify.sanitize(e.target.value);
+                setUpcValue(sanitizedValue);
+              }}
+            />
+          </div>
+          <div
+            id="input-description"
+            className="flex flex-col items-center gap-y-2"
+          >
+            <label htmlFor="description-area" className="font-semibold">
               Description:
             </label>
             <textarea
@@ -252,8 +254,8 @@ export default function EditItem() {
               }}
             />
           </div>
-          <div id="input-weight">
-            <label htmlFor="weight-area" className="relative right-2">
+          <div id="input-weight" className="flex space-x-2">
+            <label htmlFor="weight-area" className="font-semibold">
               Weight:
             </label>
             <input
@@ -266,9 +268,9 @@ export default function EditItem() {
               }}
             />
           </div>
-          <div id="input-image" className="flex flex-col">
-            <div className="flex">
-              <label htmlFor="image-area" className="relative right-2">
+          <div id="input-image" className="flex flex-col items-center gap-y-3">
+            <div className="flex gap-x-2">
+              <label htmlFor="image-area" className="font-semibold">
                 Image:
               </label>
               <input
@@ -285,18 +287,34 @@ export default function EditItem() {
               />
               <label
                 htmlFor="image"
-                className="hover:border-2 border-cyan-200 rounded p-1 bg-cyan-700 font-semibold"
+                className="hover:border-2 border-cyan-200 rounded p-1 bg-cyan-700 font-medium"
               >
                 Select File
               </label>
             </div>
             {imageIn && (
-              <div className="text-center border p-2 space-y-2 mt-5">
+              <div className="text-center border-2 p-3 space-y-2 mt-5">
                 <h3 className="font-semibold">File details:</h3>
-                <ul>
-                  <li>Name: {imageIn.name}</li>
-                  <li>Type: {imageIn.type}</li>
-                  <li>Size: {imageIn.size} bytes</li>
+                <ul className="space-y-2">
+                  <li className="flex gap-x-2">
+                    <p className="font-semibold">Name:</p>
+                    <p>{imageIn.name}</p>
+                  </li>
+                  <li className="flex gap-x-2">
+                    <p className="font-semibold">Type:</p>
+                    <p className="relative left-2">{imageIn.type}</p>
+                  </li>
+                  <li className="flex gap-x-2">
+                    <p className="font-semibold">Size:</p>
+                    <p className="relative left-3">{imageIn.size / 1000} KB</p>
+                  </li>
+                  <li className="mt-5">
+                    <FontAwesomeIcon
+                      className="cursor-pointer text-red-600"
+                      onClick={() => setImageValue(null)}
+                      icon={faTrashCan}
+                    />
+                  </li>
                 </ul>
               </div>
             )}

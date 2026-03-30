@@ -76,36 +76,36 @@ export default function ViewItem() {
   }, [appActive, dispatch, errorActive, id, imageUrl, navigate, userState]);
 
   return (
-    <div className="py-20 flex justify-center">
-      <div className="flex flex-col gap-y-5 p-20 bg-gray-900 border-3 border-cyan-600">
-        <div className="flex flex-col gap-y-5">
-          <div className="text-xl text-center mb-5 font-bold">
-            <h1>{item?.name}</h1>
-          </div>
-          <div className="flex gap-x-2">
-            <h2 className="font-bold">UPC:</h2>
+    <div className="flex flex-1 justify-center">
+      <div className="flex flex-col w-5/6 my-20 p-20 gap-y-20 bg-gray-900 border-3 border-cyan-600 items-center">
+        <div className="text-xl text-cyan-500 text-center font-bold">
+          <h1>{item?.name}</h1>
+        </div>
+        <div className="flex flex-col gap-y-10">
+          <div className="flex space-x-17">
+            <h2 className="font-semibold">UPC:</h2>
             <h2>{item?.upc}</h2>
           </div>
-          <div className="flex gap-x-2">
-            <h2 className="font-bold">Description:</h2>
-            <h2>{item?.description}</h2>
+          <div className="flex gap-x-3">
+            <h2 className="font-semibold">Description:</h2>
+            <h2 className="wrap-break-word">{item?.description}</h2>
           </div>
-          <div className="flex gap-x-2">
-            <h2 className="font-bold">Weight:</h2>
+          <div className="flex gap-x-12">
+            <h2 className="font-semibold">Weight:</h2>
             <h2>{weightDisplay}</h2>
           </div>
           <div className="flex items-center flex-col gap-y-7">
-            <h2 className="font-bold">Sample Image:</h2>
+            <h2 className="font-semibold">Image:</h2>
             <div className="w-1/2 h-1/2 border">
               {imageUrl ? (
-                <img src={imageUrl} alt={`${item?.name} image`} />
+                <img src={imageUrl} alt={`${item?.name}.png`} />
               ) : (
                 <p>Loading...</p>
               )}
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-y-1 mt-10 self-center">
+        <div className="flex flex-col gap-y-1">
           <button onClick={() => navigate("./edit")}>Edit</button>
           <button onClick={() => navigate(-1)}>Back</button>
         </div>

@@ -15,7 +15,7 @@ import { selectRole, selectUserState } from "../accounts/accountSlice";
 import { selectAppActive } from "../appSlice";
 import { insertError, selectErrorActive } from "../errors/errorSlice";
 
-// TODO Replace Header item_id with Item's Name
+// TODO Add Ability To Delete Inventory Entry
 
 export default function EditInventory() {
   const userRole = useAppSelector(selectRole);

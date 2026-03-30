@@ -42,11 +42,11 @@ export default function Boxes() {
         console.error("Failed to get boxes array: " + err);
         alert("Failed to get boxes");
         dispatch(
-          insertError([
-            "Failed To Get Boxes",
-            `Failed To Return An Acceptable Boxes Array ::\n${err}`,
-            true,
-          ]),
+          insertError({
+            header: "Failed To Get Boxes",
+            message: `Failed To Return An Acceptable Boxes Array ::\n${err}`,
+            errorActive: true,
+          }),
         );
       }
     };
@@ -73,11 +73,11 @@ export default function Boxes() {
     } catch (err) {
       console.error("ApiService Failed To Delete Item: " + err);
       dispatch(
-        insertError([
-          "Api Service Failure",
-          `Failed To Delete From Database And Get A Successful Response ::\n${err}`,
-          true,
-        ]),
+        insertError({
+          header: "Api Service Failure",
+          message: `Failed To Delete From Database And Get A Successful Response ::\n${err}`,
+          errorActive: true,
+        }),
       );
     }
   };

@@ -1978,6 +1978,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fortawesome/fontawesome-common-types@npm:7.2.0":
+  version: 7.2.0
+  resolution: "@fortawesome/fontawesome-common-types@npm:7.2.0"
+  checksum: 10c0/991ca1390c078d973e92034cf7dbae2fc3aa50cd7ff322b7b23e4c54ec84dae12979bada9a782bdaea11a1577ae74d802aa651c590f41d2e1b1126c17e6cd413
+  languageName: node
+  linkType: hard
+
+"@fortawesome/fontawesome-svg-core@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "@fortawesome/fontawesome-svg-core@npm:7.2.0"
+  dependencies:
+    "@fortawesome/fontawesome-common-types": "npm:7.2.0"
+  checksum: 10c0/5c6655b030254804999eb87b96111cdcc42c0789e6e9ea13bc1e37d5ebf9fb982c79a618b68272cc59c23c4e1abf73d487e747a17a61499eac5f9f528fc54ad4
+  languageName: node
+  linkType: hard
+
+"@fortawesome/free-regular-svg-icons@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "@fortawesome/free-regular-svg-icons@npm:7.2.0"
+  dependencies:
+    "@fortawesome/fontawesome-common-types": "npm:7.2.0"
+  checksum: 10c0/57b0fdecb2d820b5732559ef3893c905ccfe59cc267ee8b631f2826a3703acba54e73a37b5783436a2cf54c3561213068877b2455c5b1b23377ad7aacf27c019
+  languageName: node
+  linkType: hard
+
+"@fortawesome/react-fontawesome@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@fortawesome/react-fontawesome@npm:3.3.0"
+  peerDependencies:
+    "@fortawesome/fontawesome-svg-core": ~6 || ~7
+    react: ^18.0.0 || ^19.0.0
+  checksum: 10c0/6c35b9197ee64afc3afad85dee644938c51938cbf2e851c878eed5dd9afba5d1da88a46aca3c3cd88af9e7de16798910d27ef2a45047dd0ef36de070f51f71c0
+  languageName: node
+  linkType: hard
+
 "@gar/promise-retry@npm:^1.0.0":
   version: 1.0.2
   resolution: "@gar/promise-retry@npm:1.0.2"
@@ -13955,6 +13990,9 @@ __metadata:
   resolution: "wms-frontend@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.0.0"
+    "@fortawesome/fontawesome-svg-core": "npm:^7.2.0"
+    "@fortawesome/free-regular-svg-icons": "npm:^7.2.0"
+    "@fortawesome/react-fontawesome": "npm:^3.3.0"
     "@react-router/dev": "npm:^7.13.0"
     "@react-router/node": "npm:^7.13.0"
     "@react-router/serve": "npm:^7.13.0"

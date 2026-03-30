@@ -4,6 +4,8 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import type { Inventory, Item, ItemInfo, LocationData } from "@/app/models";
 import { CreateInventory } from "@/services/inventoryApi";
 import { GetItem, GetItemsList } from "@/services/itemApi";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -299,11 +301,12 @@ export default function CreateInventoryForm() {
               <ul className="flex gap-x-10">
                 <li>Area: {mapLocation.area}</li>
                 <li>Count: {mapLocation.count}</li>
-                <li
-                  className="text-red-600 underline font-medium cursor-pointer"
-                  onClick={() => handleRemove(mapLocation)}
-                >
-                  Remove
+                <li>
+                  <FontAwesomeIcon
+                    className="text-red-600 cursor-pointer"
+                    onClick={() => handleRemove(mapLocation)}
+                    icon={faTrashCan}
+                  />
                 </li>
               </ul>
             ))}

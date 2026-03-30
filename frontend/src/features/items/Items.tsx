@@ -51,31 +51,31 @@ export default function Items() {
   }, [appActive, dispatch, errorActive, navigate, userState]);
 
   return (
-    <div className="py-20 flex justify-center">
-      <div className="flex flex-col items-center gap-y-5 w-11/12 justify-center p-20 border-3 border-cyan-600 bg-gray-900">
+    <div className="flex flex-1 justify-center">
+      <div className="flex flex-col items-center my-20 gap-y-10 w-5/6 p-20 border-3 border-cyan-600 bg-gray-900">
         <div className="text-2xl font-bold text-cyan-400">
           <h1>Item Manager</h1>
         </div>
-        <div className="mt-5 flex flex-col gap-y-2">
+        <div className="flex flex-col gap-y-5">
           <div className="flex justify-center">
-            <div className="flex space-x-1">
+            <div className="flex space-x-2 font-semibold">
               <h2>Entries:</h2>
               <p className="text-cyan-200">
                 {allItems === null ? 0 : allItems?.length}
               </p>
             </div>
           </div>
-          <div className="flex flex-col gap-y-1 mt-2">
-            <button onClick={() => navigate(-1)}>Back</button>
+          <div className="flex flex-col gap-y-2">
             <button onClick={() => navigate("./create")}>Create Item</button>
+            <button onClick={() => navigate(-1)}>Back</button>
           </div>
         </div>
-        <div className="mt-5 w-full border border-cyan-400">
+        <div className="w-full border border-cyan-400">
           <table className="w-full">
             <thead className="border-b border-cyan-400">
               <tr>
-                <th>UPC</th>
                 <th>Name</th>
+                <th>UPC</th>
                 <th>Description</th>
               </tr>
             </thead>
@@ -85,7 +85,6 @@ export default function Items() {
                   key={mapItem.id}
                   className="border-b text-center font-semibold border-cyan-500"
                 >
-                  <td>{mapItem.upc}</td>
                   <td key={mapItem.id} className="hover:underline">
                     <Link
                       to={`../items/${mapItem.id}`}
@@ -94,7 +93,8 @@ export default function Items() {
                       {mapItem.name}
                     </Link>
                   </td>
-                  <td>{mapItem.description}</td>
+                  <td>{mapItem.upc}</td>
+                  <td className="">{mapItem.description}</td>
                 </tr>
               ))}
             </tbody>

@@ -36,11 +36,12 @@ export default function EditBox() {
   useEffect(() => {
     if (userRole !== "ADMIN") {
       dispatch(
-        insertError([
-          "Unauthorized!",
-          "You do not have the proper credentials to access this information",
-          true,
-        ]),
+        insertError({
+          header: "Unauthorized!",
+          message:
+            "You do not have the proper credentials to access this information",
+          errorActive: true,
+        }),
       );
     }
     if (!appActive) {
@@ -64,11 +65,11 @@ export default function EditBox() {
         console.error(`Failed to get item names: \n${err}`);
         alert("Failed Item Names!");
         dispatch(
-          insertError([
-            "Failed To Get Item Info!",
-            "Failed To Return An Acceptable Item Information Array.",
-            true,
-          ]),
+          insertError({
+            header: "Failed To Get Item Info!",
+            message: "Failed To Return An Acceptable Item Information Array.",
+            errorActive: true,
+          }),
         );
       }
     };
@@ -88,11 +89,11 @@ export default function EditBox() {
         console.error(`Failed To Get Box ${id}: ` + err);
         alert(`Failed To Get Box: ${id}`);
         dispatch(
-          insertError([
-            "Failed To Get Box!",
-            `Failed To Return An Acceptable Box Object With ID [${box?.id}] :: ${err}`,
-            true,
-          ]),
+          insertError({
+            header: "Failed To Get Box!",
+            message: `Failed To Return An Acceptable Box Object With ID [${box?.id}] :: ${err}`,
+            errorActive: true,
+          }),
         );
       }
     };
@@ -206,11 +207,11 @@ export default function EditBox() {
     } catch (err) {
       console.error("ApiService Failed To Get Item: " + err);
       dispatch(
-        insertError([
-          "Api Service Failure",
-          `Failed To Get A Successful Response ::\n${err}`,
-          true,
-        ]),
+        insertError({
+          header: "Api Service Failure",
+          message: `Failed To Get A Successful Response ::\n${err}`,
+          errorActive: true,
+        }),
       );
     }
 
@@ -238,11 +239,11 @@ export default function EditBox() {
     } catch (err) {
       console.error("ApiService Failed To Create Box: " + err);
       dispatch(
-        insertError([
-          "Api Service Failure",
-          `Failed To Populate The Database And Get A Successful Response ::\n${err}`,
-          true,
-        ]),
+        insertError({
+          header: "Api Service Failure",
+          message: `Failed To Populate The Database And Get A Successful Response ::\n${err}`,
+          errorActive: true,
+        }),
       );
     }
   };
