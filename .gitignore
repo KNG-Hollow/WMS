@@ -1,5 +1,6 @@
 # IDE Specific
 *vscode*
+**/.idea
 
 # Frontend
 node_modules/
