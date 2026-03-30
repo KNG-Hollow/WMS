@@ -60,7 +60,7 @@ export default function ViewAccount() {
 
   return (
     <div className="flex flex-1 justify-center">
-      <div className="flex flex-col border-3 gap-y-10 my-20 rounded border-cyan-600 p-20 bg-gray-900 items-center">
+      <div className="flex flex-col w-5/6 border-3 gap-y-10 my-20 rounded border-cyan-600 p-20 bg-gray-900 items-center">
         <div className="text-xl font-bold text-cyan-500">
           <h1>{`${account?.firstname} ${account?.lastname}`}</h1>
         </div>

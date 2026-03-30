@@ -127,7 +127,7 @@ export default function CreateAccountForm() {
     <div className="flex flex-1 justify-center items-center">
       <div
         id="form-container"
-        className="border-3 items-center border-cyan-600 rounded bg-gray-900 p-20 my-20 gap-y-10 flex flex-col"
+        className="border-3 items-center w-5/6 border-cyan-600 rounded bg-gray-900 p-20 my-20 gap-y-10 flex flex-col"
       >
         <div className="font-bold text-xl text-cyan-500">
           <h1>Create Account</h1>

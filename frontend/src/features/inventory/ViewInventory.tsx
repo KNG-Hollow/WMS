@@ -79,7 +79,7 @@ export default function ViewInventory() {
             <h3>Total:</h3>
             <h3 className="text-cyan-500">{entry?.total}</h3>
           </div>
-          <div className="">
+          <div className="space-y-2 w-full">
             <button className="w-full" onClick={() => navigate("./edit")}>
               Edit
             </button>

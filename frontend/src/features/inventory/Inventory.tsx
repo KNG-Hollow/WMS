@@ -111,7 +111,8 @@ export default function Inventory() {
               </tr>
             </thead>
             <tbody>
-              {allInventory?.map((mapInventory: Inventory) => (
+              {// TODO Limit 10 Entries Per View
+              allInventory?.map((mapInventory: Inventory) => (
                 <tr
                   key={mapInventory.id}
                   className="border-b text-center font-semibold border-cyan-400"
@@ -130,11 +131,14 @@ export default function Inventory() {
                   </td>
                   <td>{mapInventory.total}</td>
                   <td>
-                    {mapInventory.locations.map((entry: LocationData) => (
-                      <p>
-                        {entry.area} : {entry.count}
-                      </p>
-                    ))}
+                    {
+                      // TODO Limit 4 Entries, including 'Stock'
+                      mapInventory.locations.map((entry: LocationData) => (
+                        <p>
+                          {entry.area} : {entry.count}
+                        </p>
+                      ))
+                    }
                   </td>
                   <td className="border-l border-cyan-400">
                     <button

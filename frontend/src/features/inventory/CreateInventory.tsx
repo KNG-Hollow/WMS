@@ -85,46 +85,50 @@ export default function CreateInventoryForm() {
     };
 
     return (
-      <div id="search-dropdown" className="flex">
-        <label htmlFor="item-area" className="relative right-2">
-          Item:
-        </label>
+      <div id="search-dropdown" className="flex flex-col gap-x-2 items-center">
         <div>
-          <input
-            className="text-center border-2 group rounded mt-0.5 bg-gray-800"
-            type="text"
-            value={nameIn}
-            onChange={handleChange}
-            placeholder="Search..."
-          />
-          {nameIn && (
-            <ul
-              id="dropdown"
-              className="mt-0.5 text-center bg-gray-800 group:relative"
-            >
-              {filteredOptions.map((option, index) => (
-                <li
-                  key={index}
-                  className="cursor-pointer"
-                  onClick={() => setItemNameValue(option.name)}
-                >
-                  {option.name}
-                </li>
-              ))}
-            </ul>
-          )}
+          <label htmlFor="item-area" className="font-semibold">
+            Item:
+          </label>
         </div>
-        <button
-          onClick={() => {
-            setItemInfo(
-              filteredOptions
-                .filter((ent) => ent.name.includes(itemNameIn))
-                .at(0),
-            );
-          }}
-        >
-          Commit
-        </button>
+        <div className="flex items-center left-13 gap-x-5 relative">
+          <div className="">
+            <input
+              className="text-center border-2 group rounded mt-0.5 bg-gray-800"
+              type="text"
+              value={nameIn}
+              onChange={handleChange}
+              placeholder="Search..."
+            />
+            {nameIn && (
+              <ul
+                id="dropdown"
+                className="mt-0.5 absolute w-4/6 text-center bg-gray-800 group:relative z-10"
+              >
+                {filteredOptions.map((option, index) => (
+                  <li
+                    key={index}
+                    className="cursor-pointer"
+                    onClick={() => setItemNameValue(option.name)}
+                  >
+                    {option.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <button
+            onClick={() => {
+              setItemInfo(
+                filteredOptions
+                  .filter((ent) => ent.name.includes(itemNameIn))
+                  .at(0),
+              );
+            }}
+          >
+            Commit
+          </button>
+        </div>
       </div>
     );
   };
@@ -134,10 +138,10 @@ export default function CreateInventoryForm() {
       alert("Location Count Cannot Be Less Than 1!");
       return;
     }
-    let newLocations: LocationData[] = [];
-    setTotal(total + countIn);
-    newLocations = locationsIn!.concat({ area: areaIn, count: countIn });
-    setLocationsValue(newLocations);
+    //let newLocations: LocationData[] = [];
+    //newLocations = locationsIn!.concat({ area: areaIn, count: countIn });
+    setTotal((t) => t + countIn);
+    setLocationsValue((prev) => prev.concat({ area: areaIn, count: countIn }));
   };
 
   const handleCreate = async () => {
@@ -219,74 +223,93 @@ export default function CreateInventoryForm() {
     }
   };
 
+  const handleRemove = async (loc: LocationData) => {
+    setLocationsValue(locationsIn.filter((v) => v !== loc));
+    setTotal((t) => t - loc.count);
+  };
+
   return (
-    <div className="flex pt-20 pb-20 flex-col items-center">
+    <div className="flex flex-1 flex-col justify-center items-center">
       <div
         id="form-container"
-        className="border-3 items-center border-cyan-600 rounded bg-gray-900 p-20 gap-y-2 flex flex-col"
+        className="border-3 my-20 items-center w-5/6 border-cyan-600 rounded bg-gray-900 p-20 gap-y-10 flex flex-col"
       >
-        <div className="font-bold text-xl text-cyan-500">
+        <div className="font-semibold text-xl text-cyan-500">
           <h1>Create Entry</h1>
         </div>
         <SearchDropdown options={allItemInfo!} />
-        <div id="input-total">
-          <label htmlFor="total-area" className="relative right-2">
-            Total:
-          </label>
-          <p>{total}</p>
+        <div id="input-total" className="flex gap-x-2 font-semibold">
+          <label htmlFor="total-area">Total:</label>
+          <p className="text-cyan-500">{total}</p>
         </div>
-        <div id="input-locations" className="flex flex-row">
-          <label
-            htmlFor="locations-area"
-            className="text-center relative right-2"
-          >
-            Locations:
+        <div
+          id="input-locations"
+          className="flex flex-col items-center gap-y-10"
+        >
+          <label htmlFor="locations-area" className="font-semibold">
+            Insert Location:
           </label>
-          <div className="flex">
-            <label htmlFor="area-area" className="text-center relative right-2">
-              Area:
-            </label>
-            <input
-              className="border-2 rounded text-center"
-              type="text"
-              aria-label="area"
-              placeholder="area"
-              onChange={(e) => {
-                const sanitizedValue = DOMPurify.sanitize(e.target.value);
-                setAreaValue(sanitizedValue);
-              }}
-            />
-            <label
-              htmlFor="count-area"
-              className="text-center relative right-2"
-            >
-              Count:
-            </label>
-            <input
-              className="border-2 rounded text-center"
-              type="number"
-              aria-label="count"
-              placeholder="count"
-              onChange={(e) => {
-                setCountValue(e.target.valueAsNumber);
-              }}
-            />
+          <div className="flex gap-x-4">
+            <div className="flex items-center gap-x-2">
+              <label htmlFor="area-area" className="font-semibold">
+                Area:
+              </label>
+              <input
+                className="border-2 rounded text-center"
+                type="text"
+                aria-label="area"
+                placeholder="area"
+                value={areaIn}
+                onChange={(e) => {
+                  const sanitizedValue = DOMPurify.sanitize(e.target.value);
+                  setAreaValue(sanitizedValue);
+                }}
+              />
+            </div>
+            <div className="flex items-center gap-x-2">
+              <label htmlFor="count-area" className="font-semibold">
+                Count:
+              </label>
+              <input
+                className="border-2 rounded text-center"
+                type="number"
+                aria-label="count"
+                placeholder="count"
+                value={countIn}
+                onChange={(e) => {
+                  setCountValue(e.target.valueAsNumber);
+                }}
+              />
+            </div>
           </div>
-          <button onClick={() => handleLocationUpdate()}>Add Location</button>
+          <button
+            onClick={() => {
+              handleLocationUpdate();
+              setAreaValue("");
+              setCountValue(0);
+            }}
+          >
+            Add Location
+          </button>
         </div>
         {locationsIn.length > 0 && (
-          <div className="text-center border p-2 space-y-2 mt-5">
-            <h3 className="font-semibold">Details:</h3>
-            <ul>
-              {locationsIn.map((mapLocation: LocationData) => (
-                <li>
-                  Area: {mapLocation.area}, Location: {mapLocation.count}
+          <div className="text-center border-2 p-5 space-y-2">
+            <h3 className="font-semibold border-b-2">Details:</h3>
+            {locationsIn.map((mapLocation: LocationData) => (
+              <ul className="flex gap-x-10">
+                <li>Area: {mapLocation.area}</li>
+                <li>Count: {mapLocation.count}</li>
+                <li
+                  className="text-red-600 underline font-medium cursor-pointer"
+                  onClick={() => handleRemove(mapLocation)}
+                >
+                  Remove
                 </li>
-              ))}
-            </ul>
+              </ul>
+            ))}
           </div>
         )}
-        <div className="mt-5 flex flex-col gap-y-2">
+        <div className="flex flex-col gap-y-2">
           <button onClick={() => handleCreate()}>Submit</button>
           <button onClick={() => navigate(-1)}>Back</button>
         </div>
