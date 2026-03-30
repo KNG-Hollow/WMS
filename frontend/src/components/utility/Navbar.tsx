@@ -4,6 +4,8 @@ import { useAppSelector } from "@/app/hooks";
 import { selectAppActive, selectAppUser } from "@/features/appSlice";
 import { selectErrorActive } from "@/features/errors/errorSlice";
 import { PingHealth } from "@/services/utilityApi";
+import { faPlusSquare } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 
@@ -29,8 +31,9 @@ export default function Navbar() {
 
   function UtilityNav() {
     return (
-      <li className="group absolute left-2 bottom-1 ">
+      <li className="group absolute bottom-1 left-2">
         <div className="cursor-pointer">
+          {/*
           <svg
             viewBox="0 0 32 32"
             version="1.1"
@@ -76,19 +79,25 @@ export default function Navbar() {
               </g>{" "}
             </g>
           </svg>
+          */}
+          <FontAwesomeIcon
+            className="text-gray-900"
+            icon={faPlusSquare}
+            size="2x"
+          />
         </div>
-        <div className="hidden mt-0.5 bg-gray-800 group-hover:block absolute">
+        <div className="hidden border-3 border-cyan-800 mt-0.5 bg-gray-800 group-hover:block fixed">
           <Link
             id="link-home"
             to="/"
-            className="block px-4 py-2 text-white hover:text-cyan-200 hover:bg-gray-600"
+            className="block px-4 border-b-2 py-2 text-white hover:text-cyan-200 hover:bg-gray-600"
           >
             Home
           </Link>
           <Link
             id="link-logout"
             to="/logout"
-            className="block px-4 border-t border-white py-2 text-white hover:text-red-600 hover:bg-gray-600"
+            className="block px-4 border-b-2 border-white py-2 text-white hover:text-cyan-200 hover:bg-gray-600"
           >
             Logout
           </Link>
@@ -96,7 +105,7 @@ export default function Navbar() {
             <Link
               id="link-error"
               to="/error"
-              className="block border-t border-white px-4 py-2 text-red-600 hover:bg-gray-600"
+              className="block border-b-2 border-white px-4 py-2 text-white hover:bg-gray-600 hover:text-red-600"
             >
               Error Page
             </Link>
@@ -112,22 +121,22 @@ export default function Navbar() {
         <div className="cursor-pointer font-semibold text-white hover:text-cyan-200">
           Accounts
         </div>
-        <div className="hidden bg-gray-800 group-hover:block absolute -left-4">
+        <div className="hidden bg-gray-800 border-3 border-cyan-800 group-hover:block absolute -left-4">
           <Link
-            className="block border-b px-4 py-2 text-white hover:bg-gray-600"
+            className="block border-b-2 px-4 py-2 text-white hover:bg-gray-600 hover:text-cyan-200"
             to={`/accounts/${userState.id}`}
           >
             View Account
           </Link>
           <Link
-            className="block border-b px-4 py-2 text-white hover:bg-gray-600"
+            className="block border-b-2 px-4 py-2 text-white hover:bg-gray-600 hover:text-cyan-200"
             to="/accounts/create"
           >
             Create Account
           </Link>
 
           <Link
-            className="block px-4 py-2 text-white hover:bg-gray-600"
+            className="block px-4 py-2 text-white hover:bg-gray-600 hover:text-cyan-200"
             to="/accounts"
           >
             All Accounts
