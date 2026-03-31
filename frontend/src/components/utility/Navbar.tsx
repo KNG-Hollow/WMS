@@ -95,6 +95,13 @@ export default function Navbar() {
             Home
           </Link>
           <Link
+            id="link-about"
+            to="/about"
+            className="block px-4 border-b-2 py-2 text-white hover:text-cyan-200 hover:bg-gray-600"
+          >
+            About
+          </Link>
+          <Link
             id="link-logout"
             to="/logout"
             className="block px-4 border-b-2 border-white py-2 text-white hover:text-cyan-200 hover:bg-gray-600"

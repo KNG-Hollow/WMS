@@ -23,6 +23,9 @@ type Pages = {
   "/error": {
     params: {};
   };
+  "/about": {
+    params: {};
+  };
   "/accounts": {
     params: {};
   };
@@ -124,7 +127,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/login" | "/logout" | "/error" | "/accounts" | "/accounts/create" | "/accounts/:id" | "/accounts/:id/edit" | "/items" | "/items/create" | "/items/:id" | "/items/:id/edit" | "/boxes" | "/boxes/create" | "/boxes/:id" | "/boxes/:id/edit" | "/inventory" | "/inventory/create" | "/inventory/:id" | "/inventory/:id/edit" | "/orders" | "/orders/create" | "/orders/:id" | "/orders/:id/edit" | "/shipments" | "/shipments/create" | "/shipments/:id" | "/shipments/:id/edit";
+    page: "/" | "/login" | "/logout" | "/error" | "/about" | "/accounts" | "/accounts/create" | "/accounts/:id" | "/accounts/:id/edit" | "/items" | "/items/create" | "/items/:id" | "/items/:id/edit" | "/boxes" | "/boxes/create" | "/boxes/:id" | "/boxes/:id/edit" | "/inventory" | "/inventory/create" | "/inventory/:id" | "/inventory/:id/edit" | "/orders" | "/orders/create" | "/orders/:id" | "/orders/:id/edit" | "/shipments" | "/shipments/create" | "/shipments/:id" | "/shipments/:id/edit";
   };
   "../components/Home.tsx": {
     id: "../components/Home";
@@ -141,6 +144,10 @@ type RouteFiles = {
   "../features/errors/Error.tsx": {
     id: "../features/errors/Error";
     page: "/error";
+  };
+  "../components/utility/About.tsx": {
+    id: "../components/utility/About";
+    page: "/about";
   };
   "../features/accounts/Accounts.tsx": {
     id: "../features/accounts/Accounts";
@@ -246,6 +253,7 @@ type RouteModules = {
   "../components/utility/LoginForm": unknown;
   "../components/utility/Logout": unknown;
   "../features/errors/Error": unknown;
+  "../components/utility/About": unknown;
   "../features/accounts/Accounts": unknown;
   "../features/accounts/CreateAccount": unknown;
   "../features/accounts/ViewAccount": unknown;

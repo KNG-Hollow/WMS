@@ -1994,6 +1994,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fortawesome/free-brands-svg-icons@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "@fortawesome/free-brands-svg-icons@npm:7.2.0"
+  dependencies:
+    "@fortawesome/fontawesome-common-types": "npm:7.2.0"
+  checksum: 10c0/cfb883006dd0f918dde3d6ed81197552f094823e2032c284f05cb8788df65ccee7aa71c54b8042b393a843bb134fbcff492fc5b1ba57bb690cf9a9de17b30df3
+  languageName: node
+  linkType: hard
+
 "@fortawesome/free-regular-svg-icons@npm:^7.2.0":
   version: 7.2.0
   resolution: "@fortawesome/free-regular-svg-icons@npm:7.2.0"
@@ -13991,6 +14000,7 @@ __metadata:
   dependencies:
     "@eslint/js": "npm:^9.0.0"
     "@fortawesome/fontawesome-svg-core": "npm:^7.2.0"
+    "@fortawesome/free-brands-svg-icons": "npm:^7.2.0"
     "@fortawesome/free-regular-svg-icons": "npm:^7.2.0"
     "@fortawesome/react-fontawesome": "npm:^3.3.0"
     "@react-router/dev": "npm:^7.13.0"
