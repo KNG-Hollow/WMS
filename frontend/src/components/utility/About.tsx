@@ -19,7 +19,7 @@ export default function About() {
 
   return (
     <div className="flex flex-1 justify-center">
-      <div className="flex flex-col w-5/6 items-center p-20 my-20 border-3 border-cyan-600 bg-gray-900 gap-y-20">
+      <div className="flex flex-col w-1/2 rounded items-center p-20 my-20 border-3 border-cyan-600 bg-gray-900 gap-y-20">
         <div className="flex flex-col font-semibold text-center">
           <h1>Warehouse Management System</h1>
           <h3>{`Version: ${version}`}</h3>

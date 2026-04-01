@@ -1,5 +1,6 @@
 services:
   backend:
+    user: "1000"
     container_name: wms-backend
     build:
       context: ./backend
@@ -37,6 +38,7 @@ services:
       start_period: 30s
 
   frontend:
+    user: "1000"
     container_name: wms-frontend
     build:
       context: ./frontend
