@@ -834,3 +834,135 @@ func DeleteInventory(id int) error {
 	fmt.Printf("Successfully deleted inventory: %v!\n", id)
 	return nil
 }
+
+// Shipment Services
+
+func AddShipment(shipment models.Shipment) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Println("Attempting to add shipment to database!")
+
+	commandstr := "insert into shipment (id, supplier, eta, payload) values ($1, $2, $3, $4)"
+	command, err := conn.Exec(context.Background(), commandstr,
+		shipment.ID,
+		shipment.Supplier,
+		shipment.ETA,
+		shipment.Payload,
+	)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No new row created")
+	}
+
+	fmt.Println("Successfully added shipment!")
+	return nil
+}
+
+func GetAllShipments() ([]models.Shipment, error) {
+	conn := Connect()
+
+	defer conn.Close(context.Background())
+
+	fmt.Println("Attempting to get shipments...")
+	rows, _ := conn.Query(context.Background(), "select * from shipments")
+	col, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (models.Shipment, error) {
+		var n models.Shipment
+		err := row.Scan(
+			&n.ID,
+			&n.Supplier,
+			&n.ETA,
+			&n.Payload,
+		)
+		if err != nil {
+			return models.Shipment{}, err
+		}
+		return n, nil
+	})
+	if err != nil {
+		fmt.Printf("CollectRows error: %v", err)
+		return []models.Shipment{}, err
+	}
+	if len(col) < 1 {
+		return []models.Shipment{}, errors.New("Shipment table is empty")
+	}
+
+	fmt.Println("Successfully retrieved Shipments!")
+	return col, nil
+}
+
+func GetShipment(id int) (models.Shipment, error) {
+	conn := Connect()
+
+	fmt.Printf("Attempting to get shipment: %v...\n", id)
+	rows, _ := conn.Query(context.Background(), "select * from shipment where id=$1", id)
+	col, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (models.Shipment, error) {
+		var n models.Shipment
+		err := row.Scan(
+			&n.ID,
+			&n.Supplier,
+			&n.ETA,
+			&n.Payload,
+		)
+		if err != nil {
+			return models.Shipment{}, err
+		}
+		return n, nil
+	})
+	if err != nil {
+		fmt.Printf("CollectRows error: %v", err)
+		return models.Shipment{}, err
+	}
+	if len(col) < 1 {
+		return models.Shipment{}, errors.New("Shipment table is empty")
+	}
+
+	inv := col[0]
+
+	fmt.Printf("Successfully retrieved shipment: %v!\n", id)
+	return inv, nil
+}
+
+func UpdateShipment(id int, newData models.Shipment) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Printf("Attempting to update shipment: %v...\n", id)
+	commandstr := "update shipment set id=$1, supplier=$2, eta=$3, payload=$4 where id=$5"
+
+	command, err := conn.Exec(context.Background(), commandstr,
+		newData.ID,
+		newData.Supplier,
+		newData.ETA,
+		newData.Supplier,
+		id,
+	)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("no shipment updated")
+	}
+
+	fmt.Printf("Successfully updated shipment: %v!\n", id)
+	return nil
+}
+
+func DeleteShipment(id int) error {
+	conn := Connect()
+	defer conn.Close(context.Background())
+
+	fmt.Printf("Attempting to delete shipment: %v...\n", id)
+	command, err := conn.Exec(context.Background(), "delete from shipment where id=$1", id)
+	if err != nil {
+		return err
+	}
+	if command.RowsAffected() != 1 {
+		return errors.New("No shipment deleted!")
+	}
+
+	fmt.Printf("Successfully deleted shipment: %v!\n", id)
+	return nil
+}

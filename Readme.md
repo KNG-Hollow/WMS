@@ -2,11 +2,11 @@
 
 # Warehouse Management System
 
-A centralized digital workstation for all of your warehousing needs.
+A centralized digital workstation for easily managing all Account, Product, Inventory, Outgoing Order, and Incoming Shipment services.
 
 ## Introduction
 
-This project uses _Postgresql_ for complex query capability and full ACID compliance, _Go/Echo_ as the API Service, and _React_ as the User Interface.
+This project uses _Postgresql_ for the Database Management System, _Go/Echo_ for the API Service, and _TypeScript/React_ for the User Interface. The _Backend & Frontend_ can be containerized individually with Docker by using each respective folder's Dockerfile, or ran as a complete service with the root directory's compose.yaml using Docker Compose. The _/database_ folder contains helper scripts to populate a _Postgresql_ database with the tables needed to interact with the backend API, and some test data for previewing the application. The _/k8s_ folder contains Kubernetes configuration files to run in a cluster.
 
 ## How To Use
 

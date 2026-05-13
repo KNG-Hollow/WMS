@@ -96,8 +96,7 @@ export interface Order {
 
 export interface Shipment {
   id: number | null;
-  supplier: Account;
-  distributor: string;
+  supplier: string;
   eta: Date | string;
   payload: ItemGroup[];
 }

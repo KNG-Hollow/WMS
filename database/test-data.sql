@@ -99,14 +99,12 @@ VALUES (
 INSERT INTO shipment (
         id,
         supplier,
-        distributor,
         eta,
         payload
     )
 VALUES (
         6,
-        '{"name": "beans sup"}',
-        'beans united',
+        'test supplier',
         now(),
         '[{"item_id": 6,"count": 123}]'
     );

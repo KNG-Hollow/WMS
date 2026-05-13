@@ -131,6 +131,24 @@ func AddInventory(c *echo.Context) error {
 	return c.JSON(http.StatusCreated, inv)
 }
 
+func AddShipment(c *echo.Context) error {
+	/*
+		err := services.AuthorizeRequest(c)
+		if err != nil {
+			return err
+		}
+	*/
+	var ship models.Shipment
+	if err := c.Bind(&ship); err != nil {
+		return err
+	}
+	err := services.AddShipment(ship)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusCreated, ship)
+}
+
 func GetAccounts(c *echo.Context) error {
 	/*
 		err := services.AuthorizeRequest(c)
@@ -315,6 +333,40 @@ func GetInventory(c *echo.Context) error {
 	return c.JSON(http.StatusOK, inv)
 }
 
+func GetAllShipments(c *echo.Context) error {
+	/*
+		err := services.AuthorizeRequest(c)
+		if err != nil {
+			return err
+		}
+	*/
+	allShipments, err := services.GetAllShipments()
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, allShipments)
+}
+
+func GetShipment(c *echo.Context) error {
+	/*
+		err := services.AuthorizeRequest(c)
+		if err != nil {
+			return err
+		}
+	*/
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return err
+	}
+
+	ship, err := services.GetShipment(id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, ship)
+}
+
 func UpdateAccount(c *echo.Context) error {
 	/*
 		err := services.AuthorizeRequest(c)
@@ -435,6 +487,30 @@ func UpdateInventory(c *echo.Context) error {
 	return c.JSON(http.StatusAccepted, inv)
 }
 
+func UpdateShipment(c *echo.Context) error {
+	/*
+		err := services.AuthorizeRequest(c)
+		if err != nil {
+			return err
+		}
+	*/
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return err
+	}
+
+	var ship models.Shipment
+	if err := c.Bind(&ship); err != nil {
+		return err
+	}
+	err = services.UpdateShipment(id, ship)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusAccepted, ship)
+}
+
 func DeleteAccount(c *echo.Context) error {
 	/*
 		err := services.AuthorizeRequest(c)
@@ -529,6 +605,26 @@ func DeleteInventory(c *echo.Context) error {
 	}
 
 	err = services.DeleteInventory(id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusAccepted, id)
+}
+
+func DeleteShipment(c *echo.Context) error {
+	/*
+		err := services.AuthorizeRequest(c)
+		if err != nil {
+			return err
+		}
+	*/
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return err
+	}
+
+	err = services.DeleteShipment(id)
 	if err != nil {
 		return err
 	}

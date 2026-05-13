@@ -124,11 +124,10 @@ type Order struct {
 }
 
 type Shipment struct {
-	ID          int64       `json:"id" db:"id"`
-	Supplier    Account     `json:"supplier" db:"supplier"`
-	Distributor string      `json:"distributor" db:"distributor"`
-	ETA         time.Time   `json:"eta" db:"eta"`
-	Payload     []ItemGroup `json:"payload" db:"payload"`
+	ID       int64       `json:"id" db:"id"`
+	Supplier string      `json:"supplier" db:"supplier"`
+	ETA      time.Time   `json:"eta" db:"eta"`
+	Payload  []ItemGroup `json:"payload" db:"payload"`
 }
 
 type ItemGroup struct {
