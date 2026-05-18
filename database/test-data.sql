@@ -91,7 +91,7 @@ INSERT INTO order_data (
     )
 VALUES (
         6,
-        '{"name": "demo"}',
+        '{"id": 8,"firstname": "demo","lastname": "customer","email": "customer@account.com","phone": "456-789-0123","username": "demo","password": "customer","role": {ADMIN: "",CUSTOMER: "",EMPLOYEE: "",MANAGER: "",SUPPLIER: "",Value: "CUSTOMER"},"active": true,"created": "2026-05-05T22:48:52.77437Z"}',
         '12345 N. Test Ave.',
         now(),
         '[{"item_id": 6,"count": 123}]'

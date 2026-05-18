@@ -16,15 +16,14 @@ This project uses _Postgresql_ for the Database Management System, _Go/Echo_ for
 
 - BACKEND
   - // Role Based Security
-  - // Backend Homepage To Give Restricted Summary Data To Admins
-  - // autotls with Let's Encrypt for production ssl keys and certs
-  - // Search Engine for Query Interface
   - // Redis for session and page-caching to reduce server load
   - // Redis to store online user information
   - // Redis to store image data
+  - // Backend Homepage To Give Restricted Summary Data To Admins
+  - // Search Engine for Query Interface
+  - // autotls with Let's Encrypt for production ssl keys and certs
 
 - FRONTEND
-  - // Shipment Services
   - // Query Interface for Search Engine
 
 - DATABASE

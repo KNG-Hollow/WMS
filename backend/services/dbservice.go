@@ -867,7 +867,7 @@ func GetAllShipments() ([]models.Shipment, error) {
 	defer conn.Close(context.Background())
 
 	fmt.Println("Attempting to get shipments...")
-	rows, _ := conn.Query(context.Background(), "select * from shipments")
+	rows, _ := conn.Query(context.Background(), "select * from shipment")
 	col, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (models.Shipment, error) {
 		var n models.Shipment
 		err := row.Scan(

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import { useAppSelector } from "@/app/hooks";
-import type { ItemGroup, Shipment } from "@/app/models";
+import type { Account, ItemGroup, Order } from "@/app/models";
 import {
   selectJWT,
   type AccountSliceState,
@@ -20,7 +20,7 @@ const api = axios.create({
   },
 });
 
-export function InitShipmentAPI() {
+export function InitOrderAPI() {
   const token = useAppSelector(selectJWT);
   api.interceptors.request.use((config) => {
     if (token) {
@@ -30,18 +30,20 @@ export function InitShipmentAPI() {
   });
 }
 
-export async function CreateShipment(
+export async function CreateOrder(
   initiatorAccount: AccountSliceState,
   id: number | null,
-  supplier: string,
+  customer: Account,
+  address: string,
+  time: Date | string,
   payload: ItemGroup[],
-): Promise<[boolean, Shipment]> {
+): Promise<[boolean, Order]> {
   let successful: boolean;
-  const timestamp = new Date().toISOString();
-  const newShipment: Shipment = {
+  const newOrder: Order = {
     id: id,
-    supplier: supplier,
-    eta: timestamp,
+    customer: customer,
+    address: address,
+    timeOrdered: time,
     payload: payload,
   };
 
@@ -51,16 +53,17 @@ export async function CreateShipment(
       initiatorAccount.role !== "MANAGER"
     ) {
       successful = false;
-      alert("You Do Have Have Permission To Create A Shipment");
+      alert("You Do Have Have Permission To Create Order Entries");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.post<Shipment>(
-      apiHost + "/api/shipments",
+    const response = await api.post<Order>(
+      apiHost + "/api/orders",
       {
-        id: newShipment.id,
-        supplier: newShipment.supplier,
-        eta: newShipment.eta,
-        payload: newShipment.payload,
+        id: newOrder.id,
+        customer: newOrder.customer,
+        address: newOrder.address,
+        time: newOrder.timeOrdered,
+        payload: newOrder.payload,
       },
       {
         // withCredentials: true,
@@ -76,24 +79,32 @@ export async function CreateShipment(
     return [successful, response.data];
   } catch (err) {
     console.error(err);
-    alert(`Error: Failed To Create Shipment: ${err}`);
+    alert(`Error: Failed To Create Order: ${err}`);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
 
-export async function GetShipments(
+export async function GetAllOrders(
   initiatorAccount: AccountSliceState,
-): Promise<[boolean, Shipment[]]> {
+): Promise<[boolean, Order[]]> {
   let received: boolean;
-  let shipments: Shipment[];
+  let allOrders: Order[];
 
   try {
-    if (initiatorAccount.role === "CUSTOMER") {
+    if (!initiatorAccount.userActive) {
       received = false;
-      alert("You Do Have Have Permission To View All Shipments");
+      alert("User Account Is Not Active!");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.get<Shipment[]>(apiHost + "/api/shipments", {
+    if (
+      initiatorAccount.role === "CUSTOMER" ||
+      initiatorAccount.role === "SUPPLIER"
+    ) {
+      received = false;
+      alert("You Do Have Have Permission To View This Entry");
+      throw new Error("Initiator's Account Is Not Privileged");
+    }
+    const response = await api.get<Order[]>(apiHost + "/api/orders", {
       //withCredentials: true,
     });
     const data = response.data;
@@ -103,34 +114,34 @@ export async function GetShipments(
       throw new Error("Response Status: NOT 'Ok'");
     }
     received = true;
-    shipments = data;
-    return [received, shipments];
+    allOrders = data;
+    return [received, allOrders];
   } catch (err) {
     console.error(err);
-    alert("Error: Failed To Get Shipments!: " + err);
+    alert("Error: Failed To Get Orders!: " + err);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
 
-export async function GetShipment(
+export async function GetOrder(
   initiatorAccount: AccountSliceState,
   id: number,
-): Promise<[boolean, Shipment]> {
+): Promise<[boolean, Order]> {
   let received: boolean;
-  let shipment: Shipment;
+  let entry: Order;
 
   try {
     if (
-      initiatorAccount.role === "SUPPLIER" ||
-      initiatorAccount.role === "CUSTOMER"
+      initiatorAccount.role === "CUSTOMER" ||
+      initiatorAccount.role === "SUPPLIER"
     ) {
       received = false;
-      alert("You Do Have Have Permission To View This Shipment");
+      alert("You Do Have Have Permission To View This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
 
-    console.log(`Attempting To Get Shipment [${id}] ...`);
-    const response = await api.get<Shipment>(apiHost + `/api/shipments/${id}`, {
+    console.log(`Attempting To Get Order Entry [${id}] ...`);
+    const response = await api.get<Order>(apiHost + `/api/orders/${id}`, {
       //withCredentials: true,
     });
     const data = response.data;
@@ -140,20 +151,20 @@ export async function GetShipment(
       throw new Error("Response Status: NOT 'OK'");
     }
     received = true;
-    shipment = data;
-    return [received, shipment];
+    entry = data;
+    return [received, entry];
   } catch (err) {
     console.error(err);
-    alert(`Error: Failed To Get Shipment [${id}]: ` + err);
+    alert(`Error: Failed To Get Order Entry [${id}]: ` + err);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
 
-export async function UpdateShipment(
+export async function UpdateOrder(
   id: number,
   initiatorAccount: AccountSliceState,
-  newShipment: Shipment,
-): Promise<[boolean, Shipment]> {
+  newOrder: Order,
+): Promise<[boolean, Order]> {
   let success: boolean;
 
   try {
@@ -162,45 +173,46 @@ export async function UpdateShipment(
       initiatorAccount.role !== "ADMIN"
     ) {
       success = false;
-      alert("You Do Have Have Permission To Update This Shipment");
+      alert("You Do Have Have Permission To Update This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    if (id !== newShipment.id) {
+    if (id !== newOrder.id) {
       console.error(
-        `Input ID and New Shipment's ID Do Not Match:\n\tInput: ${id}, Shipment: ${newShipment.id}`,
+        `Input ID and New Order's ID Do Not Match:\n\tInput: ${id}, Entry: ${newOrder.id}`,
       );
       throw new Error(
-        `Input ID and New Shipment's ID Do Not Match:\n\tInput: ${id}, Shipment: ${newShipment.id}`,
+        `Input ID and New Order's ID Do Not Match:\n\tInput: ${id}, Entry: ${newOrder.id}`,
       );
     }
-    const response = await api.put<Shipment>(
-      apiHost + `/api/shipments/${id}`,
+    const response = await api.put<Order>(
+      apiHost + `/api/orders/${id}`,
       {
-        id: newShipment.id,
-        supplier: newShipment.supplier,
-        eta: newShipment.eta,
-        payload: newShipment.payload,
+        id: newOrder.id,
+        customer: newOrder.customer,
+        address: newOrder.address,
+        time: newOrder.timeOrdered,
+        payload: newOrder.payload,
       },
       {
         //withCredentials: true,
       },
     );
-    const shipmentData = response.data;
-    console.log("Raw API Response: ", shipmentData);
+    const orderData = response.data;
+    console.log("Raw API Response: ", orderData);
     if (response.status !== HttpStatusCode.Accepted) {
       success = false;
       throw new Error(`Unexpected Response Status`);
     }
     success = true;
-    return [success, shipmentData];
+    return [success, orderData];
   } catch (err) {
     console.error(err);
-    alert(`Error: Failed To Update Shipment [${id}]: ` + err);
+    alert(`Error: Failed To Update Order Entry [${id}]: ` + err);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }
 
-export async function DeleteShipment(
+export async function DeleteOrder(
   initiatorAccount: AccountSliceState,
   id: number,
 ): Promise<[boolean, number]> {
@@ -212,15 +224,12 @@ export async function DeleteShipment(
       initiatorAccount.role !== "ADMIN"
     ) {
       success = false;
-      alert("You Do Have Have Permission To Delete This Shipment");
+      alert("You Do Have Have Permission To Delete This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.delete<number>(
-      apiHost + `/api/shipments/${id}`,
-      {
-        //withCredentials: true,
-      },
-    );
+    const response = await api.delete<number>(apiHost + `/api/orders/${id}`, {
+      //withCredentials: true,
+    });
     const data = response.data;
     console.log("Raw API Response: ", data);
     if (response.status !== HttpStatusCode.Accepted) {
@@ -231,7 +240,7 @@ export async function DeleteShipment(
     return [success, data];
   } catch (err) {
     console.error(err);
-    alert(`Error: Failed To Delete Shipment [${id}]: ` + err);
+    alert(`Error: Failed To Delete Order Entry [${id}]: ` + err);
     throw new Error("Failed To Query RESTapi: " + err);
   }
 }

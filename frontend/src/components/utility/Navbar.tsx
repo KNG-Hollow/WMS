@@ -192,7 +192,7 @@ export default function Navbar() {
             ) : null}
           </li>
           <li className="hover:underline">
-            {userState.role !== "EMPLOYEE" && userState.role !== "CUSTOMER" ? (
+            {userState.role !== "CUSTOMER" ? (
               <Link
                 id="link-shipments"
                 to="/shipments"

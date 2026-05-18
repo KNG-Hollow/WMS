@@ -90,7 +90,7 @@ export interface Order {
   id: number | null;
   customer: Account;
   address: string;
-  time: Date | string;
+  timeOrdered: Date | string;
   payload: ItemGroup[];
 }
 

@@ -7,6 +7,8 @@ import { InitAccAPI } from "@/services/accountApi";
 import { InitBoxAPI } from "@/services/boxApi";
 import { InitInvAPI } from "@/services/inventoryApi";
 import { InitItemAPI } from "@/services/itemApi";
+import { InitOrderAPI } from "@/services/orderApi";
+import { InitShipmentAPI } from "@/services/shipmentApi";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
@@ -20,6 +22,8 @@ export default function Home() {
   InitInvAPI();
   InitItemAPI();
   InitBoxAPI();
+  InitShipmentAPI();
+  InitOrderAPI();
 
   useEffect(() => {
     if (!appActive || !userState.userActive) {

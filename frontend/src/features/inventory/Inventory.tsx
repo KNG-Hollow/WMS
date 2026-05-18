@@ -44,7 +44,7 @@ export default function Inventory() {
         alert("Failed To Get Inventory");
         dispatch(
           insertError({
-            header: "Failed To Get Accounts",
+            header: "Failed To Get Inventory",
             message: `Failed To Return An Acceptable Inventory Array ::\n${err}`,
             errorActive: true,
           }),
