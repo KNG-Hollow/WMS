@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/WMS/models"
-	"github.com/WMS/services"
+	"github.com/KNG-Hollow/WMS/backend/models"
+	"github.com/KNG-Hollow/WMS/backend/services"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/echotest"

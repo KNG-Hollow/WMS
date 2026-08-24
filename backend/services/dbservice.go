@@ -12,7 +12,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/WMS/models"
+	"github.com/KNG-Hollow/WMS/backend/models"
 	"github.com/jackc/pgx/v5"
 )
 

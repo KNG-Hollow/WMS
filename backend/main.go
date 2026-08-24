@@ -7,9 +7,9 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/WMS/models"
-	"github.com/WMS/routers"
-	"github.com/WMS/services"
+	"github.com/KNG-Hollow/WMS/backend/models"
+	"github.com/KNG-Hollow/WMS/backend/routers"
+	"github.com/KNG-Hollow/WMS/backend/services"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
 	echojwt "github.com/labstack/echo-jwt/v5"

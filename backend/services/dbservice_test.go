@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/WMS/models"
+	"github.com/KNG-Hollow/WMS/backend/models"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )

@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/WMS/models"
-	"github.com/WMS/services"
+	"github.com/KNG-Hollow/WMS/backend/models"
+	"github.com/KNG-Hollow/WMS/backend/services"
 	"github.com/labstack/echo/v5"
 )
 

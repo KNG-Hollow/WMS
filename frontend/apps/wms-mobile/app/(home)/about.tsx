@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import { GlobalContext } from "@/utility/Contexts";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "@react-native-vector-icons/ionicons/static";
 import { useRouter } from "expo-router";
 import { useContext, useEffect } from "react";
 import { Linking, Pressable, Text } from "react-native";

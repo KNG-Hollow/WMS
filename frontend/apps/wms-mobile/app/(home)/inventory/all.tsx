@@ -3,7 +3,7 @@
 import { GetAllInventory, GetItemsList } from "@/utility/ApiServices";
 import { GlobalContext } from "@/utility/Contexts";
 import { Inventory, ItemInfo, LocationData } from "@/utility/Models";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "@react-native-vector-icons/ionicons/static";
 import { Link, useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";

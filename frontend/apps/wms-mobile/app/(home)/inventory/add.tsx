@@ -8,7 +8,7 @@ import {
 } from "@/utility/ApiServices";
 import { GlobalContext } from "@/utility/Contexts";
 import { Inventory, ItemInfo } from "@/utility/Models";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "@react-native-vector-icons/ionicons/static";
 import { useAudioPlayer } from "expo-audio";
 import { useRouter } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";

@@ -18,7 +18,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/WMS/models"
+	"github.com/KNG-Hollow/WMS/backend/models"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/jackc/pgx/v5"
 	"github.com/labstack/echo/v5"

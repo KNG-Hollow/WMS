@@ -5,7 +5,7 @@ package routers
 import (
 	"net/http"
 
-	ctrl "github.com/WMS/controllers"
+	ctrl "github.com/KNG-Hollow/WMS/backend/controllers"
 	"github.com/labstack/echo/v5"
 )
 
