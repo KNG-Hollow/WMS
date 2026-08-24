@@ -74,11 +74,8 @@ export default function Shipments() {
           </div>
           <div className="flex flex-col gap-y-2">
             {userState.role === "ADMIN" ? (
-              <button onClick={() => navigate("./create")}>
-                Create Shipment
-              </button>
+              <button onClick={() => navigate("./create")}>New Shipment</button>
             ) : null}
-            <button onClick={() => navigate(-1)}>Back</button>
           </div>
         </div>
         <div className="w-full border border-cyan-400">
@@ -104,7 +101,7 @@ export default function Shipments() {
                       0,
                     )}
                   </td>
-                  <td>
+                  <td className="border-l border-l-cyan-500">
                     <Link
                       to={`./${mapShip.id}`}
                       className="text-cyan-500 hover:text-green-500"

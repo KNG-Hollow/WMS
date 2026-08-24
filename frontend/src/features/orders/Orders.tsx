@@ -72,7 +72,7 @@ export default function Orders() {
           </div>
           <div className="flex flex-col space-y-1 justify-center">
             {userState.role === "ADMIN" && (
-              <button onClick={() => navigate("./create")}>Add Order</button>
+              <button onClick={() => navigate("./create")}>New Order</button>
             )}
           </div>
         </div>

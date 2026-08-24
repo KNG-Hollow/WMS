@@ -42,7 +42,7 @@ export default function ViewShipment() {
         }
         setShipment(fetchedShipment);
       } catch (err) {
-        console.error(`Failed to get inventory entry ${id}: ` + err);
+        console.error(`Failed to get shipment entry ${id}: ` + err);
         alert(`Failed To Get Shipment Entry: ${id}`);
         dispatch(
           insertError({

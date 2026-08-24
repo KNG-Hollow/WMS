@@ -39,6 +39,28 @@ func AuthorizeLogin(c *echo.Context) error {
 	return c.JSON(http.StatusAccepted, token)
 }
 
+func GetItemsList(c *echo.Context) error {
+	/*
+		err := services.AuthorizeRequest(c)
+		if err != nil {
+			return err
+		}
+	*/
+	items, err := services.GetItemsList()
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, items)
+}
+
+func GetCustomersList(c *echo.Context) error {
+	accs, err := services.GetCustomersList()
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, accs)
+}
+
 //  Basic Functionality  //
 
 func AddAccount(c *echo.Context) error {
@@ -225,20 +247,6 @@ func GetItems(c *echo.Context) error {
 		}
 	*/
 	items, err := services.GetItems()
-	if err != nil {
-		return err
-	}
-	return c.JSON(http.StatusOK, items)
-}
-
-func GetItemsList(c *echo.Context) error {
-	/*
-		err := services.AuthorizeRequest(c)
-		if err != nil {
-			return err
-		}
-	*/
-	items, err := services.GetItemsList()
 	if err != nil {
 		return err
 	}

@@ -173,6 +173,44 @@ func GetAccounts() ([]models.Account, error) {
 	return accounts, nil
 }
 
+func GetCustomersList() ([]models.Account, error) {
+	conn := Connect()
+
+	defer conn.Close(context.Background())
+
+	fmt.Println("Attempting to get customers list...")
+	rows, _ := conn.Query(context.Background(), "select * from account where role = 'CUSTOMER'")
+	accounts, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (models.Account, error) {
+		var n models.Account
+		err := row.Scan(
+			&n.ID,
+			&n.Firstname,
+			&n.Lastname,
+			&n.Email,
+			&n.Phone,
+			&n.Username,
+			&n.Password,
+			&n.Role,
+			&n.Active,
+			&n.Created,
+		)
+		if err != nil {
+			return models.Account{}, err
+		}
+		return n, err
+	})
+	if err != nil {
+		fmt.Printf("CollectRows error: %v", err)
+		return []models.Account{}, err
+	}
+	if len(accounts) < 1 {
+		return []models.Account{}, errors.New("Accounts table is empty")
+	}
+
+	fmt.Println("Successfully retrieved customers list!")
+	return accounts, nil
+}
+
 func GetAccount(id int) (models.Account, error) {
 	conn := Connect()
 
