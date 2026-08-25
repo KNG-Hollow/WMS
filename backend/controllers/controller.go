@@ -46,19 +46,47 @@ func GetItemsList(c *echo.Context) error {
 			return err
 		}
 	*/
-	items, err := services.GetItemsList()
-	if err != nil {
-		return err
+	var items []models.ItemInfo
+	res := services.CheckCache("productInfo", "*")
+	if res {
+		arr, err := services.GetProductListFromCache()
+		if err != nil {
+			return err
+		}
+		items = arr
+	} else {
+		arr, err := services.GetItemsList()
+		if err != nil {
+			return err
+		}
+		items = arr
+		if err = services.AddProductListToCache(items); err != nil {
+			return err
+		}
 	}
 	return c.JSON(http.StatusOK, items)
 }
 
 func GetCustomersList(c *echo.Context) error {
-	accs, err := services.GetCustomersList()
-	if err != nil {
-		return err
+	var customers []models.Account
+	res := services.CheckCache("customer", "*")
+	if res {
+		arr, err := services.GetCustomerListFromCache()
+		if err != nil {
+			return err
+		}
+		customers = arr
+	} else {
+		arr, err := services.GetCustomersList()
+		if err != nil {
+			return err
+		}
+		customers = arr
+		if err = services.AddCustomerListToCache(customers); err != nil {
+			return err
+		}
 	}
-	return c.JSON(http.StatusOK, accs)
+	return c.JSON(http.StatusOK, customers)
 }
 
 //  Basic Functionality  //
@@ -197,10 +225,21 @@ func GetAccount(c *echo.Context) error {
 	if err != nil {
 		return err
 	}
-
-	account, err := services.GetAccount(id)
-	if err != nil {
-		return err
+	var account models.Account
+	res := services.CheckCache("account", idParam)
+	if res {
+		account, err = services.GetAccountFromCache(int64(id))
+		if err != nil {
+			return err
+		}
+	} else {
+		account, err = services.GetAccount(id)
+		if err != nil {
+			return err
+		}
+		if err := services.AddAccountToCache(account); err != nil {
+			return err
+		}
 	}
 	return c.JSON(http.StatusOK, account)
 }
@@ -265,10 +304,21 @@ func GetItem(c *echo.Context) error {
 	if err != nil {
 		return err
 	}
-
-	item, err := services.GetItem(id)
-	if err != nil {
-		return err
+	var item models.Item
+	res := services.CheckCache("product", idParam)
+	if res {
+		item, err = services.GetProductFromCache(int64(id))
+		if err != nil {
+			return err
+		}
+	} else {
+		item, err = services.GetItem(id)
+		if err != nil {
+			return err
+		}
+		if err := services.AddProductToCache(item); err != nil {
+			return err
+		}
 	}
 	return c.JSON(http.StatusOK, item)
 }

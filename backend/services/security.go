@@ -198,7 +198,7 @@ func InitJWT(acc *models.Account) (map[string]string, error) {
 
 	jwtKey, err := LoadRSAPrivateKey(os.Getenv("JWTKEY"))
 	if err != nil {
-		jwtKey, err = LoadRSAPrivateKey("../wms-jwt.pem")
+		jwtKey, err = LoadRSAPrivateKey("../jwt.pem")
 		if err != nil {
 			return nil, fmt.Errorf("Failed to open JWT Key: %w", err)
 		}

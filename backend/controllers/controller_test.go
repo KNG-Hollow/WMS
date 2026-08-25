@@ -174,6 +174,19 @@ func TestAccountController(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, rec.Code)
 
+	// TODO Ensure Caching works
+	rec = echotest.ContextConfig{
+		PathValues: echo.PathValues{
+			{Name: "id", Value: "66"},
+		},
+		Headers: map[string][]string{
+			echo.HeaderContentType: {echo.MIMEApplicationJSON},
+		},
+		JSONBody: jsonAcc,
+	}.ServeWithHandler(t, GetAccount)
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+
 	// UpdateAccount
 	rec = echotest.ContextConfig{
 		PathValues: echo.PathValues{
@@ -250,6 +263,18 @@ func TestItemController(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rec.Code)
 
 	// GetItem
+	rec = echotest.ContextConfig{
+		PathValues: echo.PathValues{
+			{Name: "id", Value: "66"},
+		},
+		Headers: map[string][]string{
+			echo.HeaderContentType: {echo.MIMEApplicationJSON},
+		},
+		JSONBody: jsonItem,
+	}.ServeWithHandler(t, GetItem)
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+
 	rec = echotest.ContextConfig{
 		PathValues: echo.PathValues{
 			{Name: "id", Value: "66"},

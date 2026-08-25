@@ -75,7 +75,7 @@ export default function Index() {
           {userData?.role === "ADMIN" ? (
             <Pressable
               className="bg-red-600 rounded items-center p-2"
-              onPress={() => router.navigate("/error")}
+              onPress={() => router.navigate("../error")}
             >
               <Text>Error</Text>
             </Pressable>

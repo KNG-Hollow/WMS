@@ -115,6 +115,7 @@ type LocationData struct {
 	Count int64  `json:"count" db:"count"`
 }
 
+// TODO Customer should be CustomerId int64
 type Order struct {
 	ID          int64       `json:"id" db:"id"`
 	Customer    Account     `json:"customer" db:"customer"`

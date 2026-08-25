@@ -14,6 +14,14 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 3000,
+    //https: { cert: "../cert.pem", key: "../key.pem" },
+    proxy: {
+      "/api": {
+        target: "https://localhost:1323",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   resolve: {
     alias: {
