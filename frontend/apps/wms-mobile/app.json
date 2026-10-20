@@ -51,9 +51,7 @@
           "enableCodeScanner": true
         }
       ],
-      [
-        "expo-router"
-      ],
+      ["expo-router"],
       [
         "expo-splash-screen",
         {
