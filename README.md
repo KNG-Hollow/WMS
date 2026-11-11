@@ -15,14 +15,13 @@ This project uses _Postgresql_ for the Database Management System, _Go/Echo_ for
 ## Features In-Progress
 
 - BACKEND
+  - // Refresh JWT Logic
   - // Break down 'Routers', 'Controllers', 'Services' files into their separate microservices
   - // Role Based Security
   - // Instead of using the CheckCache function before each call, have redis try to get the query and if it doesnt return, have the database query
-  - // Redis for session and page-caching to reduce server load
-  - // Redis to store online user information
-  - // Redis to store image data
+  - // Make use of Redis online user cache
+  - // Using Redis Search, Make A Search Engine for Query Interface
   - // Backend Homepage To Give Restricted Summary Data To Admins
-  - // Search Engine for Query Interface
   - // autotls with Let's Encrypt for production ssl keys and certs
 
 - FRONTEND

@@ -24,6 +24,8 @@ func InitRouter(e *echo.Echo, jwtConfig echo.MiddlewareFunc) {
 		return c.JSON(http.StatusOK, map[string]string{"status": "healthy"})
 	})
 	e.POST("/login", ctrl.AuthorizeLogin)
+	e.POST("/logout", ctrl.LogoutActive)
+	e.POST("/refresh", ctrl.RefreshJWT)
 
 	// PROTECTED ROUTES
 	api := e.Group("/api")
@@ -49,6 +51,8 @@ func InitRouter(e *echo.Echo, jwtConfig echo.MiddlewareFunc) {
 	api.GET("/inventory/:id", ctrl.GetInventory)
 	api.GET("/shipments", ctrl.GetAllShipments)
 	api.GET("/shipments/:id", ctrl.GetShipment)
+	api.GET("/active", ctrl.GetActiveUsers)
+	api.GET("/active/:id", ctrl.GetActiveUser)
 
 	api.PUT("/accounts/:id", ctrl.UpdateAccount)
 	api.PUT("/items/:id", ctrl.UpdateItem)

@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { useAppSelector } from "@/app/hooks";
 import type { ItemGroup, Shipment } from "@/app/models";
-import {
-  selectJWT,
-  type AccountSliceState,
-} from "@/features/accounts/accountSlice";
-import axios, { HttpStatusCode } from "axios";
-
+import { type AccountSliceState } from "@/features/accounts/accountSlice";
+import { HttpStatusCode } from "axios";
+import { ApiClient, ApiHost } from "./utilityApi";
+/*
 const apiHost: string =
   import.meta.env.VITE_API_URL || "https://localhost:1323";
 
@@ -21,15 +18,24 @@ const api = axios.create({
 });
 
 export function InitShipmentAPI() {
-  const token = useAppSelector(selectJWT);
+  const tokenStr = useAppSelector(selectJWT);
+  const tokenObject = DecodeToken(tokenStr);
+  if (!tokenObject) {
+    return console.error("Failed to convert tokenStr to object");
+  }
+  const currentDate = new Date();
+  const currentUnix = Math.floor(currentDate.getTime() / 1000);
   api.interceptors.request.use((config) => {
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (tokenObject.exp < currentUnix) {
+      const newToken = RefreshJWT(tokenObject.id);
+      config.headers.Authorization = `Bearer ${newToken}`;
+    } else {
+      config.headers.Authorization = `Bearer ${tokenStr}`;
     }
     return config;
   });
 }
-
+*/
 export async function CreateShipment(
   initiatorAccount: AccountSliceState,
   id: number | null,
@@ -54,8 +60,8 @@ export async function CreateShipment(
       alert("You Do Have Have Permission To Create A Shipment");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.post<Shipment>(
-      apiHost + "/api/shipments",
+    const response = await ApiClient.post<Shipment>(
+      ApiHost + "/api/shipments",
       {
         id: newShipment.id,
         supplier: newShipment.supplier,
@@ -93,9 +99,12 @@ export async function GetShipments(
       alert("You Do Have Have Permission To View All Shipments");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.get<Shipment[]>(apiHost + "/api/shipments", {
-      //withCredentials: true,
-    });
+    const response = await ApiClient.get<Shipment[]>(
+      ApiHost + "/api/shipments",
+      {
+        //withCredentials: true,
+      },
+    );
     const data = response.data;
     console.log("Raw API Response: ", data);
     if (response.status !== HttpStatusCode.Ok) {
@@ -130,9 +139,12 @@ export async function GetShipment(
     }
 
     console.log(`Attempting To Get Shipment [${id}] ...`);
-    const response = await api.get<Shipment>(apiHost + `/api/shipments/${id}`, {
-      //withCredentials: true,
-    });
+    const response = await ApiClient.get<Shipment>(
+      ApiHost + `/api/shipments/${id}`,
+      {
+        //withCredentials: true,
+      },
+    );
     const data = response.data;
     console.log("Raw API Response: ", data);
     if (response.status !== HttpStatusCode.Ok) {
@@ -173,8 +185,8 @@ export async function UpdateShipment(
         `Input ID and New Shipment's ID Do Not Match:\n\tInput: ${id}, Shipment: ${newShipment.id}`,
       );
     }
-    const response = await api.put<Shipment>(
-      apiHost + `/api/shipments/${id}`,
+    const response = await ApiClient.put<Shipment>(
+      ApiHost + `/api/shipments/${id}`,
       {
         id: newShipment.id,
         supplier: newShipment.supplier,
@@ -215,8 +227,8 @@ export async function DeleteShipment(
       alert("You Do Have Have Permission To Delete This Shipment");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.delete<number>(
-      apiHost + `/api/shipments/${id}`,
+    const response = await ApiClient.delete<number>(
+      ApiHost + `/api/shipments/${id}`,
       {
         //withCredentials: true,
       },

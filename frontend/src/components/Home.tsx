@@ -3,27 +3,15 @@
 import { useAppSelector } from "@/app/hooks";
 import { selectAppActive, selectAppUser } from "@/features/appSlice";
 import { selectErrorActive } from "@/features/errors/errorSlice";
-import { InitAccAPI } from "@/services/accountApi";
-import { InitBoxAPI } from "@/services/boxApi";
-import { InitInvAPI } from "@/services/inventoryApi";
-import { InitItemAPI } from "@/services/itemApi";
-import { InitOrderAPI } from "@/services/orderApi";
-import { InitShipmentAPI } from "@/services/shipmentApi";
+import { InitAPI } from "@/services/utilityApi";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-
+// TODO Have React Router route to login if not logged in
 export default function Home() {
   const appActive = useAppSelector(selectAppActive);
   const userState = useAppSelector(selectAppUser);
   const errorState = useAppSelector(selectErrorActive);
   const navigate = useNavigate();
-
-  InitAccAPI();
-  InitInvAPI();
-  InitItemAPI();
-  InitBoxAPI();
-  InitShipmentAPI();
-  InitOrderAPI();
 
   useEffect(() => {
     if (!appActive || !userState.userActive) {
@@ -33,6 +21,16 @@ export default function Home() {
       navigate("/error");
     }
   }, [appActive, userState, errorState, navigate]);
+
+  InitAPI();
+  /*
+  InitAccAPI();
+  InitInvAPI();
+  InitItemAPI();
+  InitBoxAPI();
+  InitShipmentAPI();
+  InitOrderAPI();
+  */
 
   return (
     <div className="flex flex-1 justify-center items-center">

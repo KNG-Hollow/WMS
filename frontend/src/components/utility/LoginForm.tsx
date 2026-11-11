@@ -31,7 +31,6 @@ export default function LoginForm() {
       alert("Try Again: Please fill in both username and password to login.");
       return;
     }
-
     console.log("Attempting to login as: ", usernameIn);
     try {
       [exists, token, payload] = await AuthorizeUser(usernameIn, passwordIn);
@@ -40,6 +39,9 @@ export default function LoginForm() {
       if (!exists || token.length < 1 || payload === null) {
         alert("Account not found in database...");
         throw new Error("Account not found in database!");
+      }
+      if (!payload.username || !payload.role) {
+        throw "Token payload does not contain user data";
       }
       dispatch(insertJWT(token));
       dispatch(insertID(payload.id));

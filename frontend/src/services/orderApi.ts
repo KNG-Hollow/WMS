@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { useAppSelector } from "@/app/hooks";
 import type { Account, ItemGroup, Order } from "@/app/models";
-import {
-  selectJWT,
-  type AccountSliceState,
-} from "@/features/accounts/accountSlice";
-import axios, { HttpStatusCode } from "axios";
-
+import { type AccountSliceState } from "@/features/accounts/accountSlice";
+import { HttpStatusCode } from "axios";
+import { ApiClient, ApiHost } from "./utilityApi";
+/*
 const apiHost: string =
   import.meta.env.VITE_API_URL || "https://localhost:1323";
 
@@ -21,15 +18,24 @@ const api = axios.create({
 });
 
 export function InitOrderAPI() {
-  const token = useAppSelector(selectJWT);
+  const tokenStr = useAppSelector(selectJWT);
+  const tokenObject = DecodeToken(tokenStr);
+  if (!tokenObject) {
+    return console.error("Failed to convert tokenStr to object");
+  }
+  const currentDate = new Date();
+  const currentUnix = Math.floor(currentDate.getTime() / 1000);
   api.interceptors.request.use((config) => {
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (tokenObject.exp < currentUnix) {
+      const newToken = RefreshJWT(tokenObject.id);
+      config.headers.Authorization = `Bearer ${newToken}`;
+    } else {
+      config.headers.Authorization = `Bearer ${tokenStr}`;
     }
     return config;
   });
 }
-
+*/
 export async function CreateOrder(
   initiatorAccount: AccountSliceState,
   id: number | null,
@@ -56,8 +62,8 @@ export async function CreateOrder(
       alert("You Do Have Have Permission To Create Order Entries");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.post<Order>(
-      apiHost + "/api/orders",
+    const response = await ApiClient.post<Order>(
+      ApiHost + "/api/orders",
       {
         id: newOrder.id,
         customer: newOrder.customer,
@@ -104,7 +110,7 @@ export async function GetAllOrders(
       alert("You Do Have Have Permission To View This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.get<Order[]>(apiHost + "/api/orders", {
+    const response = await ApiClient.get<Order[]>(ApiHost + "/api/orders", {
       //withCredentials: true,
     });
     const data = response.data;
@@ -141,7 +147,7 @@ export async function GetOrder(
     }
 
     console.log(`Attempting To Get Order Entry [${id}] ...`);
-    const response = await api.get<Order>(apiHost + `/api/orders/${id}`, {
+    const response = await ApiClient.get<Order>(ApiHost + `/api/orders/${id}`, {
       //withCredentials: true,
     });
     const data = response.data;
@@ -184,8 +190,8 @@ export async function UpdateOrder(
         `Input ID and New Order's ID Do Not Match:\n\tInput: ${id}, Entry: ${newOrder.id}`,
       );
     }
-    const response = await api.put<Order>(
-      apiHost + `/api/orders/${id}`,
+    const response = await ApiClient.put<Order>(
+      ApiHost + `/api/orders/${id}`,
       {
         id: newOrder.id,
         customer: newOrder.customer,
@@ -227,9 +233,12 @@ export async function DeleteOrder(
       alert("You Do Have Have Permission To Delete This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.delete<number>(apiHost + `/api/orders/${id}`, {
-      //withCredentials: true,
-    });
+    const response = await ApiClient.delete<number>(
+      ApiHost + `/api/orders/${id}`,
+      {
+        //withCredentials: true,
+      },
+    );
     const data = response.data;
     console.log("Raw API Response: ", data);
     if (response.status !== HttpStatusCode.Accepted) {

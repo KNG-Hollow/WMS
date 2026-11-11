@@ -1,17 +1,20 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { selectID } from "@/features/accounts/accountSlice";
 import {
   deactivateApp,
   resetAppUser,
   selectAppActive,
 } from "@/features/appSlice";
+import { LogoutApi } from "@/services/utilityApi";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 export default function Logout() {
   const dispatch = useAppDispatch();
   const appActive = useAppSelector(selectAppActive);
+  const id = useAppSelector(selectID);
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState(5);
 
@@ -20,7 +23,8 @@ export default function Logout() {
       navigate("/login");
     }
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+      await LogoutApi(id);
       dispatch(resetAppUser());
       dispatch(deactivateApp());
       window.location.reload();

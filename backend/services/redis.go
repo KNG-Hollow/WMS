@@ -12,8 +12,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-// TODO Caching for 'Accounts Online',
-//  'Photo Caching'
+// TODO Caching for 'Photo Caching'
 
 var (
 	Rdb *redis.Client = redis.NewClient(&redis.Options{
@@ -86,6 +85,15 @@ func AddCustomerListToCache(accounts []models.Account) error {
 	return nil
 }
 
+func AddActiveToCache(account models.AccountDTO) error {
+	fmt.Println("Adding active to cache")
+	err := Rdb.JSONSet(ctx, fmt.Sprintf("active:%d", account.ID), "$", account).Err()
+	if err != nil {
+		panic(err)
+	}
+	return nil
+}
+
 func GetAccountFromCache(id int64) (models.Account, error) {
 	fmt.Println("Getting account from cache")
 	acc, err := Rdb.JSONGet(ctx, fmt.Sprintf("account:%d", id)).Result()
@@ -133,6 +141,53 @@ func GetCustomerListFromCache() ([]models.Account, error) {
 	return accounts, err
 }
 
+func GetActiveUsersFromCache() ([]models.AccountDTO, error) {
+	fmt.Println("Getting active users from cache")
+	arr, _, err := Rdb.Scan(ctx, 0, "active:*", 10000).Result()
+	if err == redis.Nil {
+		fmt.Println("active: cache failed to return an array")
+	} else if err != nil {
+		panic(err)
+	}
+	var users []models.AccountDTO
+	for _, v := range arr {
+		acc, err := Rdb.JSONGet(ctx, v).Result()
+		if err == redis.Nil {
+			fmt.Printf("%s does not exits", v)
+		} else if err != nil {
+			panic(err)
+		} else {
+			var user models.AccountDTO
+			byte := []byte(acc)
+			err := json.Unmarshal(byte, &user)
+			if err != nil {
+				panic(err)
+			}
+			users = append(users, user)
+		}
+	}
+	return users, err
+}
+
+func GetActiveUserFromCache(id int64) (models.AccountDTO, error) {
+	fmt.Println("Getting active user from cache")
+	acc, err := Rdb.JSONGet(ctx, fmt.Sprintf("active:%d", id)).Result()
+	if err == redis.Nil {
+		fmt.Printf("active:%d does not exits", id)
+	} else if err != nil {
+		panic(err)
+	} else {
+		var user models.AccountDTO
+		byte := []byte(acc)
+		err := json.Unmarshal(byte, &user)
+		if err != nil {
+			panic(err)
+		}
+		return user, nil
+	}
+	return models.AccountDTO{}, err
+}
+
 func DeleteAccountFromCache(id int64) error {
 	fmt.Println("Deleting account from cache")
 	int, err := Rdb.Del(ctx, fmt.Sprintf("account:%d", id)).Result()
@@ -140,6 +195,17 @@ func DeleteAccountFromCache(id int64) error {
 		return err
 	} else if int < 1 {
 		return fmt.Errorf("account:%d was not found, failed to delete\n", id)
+	}
+	return nil
+}
+
+func DeleteActiveFromCache(id int64) error {
+	fmt.Println("Deleting active from cache")
+	int, err := Rdb.Del(ctx, fmt.Sprintf("active:%d", id)).Result()
+	if err != nil {
+		return err
+	} else if int < 1 {
+		return fmt.Errorf("active:%d was not found, failed to delete\n", id)
 	}
 	return nil
 }

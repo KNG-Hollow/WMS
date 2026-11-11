@@ -12,8 +12,8 @@ export interface JwtResponse {
 export interface JwtObject extends JwtPayload {
   exp: number;
   id: number;
-  username: string;
-  role: Role;
+  username?: string;
+  role?: Role;
   orig_iat: number;
 }
 

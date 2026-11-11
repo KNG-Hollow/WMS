@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { useAppSelector } from "@/app/hooks";
 import type { Box, Dimensions } from "@/app/models";
-import {
-  selectJWT,
-  type AccountSliceState,
-} from "@/features/accounts/accountSlice";
-import axios, { HttpStatusCode } from "axios";
-
+import { type AccountSliceState } from "@/features/accounts/accountSlice";
+import { HttpStatusCode } from "axios";
+import { ApiClient, ApiHost } from "./utilityApi";
+/*
 const apiHost: string =
   import.meta.env.VITE_API_URL || "https://localhost:1323";
 
@@ -20,18 +17,27 @@ const api = axios.create({
   },
 });
 
-export function ConvertDimensions(dims: Dimensions): string {
-  return `${dims.length}x${dims.width}x${dims.height}`;
-}
-
 export function InitBoxAPI() {
-  const token = useAppSelector(selectJWT);
+  const tokenStr = useAppSelector(selectJWT);
+  const tokenObject = DecodeToken(tokenStr);
+  if (!tokenObject) {
+    return console.error("Failed to convert tokenStr to object");
+  }
+  const currentDate = new Date();
+  const currentUnix = Math.floor(currentDate.getTime() / 1000);
   api.interceptors.request.use((config) => {
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (tokenObject.exp < currentUnix) {
+      const newToken = RefreshJWT(tokenObject.id);
+      config.headers.Authorization = `Bearer ${newToken}`;
+    } else {
+      config.headers.Authorization = `Bearer ${tokenStr}`;
     }
     return config;
   });
+}
+*/
+export function ConvertDimensions(dims: Dimensions): string {
+  return `${dims.length}x${dims.width}x${dims.height}`;
 }
 
 export async function CreateBox(
@@ -60,8 +66,8 @@ export async function CreateBox(
       alert("You Do Have Have Permission To Create Box Entries");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.post<Box>(
-      apiHost + "/api/boxes",
+    const response = await ApiClient.post<Box>(
+      ApiHost + "/api/boxes",
       {
         id: newBox.id,
         upc: newBox.upc,
@@ -100,7 +106,7 @@ export async function GetAllBoxes(
       alert("User Account Is Not Active!");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.get<Box[]>(apiHost + "/api/boxes", {
+    const response = await ApiClient.get<Box[]>(ApiHost + "/api/boxes", {
       //withCredentials: true,
     });
     const data = response.data;
@@ -137,7 +143,7 @@ export async function GetBox(
     }
 
     console.log(`Attempting To Get Box Entry [${id}] ...`);
-    const response = await api.get<Box>(apiHost + `/api/boxes/${id}`, {
+    const response = await ApiClient.get<Box>(ApiHost + `/api/boxes/${id}`, {
       //withCredentials: true,
     });
     const data = response.data;
@@ -180,8 +186,8 @@ export async function UpdateBox(
         `Input ID and New Box's ID Do Not Match:\n\tInput: ${id}, Entry: ${newBox.id}`,
       );
     }
-    const response = await api.put<Box>(
-      apiHost + `/api/boxes/${id}`,
+    const response = await ApiClient.put<Box>(
+      ApiHost + `/api/boxes/${id}`,
       {
         id: newBox.id,
         upc: newBox.upc,
@@ -223,9 +229,12 @@ export async function DeleteBox(
       alert("You Do Have Have Permission To Delete This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.delete<number>(apiHost + `/api/boxes/${id}`, {
-      //withCredentials: true,
-    });
+    const response = await ApiClient.delete<number>(
+      ApiHost + `/api/boxes/${id}`,
+      {
+        //withCredentials: true,
+      },
+    );
     const data = response.data;
     console.log("Raw API Response: ", data);
     if (response.status !== HttpStatusCode.Accepted) {

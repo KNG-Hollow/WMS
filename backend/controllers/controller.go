@@ -4,8 +4,10 @@ package controllers
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/KNG-Hollow/WMS/backend/models"
 	"github.com/KNG-Hollow/WMS/backend/services"
@@ -30,13 +32,60 @@ func AuthorizeLogin(c *echo.Context) error {
 	if err != nil {
 		return err
 	}
-
+	// TODO test new cookie and JWT format
 	token, err := services.InitJWT(acc)
 	if err != nil {
 		return err
 	}
+	cookie := new(http.Cookie)
+	cookie.Name = "jwt"
+	cookie.Value = token
+	cookie.Expires = time.Now().Add(24 * time.Hour)
+	//cookie.HttpOnly = true
+	cookie.SameSite = http.SameSiteNoneMode
+	c.SetCookie(cookie)
+	// TODO test
+	dto := models.AccountDTO{ID: acc.ID, Username: acc.Username, Password: acc.Password, Role: acc.Role, JWT: token}
+	if err := services.AddActiveToCache(dto); err != nil {
+		return err
+	}
 
-	return c.JSON(http.StatusAccepted, token)
+	return c.JSON(http.StatusAccepted, map[string]string{"token": token})
+}
+
+func RefreshJWT(c *echo.Context) error {
+	type Id struct {
+		Id int64 `param:"id" json:"id"`
+	}
+	var binder Id
+	if err := c.Bind(&binder); err != nil {
+		return c.JSON(http.StatusBadRequest, "could not convert")
+	}
+	token, err := services.RefreshJWT(c, int(binder.Id))
+	if err != nil {
+		return err
+	} else if token == "" {
+		return fmt.Errorf("Token is empty")
+	}
+
+	return c.JSON(http.StatusAccepted, map[string]string{"token": token})
+
+}
+
+// TODO test
+func LogoutActive(c *echo.Context) error {
+	type Id struct {
+		Id int64 `param:"id" json:"id"`
+	}
+	var binder Id
+	if err := c.Bind(&binder); err != nil {
+		return c.JSON(http.StatusBadRequest, "could not convert")
+	}
+	if err := services.DeleteActiveFromCache(binder.Id); err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusAccepted, map[string]bool{"ok": true})
 }
 
 func GetItemsList(c *echo.Context) error {
@@ -87,6 +136,41 @@ func GetCustomersList(c *echo.Context) error {
 		}
 	}
 	return c.JSON(http.StatusOK, customers)
+}
+
+// TODO test
+func GetActiveUsers(c *echo.Context) error {
+	var users []models.AccountDTO
+	res := services.CheckCache("active", "*")
+	if res {
+		arr, err := services.GetActiveUsersFromCache()
+		if err != nil {
+			return err
+		}
+		users = arr
+	}
+	return c.JSON(http.StatusOK, users)
+}
+
+// TODO test
+func GetActiveUser(c *echo.Context) error {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return err
+	}
+	var user models.AccountDTO
+	res := services.CheckCache("active", idParam)
+	if res {
+		arr, err := services.GetActiveUserFromCache(int64(id))
+		if err != nil {
+			return err
+		}
+		user = arr
+	} else {
+		return fmt.Errorf("User was not found in cache")
+	}
+	return c.JSON(http.StatusOK, user)
 }
 
 //  Basic Functionality  //

@@ -17,6 +17,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/KNG-Hollow/WMS/backend/models"
 	"github.com/golang-jwt/jwt/v5"
@@ -186,12 +187,20 @@ func ValidateLogin(username string, password string) (*models.Account, error) {
 	return &acc, nil
 }
 
-func InitJWT(acc *models.Account) (map[string]string, error) {
+func InitJWT(acc *models.Account) (string, error) {
+	/*
+		claims := &models.JwtCustomClaims{
+			ID:        acc.ID,
+			Username:  acc.Username,
+			Role:      acc.Role,
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 10)),
+		}
+	*/
 	claims := &models.JwtCustomClaims{
-		ID:       acc.ID,
-		Username: acc.Username,
-		Role:     acc.Role,
+		ID:        int64(acc.ID),
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
 	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
 
 	var jwtKey *rsa.PrivateKey
@@ -200,18 +209,60 @@ func InitJWT(acc *models.Account) (map[string]string, error) {
 	if err != nil {
 		jwtKey, err = LoadRSAPrivateKey("../jwt.pem")
 		if err != nil {
-			return nil, fmt.Errorf("Failed to open JWT Key: %w", err)
+			return "", fmt.Errorf("Failed to open JWT Key: %w", err)
 		}
 	}
 
 	t, err := token.SignedString(jwtKey)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return map[string]string{
-		"token": t,
-	}, nil
+	return t, nil
+}
+
+func RefreshJWT(c *echo.Context, id int) (string, error) {
+	/*
+		claims := &models.JwtCustomClaims{
+			ID:        int64(id),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
+		}
+	*/
+	cookie, err := c.Cookie("jwt")
+	if err != nil {
+		return "", err
+	}
+	acc, err := GetActiveUserFromCache(int64(id))
+	if err != nil {
+		return "", err
+	}
+	if cookie.Value != acc.JWT {
+		return "", fmt.Errorf("Cookie JWT and cached JWT do not match")
+	}
+
+	claims := &models.JwtCustomClaims{
+		ID:        acc.ID,
+		Username:  acc.Username,
+		Role:      acc.Role,
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 30)),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+
+	jwtKey, err := LoadRSAPrivateKey(os.Getenv("JWTKEY"))
+	if err != nil {
+		jwtKey, err = LoadRSAPrivateKey("../jwt.pem")
+		if err != nil {
+			return "", fmt.Errorf("Failed to open JWT Key: %w", err)
+		}
+	}
+
+	t, err := token.SignedString(jwtKey)
+	if err != nil {
+		return "", err
+	}
+
+	return t, nil
 }
 
 func DecodeJWT(c *echo.Context) (jwt.MapClaims, error) {
@@ -260,7 +311,7 @@ func Restricted(c *echo.Context) error {
 	if err != nil {
 		return echo.ErrUnauthorized.Wrap(err)
 	}
-	claims, ok := user.Claims.(jwt.MapClaims)
+	claims, ok := user.Claims.(*jwt.MapClaims)
 	if !ok {
 		return errors.New("failed to cast claims as jwt.MapClaims")
 	}

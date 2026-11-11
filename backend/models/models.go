@@ -24,6 +24,14 @@ type Account struct {
 	Created   time.Time `json:"created" db:"created"`
 }
 
+type AccountDTO struct {
+	ID       int64  `json:"id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Role     Role   `json:"role"`
+	JWT      string `json:"jwt"`
+}
+
 type Role struct {
 	ADMIN    string
 	MANAGER  string
