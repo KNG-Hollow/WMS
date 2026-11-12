@@ -1,5 +1,6 @@
 import { GlobalContext } from "@/utility/Contexts";
 import Ionicons from "@react-native-vector-icons/ionicons/static";
+import { useIsFocused } from "expo-router";
 import { useContext, useState } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,8 +8,11 @@ import {
   Camera,
   useCameraDevice,
   useCameraPermission,
-  useCodeScanner,
 } from "react-native-vision-camera";
+import {
+  Barcode,
+  useBarcodeScannerOutput,
+} from "react-native-vision-camera-barcode-scanner";
 
 interface CameraProps {
   scannerActive: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,22 +20,26 @@ interface CameraProps {
 
 export default function CamScanner({ scannerActive }: CameraProps) {
   const globalctx = useContext(GlobalContext);
-  const device = useCameraDevice("back");
+  const device = useCameraDevice("back", { physicalDevices: ["telephoto"] });
   const { hasPermission, requestPermission } = useCameraPermission();
   const [torch, setTorch] = useState<boolean>(false);
+  const isFocused = useIsFocused();
 
-  const codeScanner = useCodeScanner({
-    codeTypes: ["qr", "ean-13", "upc-a"],
-    onCodeScanned: (codes) => {
+  const codeScanner = useBarcodeScannerOutput({
+    barcodeFormats: ["qr-code", "ean-13", "upc-a"],
+    onBarcodeScanned(codes: Barcode[]) {
       for (const code of codes) {
-        console.log(`Scanned Type: ${code.type}`);
-        console.log(`Scanned Value: ${code.value}`);
-        const scannedType = code.type;
-        const scannedValue = code.value!;
+        console.log(`Scanned Type: ${code.valueType}`);
+        console.log(`Scanned Value: ${code.displayValue}`);
+        const scannedType = code.valueType;
+        const scannedValue = code.displayValue!;
         globalctx?.insertScan({ type: scannedType, value: scannedValue });
         scannerActive(false);
         console.log("Scanner Deactivated!");
       }
+    },
+    onError(error: Error) {
+      console.error("Failed to scan barcodes", error);
     },
   });
 
@@ -54,9 +62,9 @@ export default function CamScanner({ scannerActive }: CameraProps) {
         style={StyleSheet.absoluteFill}
         device={device!}
         isActive={true}
-        codeScanner={codeScanner}
-        torch={torch ? "on" : "off"}
-        enableZoomGesture={true}
+        outputs={[codeScanner]}
+        torchMode={torch ? "on" : "off"}
+        enableNativeZoomGesture={true}
       />
       <SafeAreaView className="flex flex-1">
         <Pressable className="top-5" onPress={() => scannerActive(false)}>
@@ -75,4 +83,31 @@ export default function CamScanner({ scannerActive }: CameraProps) {
       </SafeAreaView>
     </SafeAreaView>
   );
+  /*
+
+  return (
+    <CodeScanner
+      isActive={isFocused}
+      style={""}
+      barcodeFormats={["qr-code", "ean-13", "upc-a"]}
+      onBarcodeScanned={(barcodes) => {
+        for (let entry of barcodes) {
+          const scannedType = entry.valueType;
+          const scannedValue = entry.displayValue;
+          console.log(`Scanned Type: ${scannedType}`);
+          console.log(`Scanned Value: ${scannedValue}`);
+          globalctx?.insertScan({ type: scannedType, value: scannedValue! });
+          scannerActive(false);
+          console.log("Scanner Deactivated!");
+        }
+      }}
+      onError={(error) => {
+        console.error("Error scanning barcodes:", error);
+      }}
+    />
+  );
+
+  
+
+  */
 }

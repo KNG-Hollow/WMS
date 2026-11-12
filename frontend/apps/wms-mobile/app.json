@@ -51,9 +51,7 @@
           "enableCodeScanner": true
         }
       ],
-      [
-        "expo-router"
-      ],
+      ["expo-router"],
       [
         "expo-splash-screen",
         {
@@ -74,6 +72,7 @@
           "enableBackgroundRecording": false
         }
       ],
+      "@react-native-vector-icons/ionicons",
       "expo-asset",
       "expo-font",
       "expo-image",

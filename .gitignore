@@ -28,3 +28,5 @@ WMS.session.sql
 *.crt
 *.pem
 *.env
+
+*.apk

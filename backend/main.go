@@ -23,8 +23,8 @@ import (
 )
 
 func main() {
-	var tlscrt []byte
-	var tlskey []byte
+	//var tlscrt []byte
+	//var tlskey []byte
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Error loading .env file")
@@ -42,28 +42,29 @@ func main() {
 			os.Exit(1)
 		}
 	}
-
-	tlscrt, err = os.ReadFile(os.Getenv("TLSCRT"))
-	if err != nil {
-		tlscrt, err = os.ReadFile("../cert.pem")
+	/*
+		tlscrt, err = os.ReadFile(os.Getenv("TLSCRT"))
 		if err != nil {
-			fmt.Println("Failed to open TLS Certificate")
-			os.Exit(1)
+			tlscrt, err = os.ReadFile("../cert.pem")
+			if err != nil {
+				fmt.Println("Failed to open TLS Certificate")
+				os.Exit(1)
+			}
 		}
-	}
-	tlskey, err = os.ReadFile(os.Getenv("TLSKEY"))
-	if err != nil {
-		tlskey, err = os.ReadFile("../key.pem")
+		tlskey, err = os.ReadFile(os.Getenv("TLSKEY"))
 		if err != nil {
-			fmt.Println("Failed to open TLS Key")
-			os.Exit(1)
+			tlskey, err = os.ReadFile("../key.pem")
+			if err != nil {
+				fmt.Println("Failed to open TLS Key")
+				os.Exit(1)
+			}
 		}
-	}
+	*/
 
 	e := echo.New()
 	e.Logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
-	e.Pre(middleware.HTTPSRedirect())
+	//e.Pre(middleware.HTTPSRedirect())
 
 	jwtConfig := echojwt.WithConfig(echojwt.Config{
 		NewClaimsFunc: func(c *echo.Context) jwt.Claims {
@@ -97,28 +98,27 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	/*
-		// NO TLS
-		sc := echo.StartConfig{
-			Address:         ":1323",
-			GracefulTimeout: 5 * time.Second,
-		}
-		if err := sc.Start(ctx, e); err != nil {
-			e.Logger.Error("failed to start server", "error", err)
-		}
-	*/
-
-	// SELF-SIGNED TLS CREDENTIALS
-	sc := echo.StartConfig{Address: ":1323", GracefulTimeout: 5 * time.Second}
-	if err := sc.StartTLS(
-		ctx,
-		e,
-		tlscrt,
-		tlskey,
-	); err != nil {
-		e.Logger.Error("failed to start https server", "error", err)
+	// NO TLS
+	sc := echo.StartConfig{
+		Address:         ":1323",
+		GracefulTimeout: 5 * time.Second,
+	}
+	if err := sc.Start(ctx, e); err != nil {
+		e.Logger.Error("failed to start server", "error", err)
 	}
 }
+
+/*
+		// SELF-SIGNED TLS CREDENTIALS
+		sc := echo.StartConfig{Address: ":1323", GracefulTimeout: 5 * time.Second}
+		if err := sc.StartTLS(
+			ctx,
+			e,
+			tlscrt,
+			tlskey,
+		); err != nil {
+			e.Logger.Error("failed to start https server", "error", err)
+		}
 
 /*
 	// AUTO-TLS

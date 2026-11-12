@@ -128,11 +128,13 @@ export default function AddInventory() {
     setProductValue("");
   }, [globalctx, productList, productQueue, player]);
 
+  /*
   useEffect(() => {
     if (scannerValue !== undefined) {
       handleBarcodeSubmit();
     }
   }, [handleBarcodeSubmit, scannerValue]);
+  */
 
   const handleTextSubmit = (productName: string) => {
     const tempItem = productList!.filter(
@@ -326,6 +328,9 @@ export default function AddInventory() {
               onPress={() => {
                 console.log("Scanner Activated!");
                 setScannerActive(true);
+                if (scannerValue !== undefined) {
+                  handleBarcodeSubmit();
+                }
               }}
             >
               <Text className="text-white font-semibold">Activate Scanner</Text>
