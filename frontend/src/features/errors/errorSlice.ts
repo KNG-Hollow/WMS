@@ -1,13 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { createAppSlice } from "@/app/createAppSlice";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { createAppSlice } from "../../app/createAppSlice";
 
 export type ErrorSliceState = {
   errorActive: boolean;
   header: string;
   message: string;
 };
+
+interface ErrorSlice {
+  header: string;
+  message: string;
+  errorActive: boolean;
+}
 
 const initialState: ErrorSliceState = {
   errorActive: false,
@@ -41,16 +47,11 @@ export const errorSlice = createAppSlice({
     resetMessage: create.reducer((state) => {
       state.message = "";
     }),
-    insertError: create.reducer(
-      (
-        state,
-        action: PayloadAction<
-          [header: string, message: string, active: boolean]
-        >,
-      ) => {
-        [state.header, state.message, state.errorActive] = action.payload;
-      },
-    ),
+    insertError: create.reducer((state, action: PayloadAction<ErrorSlice>) => {
+      state.header = action.payload.header;
+      state.message = action.payload.message;
+      state.errorActive = action.payload.errorActive;
+    }),
   }),
   // You can define your selectors here. These selectors receive the slice
   // state as their first argument.

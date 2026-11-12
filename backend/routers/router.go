@@ -5,7 +5,7 @@ package routers
 import (
 	"net/http"
 
-	ctrl "github.com/WMS/controllers"
+	ctrl "github.com/KNG-Hollow/WMS/backend/controllers"
 	"github.com/labstack/echo/v5"
 )
 
@@ -24,6 +24,8 @@ func InitRouter(e *echo.Echo, jwtConfig echo.MiddlewareFunc) {
 		return c.JSON(http.StatusOK, map[string]string{"status": "healthy"})
 	})
 	e.POST("/login", ctrl.AuthorizeLogin)
+	e.POST("/logout", ctrl.LogoutActive)
+	e.POST("/refresh", ctrl.RefreshJWT)
 
 	// PROTECTED ROUTES
 	api := e.Group("/api")
@@ -34,6 +36,7 @@ func InitRouter(e *echo.Echo, jwtConfig echo.MiddlewareFunc) {
 	api.POST("/orders", ctrl.AddOrder)
 	api.POST("/boxes", ctrl.AddBox)
 	api.POST("/inventory", ctrl.AddInventory)
+	api.POST("/shipments", ctrl.AddShipment)
 
 	api.GET("/accounts", ctrl.GetAccounts)
 	api.GET("/accounts/:id", ctrl.GetAccount)
@@ -46,16 +49,22 @@ func InitRouter(e *echo.Echo, jwtConfig echo.MiddlewareFunc) {
 	api.GET("/boxes/:id", ctrl.GetBox)
 	api.GET("/inventory", ctrl.GetAllInventory)
 	api.GET("/inventory/:id", ctrl.GetInventory)
+	api.GET("/shipments", ctrl.GetAllShipments)
+	api.GET("/shipments/:id", ctrl.GetShipment)
+	api.GET("/active", ctrl.GetActiveUsers)
+	api.GET("/active/:id", ctrl.GetActiveUser)
 
 	api.PUT("/accounts/:id", ctrl.UpdateAccount)
 	api.PUT("/items/:id", ctrl.UpdateItem)
 	api.PUT("/orders/:id", ctrl.UpdateOrder)
 	api.PUT("/boxes/:id", ctrl.UpdateBox)
 	api.PUT("/inventory/:id", ctrl.UpdateInventory)
+	api.PUT("/shipments/:id", ctrl.UpdateShipment)
 
 	api.DELETE("/accounts/:id", ctrl.DeleteAccount)
 	api.DELETE("/items/:id", ctrl.DeleteItem)
 	api.DELETE("/orders/:id", ctrl.DeleteOrder)
 	api.DELETE("/boxes/:id", ctrl.DeleteBox)
 	api.DELETE("/inventory/:id", ctrl.DeleteInventory)
+	api.DELETE("/shipments/:id", ctrl.DeleteShipment)
 }

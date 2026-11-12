@@ -12,6 +12,7 @@ export default [
   route("login", "../components/utility/LoginForm.tsx"),
   route("logout", "../components/utility/Logout.tsx"),
   route("error", "../features/errors/Error.tsx"),
+  route("about", "../components/utility/About.tsx"),
 
   ...prefix("accounts", [
     index("../features/accounts/Accounts.tsx"),

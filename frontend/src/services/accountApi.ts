@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import axios, { HttpStatusCode } from "axios";
-import type { Account, Role } from "../app/models";
-import {
-  selectJWT,
-  type AccountSliceState,
-} from "../features/accounts/accountSlice";
-import { useAppSelector } from "../app/hooks";
-
+import type { Account, Role } from "@/app/models";
+import { type AccountSliceState } from "@/features/accounts/accountSlice";
+import { HttpStatusCode } from "axios";
+import { ApiClient, ApiHost } from "./utilityApi";
+/*
 const apiHost: string =
   import.meta.env.VITE_API_URL || "https://localhost:1323";
 
@@ -20,16 +17,25 @@ const api = axios.create({
   },
 });
 
-export function InitAccAPI() {
-  const token = useAppSelector(selectJWT);
+export function InitAccountAPI() {
+  const tokenStr = useAppSelector(selectJWT);
+  const tokenObject = DecodeToken(tokenStr);
+  if (!tokenObject) {
+    return console.error("Failed to convert tokenStr to object");
+  }
+  const currentDate = new Date();
+  const currentUnix = Math.floor(currentDate.getTime() / 1000);
   api.interceptors.request.use((config) => {
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (tokenObject.exp < currentUnix) {
+      const newToken = RefreshJWT(tokenObject.id);
+      config.headers.Authorization = `Bearer ${newToken}`;
+    } else {
+      config.headers.Authorization = `Bearer ${tokenStr}`;
     }
     return config;
   });
 }
-
+*/
 export async function CreateAccount(
   initiatorAccount: AccountSliceState,
   id: number | null,
@@ -62,8 +68,8 @@ export async function CreateAccount(
       alert("You Do Have Have Permission To Create An Account");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.post<Account>(
-      apiHost + "/api/accounts",
+    const response = await ApiClient.post<Account>(
+      ApiHost + "/api/accounts",
       {
         id: newAccount.id,
         firstname: newAccount.firstname,
@@ -107,7 +113,7 @@ export async function GetAccounts(
       alert("You Do Have Have Permission To View All Accounts");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.get<Account[]>(apiHost + "/api/accounts", {
+    const response = await ApiClient.get<Account[]>(ApiHost + "/api/accounts", {
       //withCredentials: true,
     });
     const data = response.data;
@@ -141,9 +147,12 @@ export async function GetAccount(
     }
 
     console.log(`Attempting To Get Account [${id}] ...`);
-    const response = await api.get<Account>(apiHost + `/api/accounts/${id}`, {
-      //withCredentials: true,
-    });
+    const response = await ApiClient.get<Account>(
+      ApiHost + `/api/accounts/${id}`,
+      {
+        //withCredentials: true,
+      },
+    );
     const data = response.data;
     console.log("Raw API Response: ", data);
     if (response.status !== HttpStatusCode.Ok) {
@@ -181,8 +190,8 @@ export async function UpdateAccount(
         `Input ID and New Account's ID Do Not Match:\n\tInput: ${id}, Account: ${newAccount.id}`,
       );
     }
-    const response = await api.put<Account>(
-      apiHost + `/api/accounts/${id}`,
+    const response = await ApiClient.put<Account>(
+      ApiHost + `/api/accounts/${id}`,
       {
         id: newAccount.id,
         firstname: newAccount.firstname,
@@ -226,9 +235,12 @@ export async function DeleteAccount(
       alert("You Do Have Have Permission To Delete This Account");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.delete<number>(apiHost + `/api/accounts/${id}`, {
-      //withCredentials: true,
-    });
+    const response = await ApiClient.delete<number>(
+      ApiHost + `/api/accounts/${id}`,
+      {
+        //withCredentials: true,
+      },
+    );
     const data = response.data;
     console.log("Raw API Response: ", data);
     if (response.status !== HttpStatusCode.Accepted) {

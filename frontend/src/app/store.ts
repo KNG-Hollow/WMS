@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { accountSlice } from "@/features/accounts/accountSlice";
+import { appSlice } from "@/features/appSlice";
+import { errorSlice } from "@/features/errors/errorSlice";
 import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import { accountSlice } from "../features/accounts/accountSlice";
-import { appSlice } from "../features/appSlice";
-import { errorSlice } from "../features/errors/errorSlice";
 
 // `combineSlices` automatically combines the reducers using
 // their `reducerPath`s, therefore we no longer need to call `combineReducers`.

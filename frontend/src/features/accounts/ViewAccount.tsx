@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import type { Account } from "@/app/models";
+import { GetAccount } from "@/services/accountApi";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectAppActive } from "../appSlice";
 import { insertError, selectErrorActive } from "../errors/errorSlice";
-import { GetAccount } from "../../services/accountApi";
 import { selectUserState } from "./accountSlice";
-import type { Account } from "../../app/models";
 
 export default function ViewAccount() {
   const appActive = useAppSelector(selectAppActive);
@@ -43,11 +43,11 @@ export default function ViewAccount() {
         console.error(`Failed To Get Account ${id}: ` + err);
         alert(`Failed To Get Account: ${id}`);
         dispatch(
-          insertError([
-            "Failed To Get Account!",
-            `Failed To Return An Acceptable Account Object With ID [${account?.id}] :: ${err}`,
-            true,
-          ]),
+          insertError({
+            header: "Failed To Get Account!",
+            message: `Failed To Return An Acceptable Account Object With ID [${account?.id}] :: ${err}`,
+            errorActive: true,
+          }),
         );
       }
     };
@@ -58,45 +58,37 @@ export default function ViewAccount() {
     }
   }, [account?.id, appActive, dispatch, errorActive, id, navigate, userState]);
 
-  function capitalize(str: string | undefined): string {
-    if (str === undefined) {
-      return "";
-    } else {
-      return str?.charAt(0).toUpperCase() + str?.slice(1);
-    }
-  }
-
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col border-3 mb-20 rounded border-cyan-600 p-25 mt-20 bg-gray-900 items-center justify-center">
-        <div className="text-xl font-extrabold text-cyan-500">
-          <h1>{`${capitalize(account?.firstname)} ${capitalize(account?.lastname)}`}</h1>
+    <div className="flex flex-1 justify-center">
+      <div className="flex flex-col w-5/6 border-3 gap-y-10 my-20 rounded border-cyan-600 p-20 bg-gray-900 items-center">
+        <div className="text-xl font-bold text-cyan-500">
+          <h1>{`${account?.firstname} ${account?.lastname}`}</h1>
         </div>
-        <div className="flex flex-col gap-y-5 items-center mt-10">
-          <div className="flex gap-x-2">
+        <div className="flex flex-col gap-y-5 items-start">
+          <div className="flex gap-x-5">
             <h3>Username:</h3>
             <p>{account?.username}</p>
           </div>
-          <div className="flex gap-x-2">
+          <div className="flex gap-x-14">
             <h3>Email:</h3>
             <p>{account?.email}</p>
           </div>
-          <div className="flex gap-x-2">
+          <div className="flex gap-x-12">
             <h3>Phone:</h3>
             <p>{account?.phone}</p>
           </div>
           {userState.role === "ADMIN" ? (
-            <div className="flex gap-x-2">
+            <div className="flex gap-x-16">
               <h3>Role:</h3>
               <p>{account?.role.Value}</p>
             </div>
           ) : null}
-          <div className="flex gap-x-2">
+          <div className="flex gap-x-9">
             <h3>Created:</h3>
             <p>{account?.created.toString()}</p>
           </div>
         </div>
-        <div className="mt-10 flex flex-col gap-y-2">
+        <div className="flex flex-col gap-y-2">
           <button onClick={() => navigate("./edit")}>Edit Account</button>
           <button onClick={() => navigate(-1)}>Back</button>
         </div>

@@ -24,6 +24,14 @@ type Account struct {
 	Created   time.Time `json:"created" db:"created"`
 }
 
+type AccountDTO struct {
+	ID       int64  `json:"id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Role     Role   `json:"role"`
+	JWT      string `json:"jwt"`
+}
+
 type Role struct {
 	ADMIN    string
 	MANAGER  string
@@ -53,6 +61,7 @@ type Item struct {
 
 type ItemInfo struct {
 	ID   int64  `json:"id" db:"id"`
+	UPC  string `json:"upc" db:"upc"`
 	Name string `json:"name" db:"name"`
 }
 
@@ -97,14 +106,14 @@ func (i *ImageData) Value() (driver.Value, error) {
 type Box struct {
 	ID         int64  `json:"id" db:"id"`
 	UPC        string `json:"upc" db:"upc"`
-	Item       Item   `json:"item" db:"item"`
 	Dimensions string `json:"dimensions" db:"dimensions"`
 	Count      int64  `json:"count" db:"count"`
+	ItemID     int64  `json:"item_id" db:"item_id"`
 }
 
 type Inventory struct {
 	ID         int64          `json:"id" db:"id"`
-	Item       Item           `json:"item" db:"item"`
+	ItemID     int64          `json:"item_id" db:"item_id"`
 	TotalCount int64          `json:"total" db:"total"`
 	Locations  []LocationData `json:"locations" db:"locations"`
 }
@@ -114,6 +123,7 @@ type LocationData struct {
 	Count int64  `json:"count" db:"count"`
 }
 
+// TODO Customer should be CustomerId int64
 type Order struct {
 	ID          int64       `json:"id" db:"id"`
 	Customer    Account     `json:"customer" db:"customer"`
@@ -123,16 +133,15 @@ type Order struct {
 }
 
 type Shipment struct {
-	ID          int64       `json:"id" db:"id"`
-	Supplier    Account     `json:"supplier" db:"supplier"`
-	Distributor string      `json:"distributor" db:"distributor"`
-	ETA         time.Time   `json:"eta" db:"eta"`
-	Payload     []ItemGroup `json:"payload" db:"payload"`
+	ID       int64       `json:"id" db:"id"`
+	Supplier string      `json:"supplier" db:"supplier"`
+	ETA      time.Time   `json:"eta" db:"eta"`
+	Payload  []ItemGroup `json:"payload" db:"payload"`
 }
 
 type ItemGroup struct {
-	Item  Item  `json:"item"`
-	Count int64 `json:"count"`
+	ItemID int64 `json:"item_id"`
+	Count  int64 `json:"count"`
 }
 
 type LoginDetails struct {

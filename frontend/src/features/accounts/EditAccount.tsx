@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectAppActive } from "../appSlice";
-import { insertError, selectErrorActive } from "../errors/errorSlice";
-import type { Account } from "../../app/models";
-import { selectRole, selectUserState } from "./accountSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import type { Account } from "@/app/models";
 import {
   DeleteAccount,
   GetAccount,
   UpdateAccount,
-} from "../../services/accountApi";
+} from "@/services/accountApi";
 import DOMPurify from "dompurify";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import { selectAppActive } from "../appSlice";
+import { insertError, selectErrorActive } from "../errors/errorSlice";
+import { selectRole, selectUserState } from "./accountSlice";
 
 export default function EditAccount() {
   const userRole = useAppSelector(selectRole);
@@ -34,11 +34,12 @@ export default function EditAccount() {
   useEffect(() => {
     if (userRole !== "ADMIN" && userState.id !== +id!) {
       dispatch(
-        insertError([
-          "Unauthorized!",
-          "You do not have the proper credentials to access this information",
-          true,
-        ]),
+        insertError({
+          header: "Unauthorized!",
+          message:
+            "You do not have the proper credentials to access this information",
+          errorActive: true,
+        }),
       );
     }
     if (!appActive) {
@@ -65,11 +66,11 @@ export default function EditAccount() {
         console.error(`Failed To Get Account ${id}: ` + err);
         alert(`Failed To Get Account: ${id}`);
         dispatch(
-          insertError([
-            "Failed To Get Account!",
-            `Failed To Return An Acceptable Account Object With ID [${account?.id}] :: ${err}`,
-            true,
-          ]),
+          insertError({
+            header: "Failed To Get Account!",
+            message: `Failed To Return An Acceptable Account Object With ID [${account?.id}] :: ${err}`,
+            errorActive: true,
+          }),
         );
       }
     };
@@ -110,11 +111,11 @@ export default function EditAccount() {
     } catch (err) {
       console.error("ApiService Failed To Delete Account: " + err);
       dispatch(
-        insertError([
-          "Api Service Failure",
-          `Failed To Delete From Database And Get A Successful Response ::\n${err}`,
-          true,
-        ]),
+        insertError({
+          header: "Api Service Failure",
+          message: `Failed To Delete From Database And Get A Successful Response ::\n${err}`,
+          errorActive: true,
+        }),
       );
     }
   };
@@ -183,28 +184,28 @@ export default function EditAccount() {
     } catch (err) {
       console.error("ApiService Failed To Create Account: " + err);
       dispatch(
-        insertError([
-          "Api Service Failure",
-          `Failed To Populate The Database And Get A Successful Response ::\n${err}`,
-          true,
-        ]),
+        insertError({
+          header: "Api Service Failure",
+          message: `Failed To Populate The Database And Get A Successful Response ::\n${err}`,
+          errorActive: true,
+        }),
       );
     }
   };
 
   return (
-    <div className="flex py-20 flex-col items-center">
+    <div className="flex flex-1 justify-center items-center">
       <div
         id="form-container"
-        className="mt-10 border-3 border-cyan-600 rounded bg-gray-900 p-20 gap-y-2 flex flex-col"
+        className="my-20 border-3 border-cyan-600 rounded bg-gray-900 p-20 gap-y-10 flex flex-col"
       >
-        <div className="font-extrabold mb-10 text-center text-xl text-cyan-500">
+        <div className="font-bold text-center text-xl text-cyan-500">
           <h1>Edit Account</h1>
         </div>
-        <div id="form" className="flex gap-y-5 flex-col items-center">
+        <div id="form" className="flex gap-y-5 flex-col items-start">
           {userRole === "ADMIN" ? (
-            <div id="input-username">
-              <label htmlFor="username-area" className="relative right-2">
+            <div id="input-username" className="space-x-2">
+              <label htmlFor="username-area" className="">
                 *Username:
               </label>
               <input
@@ -220,7 +221,7 @@ export default function EditAccount() {
               />
             </div>
           ) : null}
-          <div id="input-password">
+          <div id="input-password" className="space-x-3">
             <label htmlFor="password-area">*Password:</label>
             <input
               className="border-2 rounded text-center"
@@ -236,7 +237,7 @@ export default function EditAccount() {
           </div>
           {userRole === "ADMIN" ? (
             <>
-              <div id="input-firstname">
+              <div id="input-firstname" className="space-x-3">
                 <label htmlFor="firstname-area">*Firstname:</label>
                 <input
                   className="border-2 rounded text-center"
@@ -250,7 +251,7 @@ export default function EditAccount() {
                   }}
                 />
               </div>
-              <div id="input-lastname">
+              <div id="input-lastname" className="space-x-3">
                 <label htmlFor="lastname-area">*Lastname:</label>
                 <input
                   className="border-2 rounded text-center"
@@ -267,7 +268,7 @@ export default function EditAccount() {
             </>
           ) : null}
 
-          <div id="input-email">
+          <div id="input-email" className="space-x-14">
             <label htmlFor="email-area">Email:</label>
             <input
               className="border-2 rounded text-center"
@@ -284,7 +285,7 @@ export default function EditAccount() {
               }}
             />
           </div>
-          <div id="input-phone">
+          <div id="input-phone" className="space-x-12">
             <label htmlFor="phone-area">Phone:</label>
             <input
               className="border-2 rounded text-center"
@@ -304,7 +305,7 @@ export default function EditAccount() {
           {userRole === "ADMIN" ? (
             <div
               id="input-role"
-              className="border flex items-center py-2 flex-col w-1/2"
+              className="border-2 flex self-center items-center p-4 flex-col w-1/2 gap-y-2"
             >
               <label className="font-bold flex">Role:</label>
               <label htmlFor="role-customer">
@@ -341,7 +342,6 @@ export default function EditAccount() {
                 />
                 <span className="">Employee</span>
               </label>
-
               <label htmlFor="role-manager">
                 <input
                   className=""
@@ -395,7 +395,7 @@ export default function EditAccount() {
               </label>
             </div>
           ) : null}
-          <div className="mt-5 flex flex-col gap-y-2">
+          <div className="flex self-center flex-col gap-y-2">
             <button onClick={() => handleUpdate()}>Submit</button>
             {userRole === "ADMIN" ? (
               <button onClick={() => handleDelete()}>Delete</button>

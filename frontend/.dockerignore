@@ -1,0 +1,12 @@
+# Frontend
+node_modules
+.yarn
+*.def.*
+build
+apps
+
+.*
+
+**.key
+**.crt
+**.pem

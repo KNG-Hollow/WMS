@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import packageJson from "@/../package.json";
+import backgroundImage from "@/assets/background.png";
+import Footer from "@/components/utility/Footer";
+import Navbar from "@/components/utility/Navbar";
+import { StrictMode, type ReactNode } from "react";
+import { Provider } from "react-redux";
 import {
-  Outlet,
-  Meta,
   Links,
+  Meta,
+  Outlet,
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./App.css";
-import { StrictMode, type ReactNode } from "react";
-import { Provider } from "react-redux";
 import { store } from "./store";
-import packageJson from "../../package.json";
-import Footer from "../components/utility/Footer";
-import Navbar from "../components/utility/Navbar";
-import backgroundImage from "../assets/background.png";
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
@@ -46,14 +46,14 @@ export default function App() {
   return (
     <StrictMode>
       <Provider store={store}>
+        <Navbar />
         <div
-          className="bg-linear-to-b from-cyan-600 to-slate-600 bg-center bg-no-repeat min-h-screen"
+          className="flex bg-linear-to-b from-cyan-600 to-slate-600 bg-center bg-no-repeat min-h-screen"
           style={{ backgroundImage: `url(${backgroundImage})` }}
         >
-          <Navbar />
           <Outlet />
-          <Footer />
         </div>
+        <Footer />
       </Provider>
     </StrictMode>
   );
@@ -97,16 +97,18 @@ export async function loader() {
 
 export function HydrateFallback({ loaderData }: Route.ComponentProps) {
   return (
-    <div className="flex font-bold flex-col gap-y-25 items-center bg-linear-to-t from-cyan-700 to-slate-950 bg-center bg-no-repeat min-h-screen">
-      <h1 className="mt-15">Loading Version: {loaderData.version}</h1>
-      <Spinner />
+    <div className="flex flex-1 justify-center bg-linear-to-t from-cyan-700 to-slate-950 bg-center bg-no-repeat min-h-screen">
+      <div className="flex font-bold flex-col gap-y-25 justify-center">
+        <h1 className="">Loading Version: {loaderData.version}</h1>
+        <Spinner />
+      </div>
     </div>
   );
 }
 
 export function Spinner() {
   return (
-    <div id="spinner-container" className="flex justify-center self-center">
+    <div id="spinner-container" className="flex justify-center">
       <div
         id="spinner"
         className="w-24 h-24 rounded-full border-8 border-t-pink-600 animate-spin"

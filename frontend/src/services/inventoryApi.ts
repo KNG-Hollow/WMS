@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import axios, { HttpStatusCode } from "axios";
-import type { Inventory, Item, LocationData } from "../app/models";
-import {
-  selectJWT,
-  type AccountSliceState,
-} from "../features/accounts/accountSlice";
-import { useAppSelector } from "../app/hooks";
-
+import type { Inventory, LocationData } from "@/app/models";
+import { type AccountSliceState } from "@/features/accounts/accountSlice";
+import { HttpStatusCode } from "axios";
+import { ApiClient, ApiHost } from "./utilityApi";
+/*
 const apiHost: string =
   import.meta.env.VITE_API_URL || "https://localhost:1323";
 
@@ -21,26 +18,35 @@ const api = axios.create({
 });
 
 export function InitInvAPI() {
-  const token = useAppSelector(selectJWT);
+  const tokenStr = useAppSelector(selectJWT);
+  const tokenObject = DecodeToken(tokenStr);
+  if (!tokenObject) {
+    return console.error("Failed to convert tokenStr to object");
+  }
+  const currentDate = new Date();
+  const currentUnix = Math.floor(currentDate.getTime() / 1000);
   api.interceptors.request.use((config) => {
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (tokenObject.exp < currentUnix) {
+      const newToken = RefreshJWT(tokenObject.id);
+      config.headers.Authorization = `Bearer ${newToken}`;
+    } else {
+      config.headers.Authorization = `Bearer ${tokenStr}`;
     }
     return config;
   });
 }
-
+*/
 export async function CreateInventory(
   initiatorAccount: AccountSliceState,
   id: number | null,
-  item: Item,
+  item_id: number,
   total: number,
   locations: LocationData[],
 ): Promise<[boolean, Inventory]> {
   let successful: boolean;
   const newInventory: Inventory = {
     id: id,
-    item: item,
+    item_id: item_id,
     total: total,
     locations: locations,
   };
@@ -54,11 +60,11 @@ export async function CreateInventory(
       alert("You Do Have Have Permission To Create Inventory Entries");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.post<Inventory>(
-      apiHost + "/api/inventory",
+    const response = await ApiClient.post<Inventory>(
+      ApiHost + "/api/inventory",
       {
         id: newInventory.id,
-        item: newInventory.item,
+        item_id: newInventory.item_id,
         total: newInventory.total,
         locations: newInventory.locations,
       },
@@ -93,9 +99,12 @@ export async function GetAllInventory(
       alert("User Account Is Not Active!");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.get<Inventory[]>(apiHost + "/api/inventory", {
-      //withCredentials: true,
-    });
+    const response = await ApiClient.get<Inventory[]>(
+      ApiHost + "/api/inventory",
+      {
+        //withCredentials: true,
+      },
+    );
     const data = response.data;
     console.log("Raw API Response: ", data);
     if (response.status !== HttpStatusCode.Ok) {
@@ -130,8 +139,8 @@ export async function GetInventory(
     }
 
     console.log(`Attempting To Get Inventory Entry [${id}] ...`);
-    const response = await api.get<Inventory>(
-      apiHost + `/api/inventory/${id}`,
+    const response = await ApiClient.get<Inventory>(
+      ApiHost + `/api/inventory/${id}`,
       {
         //withCredentials: true,
       },
@@ -176,11 +185,11 @@ export async function UpdateInventory(
         `Input ID and New Inventory's ID Do Not Match:\n\tInput: ${id}, Entry: ${newInventory.id}`,
       );
     }
-    const response = await api.put<Inventory>(
-      apiHost + `/api/inventory/${id}`,
+    const response = await ApiClient.put<Inventory>(
+      ApiHost + `/api/inventory/${id}`,
       {
         id: newInventory.id,
-        item: newInventory.item,
+        item_id: newInventory.item_id,
         total: newInventory.total,
         locations: newInventory.locations,
       },
@@ -218,8 +227,8 @@ export async function DeleteInventory(
       alert("You Do Have Have Permission To Delete This Entry");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.delete<number>(
-      apiHost + `/api/inventory/${id}`,
+    const response = await ApiClient.delete<number>(
+      ApiHost + `/api/inventory/${id}`,
       {
         //withCredentials: true,
       },

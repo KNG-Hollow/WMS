@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import { useState } from "react";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch } from "@/app/hooks";
+import type { JwtObject } from "@/app/models";
 import {
+  activateUser,
+  insertID,
   insertJWT,
   insertRole,
-  activateUser,
   insertUsername,
-  insertID,
-} from "../../features/accounts/accountSlice";
-import { insertAppUser, activateApp } from "../../features/appSlice";
-import { useNavigate } from "react-router";
-import type { JwtObject } from "../../app/models";
-import { AuthorizeUser } from "../../services/utilityApi";
+} from "@/features/accounts/accountSlice";
+import { activateApp, insertAppUser } from "@/features/appSlice";
+import { AuthorizeUser } from "@/services/utilityApi";
 import DOMPurify from "dompurify";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function LoginForm() {
   const dispatch = useAppDispatch();
@@ -31,7 +31,6 @@ export default function LoginForm() {
       alert("Try Again: Please fill in both username and password to login.");
       return;
     }
-
     console.log("Attempting to login as: ", usernameIn);
     try {
       [exists, token, payload] = await AuthorizeUser(usernameIn, passwordIn);
@@ -40,6 +39,9 @@ export default function LoginForm() {
       if (!exists || token.length < 1 || payload === null) {
         alert("Account not found in database...");
         throw new Error("Account not found in database!");
+      }
+      if (!payload.username || !payload.role) {
+        throw "Token payload does not contain user data";
       }
       dispatch(insertJWT(token));
       dispatch(insertID(payload.id));
@@ -69,19 +71,19 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-full flex flex-col">
-      <div className="text-center w-3/4 py-2 border-2 bg-gray-900 self-center mt-15 text-2xl font-bold">
+    <div className="flex flex-1 gap-y-15 items-center justify-center flex-col">
+      <div className="text-center w-svh py-3 border-2 rounded bg-gray-900 text-2xl font-semibold">
         <h2>Login</h2>
       </div>
-      <div className="mt-5 flex justify-center">
+      <div className="w-svh flex justify-center">
         <div
           id="login-container"
-          className="mt-10 border-3 px-10 rounded-xl py-10 bg-gray-900 flex h-full flex-col items-center"
+          className="border-2 rounded-xl py-15 gap-y-10 bg-gray-900 flex w-full flex-col items-center justify-center"
         >
-          <div id="login-form">
+          <div id="login-form" className="space-y-5">
             <div
               id="input-username"
-              className="flex flex-row pr-22 space-x-2 font-extrabold"
+              className="flex flex-row pr-22 space-x-2 font-bold"
             >
               <label htmlFor="username-area">Username:</label>
               <input
@@ -101,7 +103,7 @@ export default function LoginForm() {
             </div>
             <div
               id="input-password"
-              className="mt-4 flex flex-row space-x-3 font-extrabold"
+              className="flex flex-row space-x-3 font-bold"
             >
               <label htmlFor="password-area">Password:</label>
               <input
@@ -120,7 +122,7 @@ export default function LoginForm() {
               />
             </div>
           </div>
-          <div id="login-buttons" className="mt-15">
+          <div id="login-buttons" className="">
             <div id="login-button">
               <button onClick={handleLogin}>Login</button>
             </div>

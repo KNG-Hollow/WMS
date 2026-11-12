@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import axios, { HttpStatusCode } from "axios";
-import type { ImageInfo, Item, ItemInfo } from "../app/models";
-import {
-  selectJWT,
-  type AccountSliceState,
-} from "../features/accounts/accountSlice";
-import { useAppSelector } from "../app/hooks";
-
+import type { ImageInfo, Item, ItemInfo } from "@/app/models";
+import { type AccountSliceState } from "@/features/accounts/accountSlice";
+import { HttpStatusCode } from "axios";
+import { ApiClient, ApiHost } from "./utilityApi";
+/*
 const apiHost: string =
   import.meta.env.VITE_API_URL || "https://localhost:1323";
 
@@ -21,15 +18,24 @@ const api = axios.create({
 });
 
 export function InitItemAPI() {
-  const token = useAppSelector(selectJWT);
+  const tokenStr = useAppSelector(selectJWT);
+  const tokenObject = DecodeToken(tokenStr);
+  if (!tokenObject) {
+    return console.error("Failed to convert tokenStr to object");
+  }
+  const currentDate = new Date();
+  const currentUnix = Math.floor(currentDate.getTime() / 1000);
   api.interceptors.request.use((config) => {
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (tokenObject.exp < currentUnix) {
+      const newToken = RefreshJWT(tokenObject.id);
+      config.headers.Authorization = `Bearer ${newToken}`;
+    } else {
+      config.headers.Authorization = `Bearer ${tokenStr}`;
     }
     return config;
   });
 }
-
+*/
 export async function GetItemsList(
   initiatorAccount: AccountSliceState,
 ): Promise<[boolean, ItemInfo[]]> {
@@ -42,9 +48,12 @@ export async function GetItemsList(
       alert("User Account Is Not Active!");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.get<ItemInfo[]>(apiHost + "/api/items/list", {
-      //withCredentials: true,
-    });
+    const response = await ApiClient.get<ItemInfo[]>(
+      ApiHost + "/api/items/list",
+      {
+        //withCredentials: true,
+      },
+    );
     const data = response.data;
     console.log("Raw API Response: ", data);
     if (response.status !== HttpStatusCode.Ok) {
@@ -89,8 +98,8 @@ export async function CreateItem(
       alert("You Do Have Have Permission To Create Items");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.post<Item>(
-      apiHost + "/api/items",
+    const response = await ApiClient.post<Item>(
+      ApiHost + "/api/items",
       {
         id: newItem.id,
         upc: newItem.upc,
@@ -130,7 +139,7 @@ export async function GetItems(
       alert("User Account Is Not Active!");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.get<Item[]>(apiHost + "/api/items", {
+    const response = await ApiClient.get<Item[]>(ApiHost + "/api/items", {
       //withCredentials: true,
     });
     const data = response.data;
@@ -164,7 +173,7 @@ export async function GetItem(
     }
 
     console.log(`Attempting To Get Item [${id}] ...`);
-    const response = await api.get<Item>(apiHost + `/api/items/${id}`, {
+    const response = await ApiClient.get<Item>(ApiHost + `/api/items/${id}`, {
       //withCredentials: true,
     });
     const data = response.data;
@@ -207,8 +216,8 @@ export async function UpdateItem(
         `Input ID and New Item's ID Do Not Match:\n\tInput: ${id}, Entry: ${newItem.id}`,
       );
     }
-    const response = await api.put<Item>(
-      apiHost + `/api/items/${id}`,
+    const response = await ApiClient.put<Item>(
+      ApiHost + `/api/items/${id}`,
       {
         id: newItem.id,
         upc: newItem.upc,
@@ -251,9 +260,12 @@ export async function DeleteItem(
       alert("You Do Have Have Permission To Delete This Item!");
       throw new Error("Initiator's Account Is Not Privileged");
     }
-    const response = await api.delete<number>(apiHost + `/api/items/${id}`, {
-      //withCredentials: true,
-    });
+    const response = await ApiClient.delete<number>(
+      ApiHost + `/api/items/${id}`,
+      {
+        //withCredentials: true,
+      },
+    );
     const data = response.data;
     console.log("Raw API Response: ", data);
     if (response.status !== HttpStatusCode.Accepted) {

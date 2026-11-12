@@ -1,0 +1,72 @@
+// SPDX-License-Identifier: GPL-3.0
+
+import { GlobalContext } from "@/utility/Contexts";
+import Ionicons from "@react-native-vector-icons/ionicons/static";
+import { useRouter } from "expo-router";
+import { useContext, useEffect } from "react";
+import { Linking, Pressable, Text } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { version } from "../../package.json";
+
+export default function AboutScreen() {
+  //const [connected, setConnected] = useState<boolean>(true);
+  const globalctx = useContext(GlobalContext);
+  const connected = globalctx?.APIActive;
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!globalctx?.appActive || globalctx.userData === undefined) {
+      router.navigate("/login");
+    }
+  }, [globalctx?.appActive, globalctx?.userData, router]);
+
+  const footer = () => {
+    const copyright = String.fromCodePoint(0x00a9);
+    const year = new Date().getFullYear();
+    const companyName = "Jaylen Holloway";
+
+    return (
+      <Text className="text-cyan-400">{`${copyright} ${year} ${companyName}. All Rights Reserved.`}</Text>
+    );
+  };
+
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView
+        style={{
+          experimental_backgroundImage: "linear-gradient(#0891b2, #25292e)",
+        }}
+        className="flex flex-1 items-center justify-center align-middle bg-darkbg"
+      >
+        <SafeAreaView className="flex items-center flex-1 justify-center">
+          <Text className="text-white">
+            Warehouse Management System - Inventory Manager
+          </Text>
+          <Text className="mt-15 text-white">Version: {version}</Text>
+
+          <Text className="mt-20 text-white">
+            Connection:{"\t"}
+            {connected ? (
+              <Text className="text-green-600 font-bold">Active</Text>
+            ) : (
+              <Text className="text-red-600">Inactive</Text>
+            )}
+          </Text>
+        </SafeAreaView>
+        <SafeAreaView className="mb-2">
+          <Pressable
+            className="mb-5 self-center"
+            onPress={() =>
+              Linking.openURL(
+                "https://github.com/KNG-Hollow/WMS/tree/feature/wms-mobile/frontend/apps/wms-mobile",
+              )
+            }
+          >
+            <Ionicons name="logo-github" size={40} color="white" />
+          </Pressable>
+          {footer()}
+        </SafeAreaView>
+      </SafeAreaView>
+    </SafeAreaProvider>
+  );
+}

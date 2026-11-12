@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { useAppSelector } from "@/app/hooks";
+import { selectAppActive, selectAppUser } from "@/features/appSlice";
+import { selectErrorActive } from "@/features/errors/errorSlice";
+import { PingHealth } from "@/services/utilityApi";
+import { faPlusSquare } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "../../app/hooks";
-import { selectAppActive, selectAppUser } from "../../features/appSlice";
-import { PingHealth } from "../../services/utilityApi";
 import { Link } from "react-router";
 
 // TODO Adjust CSS for smaller screen sizes
@@ -11,6 +14,7 @@ import { Link } from "react-router";
 export default function Navbar() {
   const appActive = useAppSelector(selectAppActive);
   const userState = useAppSelector(selectAppUser);
+  const errorActive = useAppSelector(selectErrorActive);
   const [connected, setConnected] = useState<boolean>(true);
 
   useEffect(() => {
@@ -21,20 +25,21 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, []);
 
-  if (!appActive || !userState.userActive) {
+  if (!appActive || !userState.userActive || errorActive) {
     return null;
   }
 
   function UtilityNav() {
     return (
-      <li className="group absolute left-2 bottom-1 ">
-        <div className="cursor-pointer w-8 h-8">
+      <li className="group absolute bottom-1 left-2">
+        <div className="cursor-pointer">
+          {/*
           <svg
             viewBox="0 0 32 32"
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
             fill="#000000"
-            className="fill-cyan-400"
+            className="fill-cyan-400 w-8 h-8"
             data-darkreader-inline-fill=""
           >
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -74,19 +79,32 @@ export default function Navbar() {
               </g>{" "}
             </g>
           </svg>
+          */}
+          <FontAwesomeIcon
+            className="text-gray-900"
+            icon={faPlusSquare}
+            size="2x"
+          />
         </div>
-        <div className="hidden mt-0.5 bg-gray-800 group-hover:block absolute -left-5">
+        <div className="hidden border-3 border-cyan-800 mt-0.5 bg-gray-800 group-hover:block fixed">
           <Link
             id="link-home"
             to="/"
-            className="block px-4 py-2 text-white hover:text-cyan-200 hover:bg-gray-600"
+            className="block px-4 border-b-2 py-2 text-white hover:text-cyan-200 hover:bg-gray-600"
           >
             Home
           </Link>
           <Link
+            id="link-about"
+            to="/about"
+            className="block px-4 border-b-2 py-2 text-white hover:text-cyan-200 hover:bg-gray-600"
+          >
+            About
+          </Link>
+          <Link
             id="link-logout"
             to="/logout"
-            className="block px-4 border-t border-white py-2 text-white hover:text-red-600 hover:bg-gray-600"
+            className="block px-4 border-b-2 border-white py-2 text-white hover:text-cyan-200 hover:bg-gray-600"
           >
             Logout
           </Link>
@@ -94,7 +112,7 @@ export default function Navbar() {
             <Link
               id="link-error"
               to="/error"
-              className="block border-t border-white px-4 py-2 text-red-600 hover:bg-gray-600"
+              className="block border-b-2 border-white px-4 py-2 text-white hover:bg-gray-600 hover:text-red-600"
             >
               Error Page
             </Link>
@@ -110,22 +128,22 @@ export default function Navbar() {
         <div className="cursor-pointer font-semibold text-white hover:text-cyan-200">
           Accounts
         </div>
-        <div className="hidden bg-gray-800 group-hover:block absolute -left-4">
+        <div className="hidden bg-gray-800 border-3 border-cyan-800 group-hover:block absolute -left-4">
           <Link
-            className="block border-b px-4 py-2 text-white hover:bg-gray-600"
+            className="block border-b-2 px-4 py-2 text-white hover:bg-gray-600 hover:text-cyan-200"
             to={`/accounts/${userState.id}`}
           >
             View Account
           </Link>
           <Link
-            className="block border-b px-4 py-2 text-white hover:bg-gray-600"
+            className="block border-b-2 px-4 py-2 text-white hover:bg-gray-600 hover:text-cyan-200"
             to="/accounts/create"
           >
             Create Account
           </Link>
 
           <Link
-            className="block px-4 py-2 text-white hover:bg-gray-600"
+            className="block px-4 py-2 text-white hover:bg-gray-600 hover:text-cyan-200"
             to="/accounts"
           >
             All Accounts
@@ -136,7 +154,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className="py-2 border-b-2 fixed top-0 left-0 flex w-full scale-z-100 content-center justify-center bg-cyan-800 border-cyan-600">
+    <div className="py-2 border-b-2 fixed top-0 left-0 flex w-svw scale-z-100 content-center justify-center bg-cyan-600 border-cyan-800">
       <nav>
         <ul className="flex flex-row gap-8">
           {UtilityNav()}
@@ -174,7 +192,7 @@ export default function Navbar() {
             ) : null}
           </li>
           <li className="hover:underline">
-            {userState.role !== "EMPLOYEE" && userState.role !== "CUSTOMER" ? (
+            {userState.role !== "CUSTOMER" ? (
               <Link
                 id="link-shipments"
                 to="/shipments"

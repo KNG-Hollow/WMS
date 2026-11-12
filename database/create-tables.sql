@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS account (
     password VARCHAR(128) NOT NULL,
     role VARCHAR(64) NOT NULL,
     active BOOLEAN NOT NULL,
-    created TIMESTAMP NOT NULL
+    created TIMESTAMP WITH TIME ZONE NOT NULL
 );
 CREATE TABLE IF NOT EXISTS item (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -22,26 +22,27 @@ CREATE TABLE IF NOT EXISTS order_data (
     id SERIAL PRIMARY KEY NOT NULL,
     customer JSON NOT NULL,
     address VARCHAR(128) NOT NULL,
-    timeOrdered TIMESTAMP NOT NULL,
+    timeOrdered TIMESTAMP WITH TIME ZONE NOT NULL,
     payload JSON NOT NULL
 );
 CREATE TABLE IF NOT EXISTS shipment (
     id SERIAL PRIMARY KEY NOT NULL,
-    supplier JSON NOT NULL,
-    distributor VARCHAR(128) NOT NULL,
-    eta TIMESTAMP NOT NULL,
+    supplier VARCHAR(128) NOT NULL,
+    eta TIMESTAMP WITH TIME ZONE NOT NULL,
     payload JSON NOT NULL
 );
 CREATE TABLE IF NOT EXISTS box (
     id SERIAL PRIMARY KEY NOT NULL,
     upc VARCHAR(128) NOT NULL,
-    item JSON NOT NULL,
     dimensions VARCHAR(128) NOT NULL,
-    count INT NOT NULL
+    count INT NOT NULL,
+    item_id INT,
+    FOREIGN KEY (item_id) REFERENCES item(id)
 );
 CREATE TABLE IF NOT EXISTS inventory (
     id SERIAL PRIMARY KEY NOT NULL,
-    item JSON NOT NULL,
+    item_id INT,
+    FOREIGN KEY (item_id) REFERENCES item(id),
     total INT NOT NULL,
     locations JSON NOT NULL
 );

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import { createAppSlice } from "@/app/createAppSlice";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { createAppSlice } from "../app/createAppSlice";
 import { accountSlice, type AccountSliceState } from "./accounts/accountSlice";
 import { errorSlice, type ErrorSliceState } from "./errors/errorSlice";
 
